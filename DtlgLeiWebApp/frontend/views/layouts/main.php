@@ -9,6 +9,7 @@ use yii\bootstrap5\Breadcrumbs;
 use yii\bootstrap5\Html;
 use yii\bootstrap5\Nav;
 use yii\bootstrap5\NavBar;
+use yii\bootstrap5\Dropdown;
 
 AppAsset::register($this);
 ?>
@@ -36,29 +37,50 @@ AppAsset::register($this);
     ]);
     $menuItems = [
         ['label' => 'Home', 'url' => ['/site/index']],
-        ['label' => 'About', 'url' => ['/site/about']],
-        ['label' => 'Contact', 'url' => ['/site/contact']],
+        ['label' => 'Products', 'url' => ['/site/product']],
+        ['label' => 'Contact Us', 'url' => ['/site/contact']],
+        ['label' => 'About Us', 'url' => ['/site/about']]
     ];
-    if (Yii::$app->user->isGuest) {
-        $menuItems[] = ['label' => 'Signup', 'url' => ['/site/signup']];
-    }
 
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav me-auto mb-2 mb-md-0'],
         'items' => $menuItems,
     ]);
-    if (Yii::$app->user->isGuest) {
-        echo Html::tag('div',Html::a('Login',['/site/login'],['class' => ['btn btn-link login text-decoration-none']]),['class' => ['d-flex']]);
-    } else {
-        echo Html::beginForm(['/site/logout'], 'post', ['class' => 'd-flex'])
-            . Html::submitButton(
-                'Logout (' . Yii::$app->user->identity->username . ')',
-                ['class' => 'btn btn-link logout text-decoration-none']
-            )
-            . Html::endForm();
-    }
+    ?>
+    <div class="dropdown">
+        <a href="" data-toggle="dropdown" class="dropdown-toggle"><i class="fa fa-user" aria-hidden="true"></i><b class="caret"></b></a>
+        <?php
+        if (Yii::$app->user->isGuest) {
+            echo Dropdown::widget([
+                    'items' => [
+                        ['label' => 'Signup', 'url' => ['/site/signup']],
+                        ['label' => 'Login', 'url' => ['/site/login']],
+                    ]
+            ]);
+            ?>
+            <a href="">
+              <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+            </a>
+        <?php
+        } else {
+            echo Dropdown::widget([
+                'items' => [
+                    ['label' => 'Perfil', 'url' => ['/site/Profile']],
+                    ['label' => 'Favoritos', 'url' => ['/site/Favorites']],
+                    ['label' => 'Logout', 'url' => ['/site/logout']],
+                ]
+            ]);
+
+            echo main . phpHtml::beginForm(['/site/logout'], 'post', ['class' => 'd-flex'])
+                . Html::submitButton(
+                    'Logout (' . Yii::$app->user->identity->username . ')',
+                    ['class' => 'btn btn-link logout text-decoration-none']
+                )
+                . Html::endForm();
+        }
     NavBar::end();
     ?>
+
 </header>
 
 <main role="main" class="flex-shrink-0">
@@ -71,14 +93,142 @@ AppAsset::register($this);
     </div>
 </main>
 
-<footer class="footer mt-auto py-3 text-muted">
+    <!-- info section -->
+<section class="info_section layout_padding2">
     <div class="container">
-        <p class="float-start">&copy; <?= Html::encode(Yii::$app->name) ?> <?= date('Y') ?></p>
-        <p class="float-end"><?= Yii::powered() ?></p>
+        <div class="info_logo">
+            <h2>
+                HandTime
+            </h2>
+        </div>
+        <div class="row">
+
+            <div class="col-md-3">
+                <div class="info_contact">
+                    <h5>
+                        About Shop
+                    </h5>
+                    <div>
+                        <div class="img-box">
+                            <img src="images/location-white.png" width="18px" alt="">
+                        </div>
+                        <p>
+                            Address
+                        </p>
+                    </div>
+                    <div>
+                        <div class="img-box">
+                            <img src="images/telephone-white.png" width="12px" alt="">
+                        </div>
+                        <p>
+                            +01 1234567890
+                        </p>
+                    </div>
+                    <div>
+                        <div class="img-box">
+                            <img src="images/envelope-white.png" width="18px" alt="">
+                        </div>
+                        <p>
+                            demo@gmail.com
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="info_info">
+                    <h5>
+                        Informations
+                    </h5>
+                    <p>
+                        ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="info_insta">
+                    <h5>
+                        Instagram
+                    </h5>
+                    <div class="insta_container">
+                        <div class="row m-0">
+                            <div class="col-4 px-0">
+                                <a href="">
+                                    <div class="insta-box b-1">
+                                        <img src="images/w1.png" alt="">
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-4 px-0">
+                                <a href="">
+                                    <div class="insta-box b-1">
+                                        <img src="images/w2.png" alt="">
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-4 px-0">
+                                <a href="">
+                                    <div class="insta-box b-1">
+                                        <img src="images/w3.png" alt="">
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-4 px-0">
+                                <a href="">
+                                    <div class="insta-box b-1">
+                                        <img src="images/w4.png" alt="">
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-4 px-0">
+                                <a href="">
+                                    <div class="insta-box b-1">
+                                        <img src="images/w5.png" alt="">
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-4 px-0">
+                                <a href="">
+                                    <div class="insta-box b-1">
+                                        <img src="images/w6.png" alt="">
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="info_form ">
+                    <h5>
+                        Newsletter
+                    </h5>
+                    <form action="">
+                        <input type="email" placeholder="Enter your email">
+                        <button>
+                            Subscribe
+                        </button>
+                    </form>
+                    <div class="social_box">
+                        <a href="">
+                            <img src="images/fb.png" alt="">
+                        </a>
+                        <a href="">
+                            <img src="images/twitter.png" alt="">
+                        </a>
+                        <a href="">
+                            <img src="images/linkedin.png" alt="">
+                        </a>
+                        <a href="">
+                            <img src="images/youtube.png" alt="">
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-</footer>
+</section>
 
 <?php $this->endBody() ?>
-</body>
-</html>
-<?php $this->endPage();
+<?php $this->endPage() ?>
