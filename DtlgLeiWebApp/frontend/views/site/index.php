@@ -4,7 +4,6 @@
 
 use frontend\assets\AppAsset;
 
-$this->title = 'Detailing Leiria';
 ?>
 <head>
     <title>HandTime</title>
