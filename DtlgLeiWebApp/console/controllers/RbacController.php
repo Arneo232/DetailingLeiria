@@ -1,5 +1,5 @@
 <?php
-namespace console\commands;
+namespace console\controllers;
 
 use Yii;
 use yii\console\Controller;
@@ -28,7 +28,7 @@ class RbacController extends Controller
 
         // --- Papéis ---
         // Papel: cliente (permite apenas visualizar posts)
-        $client = $auth->createRole('cliente');
+        $client = $auth->createRole('client');
         $auth->add($client);
         $auth->addChild($client, $viewPost);
 
@@ -55,19 +55,5 @@ class RbacController extends Controller
         $auth->assign($gestor, 5);
     }
 
-    /**
-     * Atribui automaticamente o papel "cliente" para um novo usuário.
-     * @param int $userId ID do usuário recém-registrado
-     */
-    public function actionAssignClientRole($userId)
-    {
-        $auth = Yii::$app->authManager;
-        $clientRole = $auth->getRole('cliente');
-        if ($clientRole !== null) {
-            $auth->assign($clientRole, $userId);
-            echo "Papel 'cliente' atribuído ao usuário com ID $userId.\n";
-        } else {
-            echo "O papel 'cliente' não foi encontrado.\n";
-        }
-    }
+   
 }
