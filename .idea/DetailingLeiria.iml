@@ -9,7 +9,10 @@
       <sourceFolder url="file://$MODULE_DIR$/DtlgLeiWebApp/common/tests/_support" isTestSource="true" packagePrefix="common\tests\" />
       <sourceFolder url="file://$MODULE_DIR$/DtlgLeiWebApp/frontend/tests" isTestSource="true" packagePrefix="frontend\tests\" />
       <sourceFolder url="file://$MODULE_DIR$/DtlgLeiWebApp/frontend/tests/_support" isTestSource="true" packagePrefix="frontend\tests\" />
+<<<<<<< Updated upstream
       <sourceFolder url="file://$MODULE_DIR$/DtlgLeiWebApp/tests" isTestSource="true" />
+=======
+>>>>>>> Stashed changes
       <excludeFolder url="file://$MODULE_DIR$/DtlgLeiWebApp/vendor/almasaeed2010/adminlte" />
       <excludeFolder url="file://$MODULE_DIR$/DtlgLeiWebApp/vendor/behat/gherkin" />
       <excludeFolder url="file://$MODULE_DIR$/DtlgLeiWebApp/vendor/bower-asset/bootstrap" />

@@ -46,38 +46,37 @@ AppAsset::register($this);
         'options' => ['class' => 'navbar-nav me-auto mb-2 mb-md-0'],
         'items' => $menuItems,
     ]);
-    ?>
-    <div class="dropdown">
-        <a href="" data-toggle="dropdown" class="dropdown-toggle"><i class="fa fa-user" aria-hidden="true"></i><b class="caret"></b></a>
-        <?php
-        if (Yii::$app->user->isGuest) {
-            echo Dropdown::widget([
-                    'items' => [
-                        ['label' => 'Signup', 'url' => ['/site/signup']],
-                        ['label' => 'Login', 'url' => ['/site/login']],
-                    ]
-            ]);
-            ?>
-            <a href="">
-              <i class="fa fa-shopping-cart" aria-hidden="true"></i>
-            </a>
-        <?php
-        } else {
-            echo Dropdown::widget([
-                'items' => [
-                    ['label' => 'Perfil', 'url' => ['/site/Profile']],
-                    ['label' => 'Favoritos', 'url' => ['/site/Favorites']],
-                    ['label' => 'Logout', 'url' => ['/site/logout']],
-                ]
-            ]);
 
-            echo main . phpHtml::beginForm(['/site/logout'], 'post', ['class' => 'd-flex'])
-                . Html::submitButton(
-                    'Logout (' . Yii::$app->user->identity->username . ')',
-                    ['class' => 'btn btn-link logout text-decoration-none']
-                )
-                . Html::endForm();
-        }
+    $myAccountItems = [];
+    if (Yii::$app->user->isGuest) {
+        $myAccountItems = [
+            ['label' => 'Signup', 'url' => ['/site/signup']],
+            ['label' => 'Login', 'url' => ['/site/login']],
+        ];
+    } else {
+        $myAccountItems = [
+            HTML::beginForm(['/user/profile'], 'get'),
+            HTML::submitButton('Profile', ['class' => 'btn text-decoration-none']),
+            HTML::endForm(),
+            HTML::beginForm(['/site/logout'], 'post'),
+            HTML::submitButton('Logout ('. Yii::$app->user->identity->username .')', ['class' => 'btn text-decoration-none']),
+            HTML::endForm()
+        ];
+    }
+    echo Nav::widget([
+        'options' => ['class' => 'navbar-nav ms-auto mb-2 mb-md-0 d-flex'],
+        'items' => [
+            [
+                'label' => Html::tag('i', '', ['class' => 'fa fa-user', 'aria-hidden' => 'true']),
+                'encode' => false,
+                'items' => $myAccountItems,
+            ],
+            [
+                'label' => Html::tag('i', '', ['class' => 'fa fa-shopping-cart', 'aria-hidden' => 'true']),
+                'encode' => false,
+            ],
+        ],
+    ]);
     NavBar::end();
     ?>
 
