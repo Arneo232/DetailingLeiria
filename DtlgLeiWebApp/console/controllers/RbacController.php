@@ -14,46 +14,69 @@ class RbacController extends Controller
         $auth->removeAll();
 
         // --- Permissões ---
-        $createPost = $auth->createPermission('createPost');
-        $createPost->description = 'Permite criar posts';
-        $auth->add($createPost);
+        $viewStatistics = $auth->createPermission('viewStatistics');
+        $viewStatistics->description = 'Permite visualizar estatísticas de compras';
+        $auth->add($viewStatistics);
 
-        $updatePost = $auth->createPermission('updatePost');
-        $updatePost->description = 'Permite atualizar posts';
-        $auth->add($updatePost);
+        $manageUsers = $auth->createPermission('manageUsers');
+        $manageUsers->description = 'Permite gerir contas de funcionários e utilizadores';
+        $auth->add($manageUsers);
 
-        $viewPost = $auth->createPermission('viewPost');
-        $viewPost->description = 'Permite visualizar posts';
-        $auth->add($viewPost);
+        $managePages = $auth->createPermission('managePages');
+        $managePages->description = 'Permite gerir páginas';
+        $auth->add($managePages);
+
+        $manageProducts = $auth->createPermission('manageProducts');
+        $manageProducts->description = 'Permite gerir produtos';
+        $auth->add($manageProducts);
+
+        $deleteComments = $auth->createPermission('deleteComments');
+        $deleteComments->description = 'Permite remover comentários de produtos';
+        $auth->add($deleteComments);
+
+        $manageCategoriesTags = $auth->createPermission('manageCategoriesTags');
+        $manageCategoriesTags->description = 'Permite gerir categorias e etiquetas';
+        $auth->add($manageCategoriesTags);
+
+        $managePayments = $auth->createPermission('managePayments');
+        $managePayments->description = 'Permite gerir métodos de pagamento';
+        $auth->add($managePayments);
+
+        $manageDeliveries = $auth->createPermission('manageDeliveries');
+        $manageDeliveries->description = 'Permite gerir métodos de entrega';
+        $auth->add($manageDeliveries);
 
         // --- Papéis ---
-        // Papel: cliente (permite apenas visualizar posts)
+        // Papel: cliente (visualiza estatísticas simples e produtos)
         $client = $auth->createRole('client');
         $auth->add($client);
-        $auth->addChild($client, $viewPost);
 
-        // Papel: funcionário (pode criar e atualizar posts)
+        // Papel: funcionário (gestão básica de produtos e estatísticas)
         $funcionario = $auth->createRole('funcionario');
         $auth->add($funcionario);
-        $auth->addChild($funcionario, $createPost);
-        $auth->addChild($funcionario, $updatePost);
+        $auth->addChild($funcionario, $viewStatistics);
+        $auth->addChild($funcionario, $manageProducts);
+        $auth->addChild($funcionario, $deleteComments);
 
-        // Papel: gestor (herda permissões de funcionário)
+        // Papel: gestor (herda de funcionário, gerencia mais funcionalidades)
         $gestor = $auth->createRole('gestor');
         $auth->add($gestor);
         $auth->addChild($gestor, $funcionario);
+        $auth->addChild($gestor, $manageCategoriesTags);
+        $auth->addChild($gestor, $managePayments);
+        $auth->addChild($gestor, $manageDeliveries);
 
-        // Papel: admin (herda permissões de gestor)
+        // Papel: admin (herda de gestor, gerencia usuários e permissões)
         $admin = $auth->createRole('admin');
         $auth->add($admin);
         $auth->addChild($admin, $gestor);
+        $auth->addChild($admin, $manageUsers);
+        $auth->addChild($admin, $managePages);
 
-        // Atribuição de papéis para users
+        // Atribuição de papéis para os users
         $auth->assign($admin, 1);
         $auth->assign($client, 3);
         $auth->assign($funcionario, 4);
-        $auth->assign($gestor, 5);
+        $auth->assign($gestor, 5);        
     }
-
-   
 }
