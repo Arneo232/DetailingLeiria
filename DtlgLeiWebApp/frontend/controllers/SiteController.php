@@ -260,4 +260,9 @@ class SiteController extends Controller
             'model' => $model
         ]);
     }
+    public function actionProductDetail()
+    {
+        return $this->render('ProductDetail');
+    }
+
 }
