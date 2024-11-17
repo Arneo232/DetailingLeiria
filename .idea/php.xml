@@ -105,9 +105,21 @@
       <path value="$PROJECT_DIR$/DtlgLeiWebApp/vendor/cebe/markdown" />
     </include_path>
   </component>
+<<<<<<< Updated upstream
   <component name="PhpStanOptionsConfiguration">
     <option name="transferred" value="true" />
   </component>
+=======
+  <component name="PhpProjectSharedConfiguration" php_language_level="7.4" />
+  <component name="PhpStanOptionsConfiguration">
+    <option name="transferred" value="true" />
+  </component>
+  <component name="PhpUnit">
+    <phpunit_settings>
+      <PhpUnitSettings custom_loader_path="$PROJECT_DIR$/DtlgLeiWebApp/vendor/autoload.php" />
+    </phpunit_settings>
+  </component>
+>>>>>>> Stashed changes
   <component name="PsalmOptionsConfiguration">
     <option name="transferred" value="true" />
   </component>
