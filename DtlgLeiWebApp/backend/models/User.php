@@ -1,6 +1,6 @@
 <?php
 
-namespace app\models;
+namespace backend\models;
 
 use Yii;
 
@@ -20,6 +20,8 @@ use Yii;
  */
 class User extends \yii\db\ActiveRecord
 {
+    public $password;
+
     /**
      * {@inheritdoc}
      */
@@ -34,13 +36,9 @@ class User extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['username', 'auth_key', 'password_hash', 'email', 'created_at', 'updated_at'], 'required'],
-            [['status', 'created_at', 'updated_at'], 'integer'],
-            [['username', 'password_hash', 'password_reset_token', 'email', 'verification_token'], 'string', 'max' => 255],
-            [['auth_key'], 'string', 'max' => 32],
-            [['username'], 'unique'],
-            [['email'], 'unique'],
-            [['password_reset_token'], 'unique'],
+            [['username', 'email', 'status'], 'required'], // Regular required fields
+            [['password'], 'string', 'min' => 6, 'on' => 'create'], // Password validation
+            [['auth_key', 'password_hash', 'password_reset_token', 'verification_token', 'created_at', 'updated_at'], 'safe'], // Automatically managed fields
         ];
     }
 
@@ -61,5 +59,27 @@ class User extends \yii\db\ActiveRecord
             'updated_at' => 'Updated At',
             'verification_token' => 'Verification Token',
         ];
+    }
+
+    public function beforeSave($insert)
+    {
+        if (parent::beforeSave($insert)) {
+            if (!empty($this->password)) {
+                // Hash the password and store it in the password_hash field
+                $this->password_hash = Yii::$app->security->generatePasswordHash($this->password);
+            }
+
+            if ($this->isNewRecord) {
+                // Generate auth_key for new records
+                $this->auth_key = Yii::$app->security->generateRandomString();
+                $this->created_at = time(); // Set created_at timestamp
+            }
+
+            // Always update the updated_at timestamp
+            $this->updated_at = time();
+
+            return true;
+        }
+        return false;
     }
 }
