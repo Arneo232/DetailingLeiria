@@ -18,7 +18,10 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'password')->passwordInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'status')->textInput() ?>
+    <?= $form->field($model, 'role')->dropDownList(
+        \yii\helpers\ArrayHelper::map(Yii::$app->authManager->getRoles(), 'name', 'name'),
+        ['prompt' => 'Selecione a Role']
+    ) ?>
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>

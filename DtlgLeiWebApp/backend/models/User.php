@@ -21,6 +21,7 @@ use Yii;
 class User extends \yii\db\ActiveRecord
 {
     public $password;
+    public $role;
 
     /**
      * {@inheritdoc}
@@ -33,12 +34,14 @@ class User extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
+
     public function rules()
     {
         return [
-            [['username', 'email', 'status'], 'required'], // Regular required fields
+            [['username', 'email', 'role'], 'required'], // Regular required fields
             [['password'], 'string', 'min' => 6, 'on' => 'create'], // Password validation
             [['auth_key', 'password_hash', 'password_reset_token', 'verification_token', 'created_at', 'updated_at'], 'safe'], // Automatically managed fields
+
         ];
     }
 

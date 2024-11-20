@@ -4,12 +4,6 @@
     <option name="configurations">
       <list>
         <Configuration>
-<<<<<<< Updated upstream
-          <option name="path" value="$PROJECT_DIR$/DtlgLeiWebApp/tests" />
-        </Configuration>
-        <Configuration>
-=======
->>>>>>> Stashed changes
           <option name="namespace" value="common\tests" />
           <option name="path" value="$PROJECT_DIR$/DtlgLeiWebApp/common/tests" />
           <option name="mySuiteNamespaces">
