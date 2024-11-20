@@ -13,70 +13,69 @@ class RbacController extends Controller
         // Remover tudo para começar do zero
         $auth->removeAll();
 
-        // --- Permissões ---
-        $viewStatistics = $auth->createPermission('viewStatistics');
-        $viewStatistics->description = 'Permite visualizar estatísticas de compras';
-        $auth->add($viewStatistics);
+        // --- Definição de Entidades e Permissões CRUD ---
+        $entities = [
+            'Products' => 'produtos',
+            'Pages' => 'páginas',
+            'Users' => 'contas de utilizadores e funcionários',
+            'Comments' => 'comentários',
+            'CategoriesTags' => 'categorias e etiquetas',
+            'Payments' => 'métodos de pagamento',
+            'Deliveries' => 'métodos de entrega',
+        ];
 
-        $manageUsers = $auth->createPermission('manageUsers');
-        $manageUsers->description = 'Permite gerir contas de funcionários e utilizadores';
-        $auth->add($manageUsers);
+        $permissions = []; // Para armazenar permissões criadas
 
-        $managePages = $auth->createPermission('managePages');
-        $managePages->description = 'Permite gerir páginas';
-        $auth->add($managePages);
-
-        $manageProducts = $auth->createPermission('manageProducts');
-        $manageProducts->description = 'Permite gerir produtos';
-        $auth->add($manageProducts);
-
-        $deleteComments = $auth->createPermission('deleteComments');
-        $deleteComments->description = 'Permite remover comentários de produtos';
-        $auth->add($deleteComments);
-
-        $manageCategoriesTags = $auth->createPermission('manageCategoriesTags');
-        $manageCategoriesTags->description = 'Permite gerir categorias e etiquetas';
-        $auth->add($manageCategoriesTags);
-
-        $managePayments = $auth->createPermission('managePayments');
-        $managePayments->description = 'Permite gerir métodos de pagamento';
-        $auth->add($managePayments);
-
-        $manageDeliveries = $auth->createPermission('manageDeliveries');
-        $manageDeliveries->description = 'Permite gerir métodos de entrega';
-        $auth->add($manageDeliveries);
+        foreach ($entities as $entity => $description) {
+            foreach (['create', 'read', 'update', 'delete'] as $action) {
+                $permissionName = "{$action}{$entity}";
+                $permission = $auth->createPermission($permissionName);
+                $permission->description = "Permite {$action} {$description}";
+                $auth->add($permission);
+                $permissions[$entity][$action] = $permission;
+            }
+        }
 
         // --- Papéis ---
-        // Papel: cliente (visualiza estatísticas simples e produtos)
+        // Papel: cliente (somente leitura de produtos e comentários)
         $client = $auth->createRole('client');
         $auth->add($client);
+        $auth->addChild($client, $permissions['Products']['read']);
+        $auth->addChild($client, $permissions['Comments']['read']);
 
-        // Papel: funcionário (gestão básica de produtos e estatísticas)
+        // Papel: funcionário (CRUD de produtos e comentários)
         $funcionario = $auth->createRole('funcionario');
         $auth->add($funcionario);
-        $auth->addChild($funcionario, $viewStatistics);
-        $auth->addChild($funcionario, $manageProducts);
-        $auth->addChild($funcionario, $deleteComments);
+        foreach (['Products', 'Comments'] as $entity) {
+            foreach (['create', 'read', 'update', 'delete'] as $action) {
+                $auth->addChild($funcionario, $permissions[$entity][$action]);
+            }
+        }
 
-        // Papel: gestor (herda de funcionário, gerencia mais funcionalidades)
+        // Papel: gestor (herda de funcionário, adiciona CRUD de categorias, pagamentos e entregas)
         $gestor = $auth->createRole('gestor');
         $auth->add($gestor);
         $auth->addChild($gestor, $funcionario);
-        $auth->addChild($gestor, $manageCategoriesTags);
-        $auth->addChild($gestor, $managePayments);
-        $auth->addChild($gestor, $manageDeliveries);
+        foreach (['CategoriesTags', 'Payments', 'Deliveries'] as $entity) {
+            foreach (['create', 'read', 'update', 'delete'] as $action) {
+                $auth->addChild($gestor, $permissions[$entity][$action]);
+            }
+        }
 
-        // Papel: admin (herda de gestor, gerencia usuários e permissões)
+        // Papel: admin (herda de gestor, adiciona CRUD de usuários e páginas)
         $admin = $auth->createRole('admin');
         $auth->add($admin);
         $auth->addChild($admin, $gestor);
-        $auth->addChild($admin, $manageUsers);
-        $auth->addChild($admin, $managePages);
+        foreach (['Users', 'Pages'] as $entity) {
+            foreach (['create', 'read', 'update', 'delete'] as $action) {
+                $auth->addChild($admin, $permissions[$entity][$action]);
+            }
+        }
 
-        // Atribuição de papéis para os users
-        $auth->assign($admin, 1);
-        $auth->assign($client, 3);
-        $auth->assign($funcionario, 4);
-        $auth->assign($gestor, 5);        
+        // Atribuir papéis aos usuários
+        $auth->assign($admin, 1); // ID do admin
+        $auth->assign($client, 3); // ID do cliente
+        $auth->assign($funcionario, 4); // ID do funcionário
+        $auth->assign($gestor, 5); // ID do gestor
     }
 }
