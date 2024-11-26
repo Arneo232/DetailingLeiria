@@ -2,8 +2,9 @@
 
 namespace backend\controllers;
 
-use backend\models\User;
+use common\models\User;
 use backend\models\UserSearch;
+use backend\models\UserForm;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -74,10 +75,9 @@ class UserController extends Controller
      */
     public function actionCreate()
     {
-        $model = new User();
-        $model->scenario = 'create'; // Ensure the 'create' scenario is set
+        $model = new UserForm();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post()) && $model->createForm()) {
             return $this->redirect(['view', 'id' => $model->id]);
         }
 

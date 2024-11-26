@@ -29,6 +29,9 @@ class User extends ActiveRecord implements IdentityInterface
     const STATUS_INACTIVE = 9;
     const STATUS_ACTIVE = 10;
 
+    public $password;
+
+    public $role;
 
     /**
      * {@inheritdoc}
@@ -54,6 +57,9 @@ class User extends ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
+            [['username', 'email'], 'required', 'on' => ['create', 'update']],
+            [['password'], 'required', 'on' => 'create'],
+            [['auth_key', 'password_hash', 'password_reset_token', 'verification_token', 'created_at', 'updated_at'], 'safe'],
             ['status', 'default', 'value' => self::STATUS_INACTIVE],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_INACTIVE, self::STATUS_DELETED]],
         ];
@@ -215,5 +221,7 @@ class User extends ActiveRecord implements IdentityInterface
     {
         return $this->hasOne(Profile::class, ['user_id' => 'id']);
     }
+
+
 
 }

@@ -15,7 +15,7 @@ class UserForm extends Model
     public $email;
     public $password;
 
-
+    public $role;
 
     /**
      * {@inheritdoc}
@@ -64,7 +64,7 @@ class UserForm extends Model
         $client = $auth->getRole('client');
         $auth->assign($client, $user->id);
 
-        return true;
+        return $user;
     }
 
     /**
