@@ -95,9 +95,10 @@ class UserController extends Controller
      */
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id);
+        $model = new UserForm;
+        $model = $model->ColocarDados($id);
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post()) && $model->updateForm()) {
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
