@@ -24,6 +24,8 @@
                 'items' => [
                     ['label' => 'Gii',  'icon' => 'file-code', 'url' => ['/gii'], 'target' => '_blank'],
                     ['label' => 'Gestão de Utilizadores', 'url' => ['/user/index'], 'icon' => 'fa fa-users'],
+                    ['label' => 'Gestão de Categorias', 'url' => ['/categoria/index'], 'icon' => 'fa fa-file'],
+                    ['label' => 'Gestão de Métodos de Pagamento', 'url' => ['/metodoPagamento/create'], 'icon' => 'fa fa-credit-card'],
                 ],
             ]);
             ?>
