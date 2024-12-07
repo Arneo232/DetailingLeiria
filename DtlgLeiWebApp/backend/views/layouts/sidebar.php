@@ -24,8 +24,8 @@
                 'items' => [
                     ['label' => 'Gii',  'icon' => 'file-code', 'url' => ['/gii'], 'target' => '_blank'],
                     ['label' => 'Gestão de Utilizadores', 'url' => ['/user/index'], 'icon' => 'fa fa-users'],
-                    ['label' => 'Gestão de Categorias', 'url' => ['/categoria/index'], 'icon' => 'fa fa-file'],
-                    ['label' => 'Gestão de Métodos de Pagamento', 'url' => ['/metodoPagamento/create'], 'icon' => 'fa fa-credit-card'],
+                    ['label' => 'Gestão de Categorias', 'url' => ['/categoria/index'], 'icon' => 'fa fa-icons'],
+                    ['label' => 'Gestão de Métodos de Pagamento', 'url' => ['/metodoPagamento/index'], 'icon' => 'fa fa-credit-card'],
                 ],
             ]);
             ?>

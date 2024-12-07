@@ -116,7 +116,15 @@ class UserController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $user = $this->findModel($id);
+
+        // Check if the user has an associated profile and delete it
+        if ($user->profile) {
+            $user->profile->delete();
+        }
+
+        // Now delete the user
+        $user->delete();
 
         return $this->redirect(['index']);
     }

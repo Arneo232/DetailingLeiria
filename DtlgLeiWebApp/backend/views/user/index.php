@@ -1,6 +1,7 @@
 <?php
 
 use common\models\User;
+use common\models\Profile;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\grid\ActionColumn;
@@ -30,6 +31,18 @@ $this->params['breadcrumbs'][] = $this->title;
             'username',
             'email:email',
             'role',
+            [
+                'label' => 'Telefone',
+                'value' => function ($model) {
+                    return $model->profile ? $model->profile->ntelefone : '(not set)';
+                },
+            ],
+            [
+                'label' => 'Morada',
+                'value' => function ($model) {
+                    return $model->profile ? $model->profile->morada : '(not set)';
+                },
+            ],
             'created_at',
             [
                 'class' => ActionColumn::className(),

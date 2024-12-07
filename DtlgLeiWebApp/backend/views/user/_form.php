@@ -18,7 +18,11 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'email')->textInput(['maxlength' => true]) ?>
 
+    <?= $form->field($model, 'password')->passwordInput(['maxlength' => true]) ?>
 
+    <?= $form->field($model, 'ntelefone')->textInput(['maxlength' => true]) ?>
+
+    <?= $form->field($model, 'morada')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'role')->dropDownList(
         \yii\helpers\ArrayHelper::map(Yii::$app->authManager->getRoles(), 'name', 'name'),

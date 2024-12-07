@@ -2,7 +2,6 @@
 
 namespace backend\controllers;
 
-
 use common\models\Categoria;
 use app\models\CategoriaSearch;
 use yii\web\Controller;

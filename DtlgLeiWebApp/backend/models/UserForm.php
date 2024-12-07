@@ -20,6 +20,9 @@ class UserForm extends Model
 
     public $role;
 
+    public $ntelefone;
+    public $morada;
+
     /**
      * {@inheritdoc}
      */
@@ -39,6 +42,11 @@ class UserForm extends Model
             ['email', 'unique', 'targetClass' => '\common\models\User', 'message' => 'This email address has already been taken.'],
 
             ['password', 'string', 'min' => Yii::$app->params['user.passwordMinLength']],
+
+            ['ntelefone', 'required'],
+            ['ntelefone', 'string', 'max' => 1000000000],
+            ['morada', 'required'],
+            ['morada', 'string', 'max' => 255],
         ];
     }
 
@@ -68,6 +76,13 @@ class UserForm extends Model
 
         $this->id = $user->getId();
 
+        // Save profile data
+        $profile = new Profile();
+        $profile->userId = $user->id;
+        $profile->ntelefone = $this->ntelefone;
+        $profile->morada = $this->morada;
+        $profile->save();
+
         $auth = Yii::$app->authManager;
         $auth->assign($role, $user->id);
 
@@ -79,15 +94,23 @@ class UserForm extends Model
 
         $user = User::findOne($this->id);
 
-
+        //update user
         $user->username = $this->username;
         $user->email = $this->email;
         // $user->setPassword($this->password);
         $user->generateAuthKey();
         $user->generateEmailVerificationToken();
-
         $user->save(false);
 
+        // Update profile data
+        $profile = $user->profile; // Use the relationship
+        $profile = new Profile();
+        $profile->userId = $user->id;
+        $profile->ntelefone = $this->ntelefone;
+        $profile->morada = $this->morada;
+        $profile->save();
+
+        //update role
         $auth = Yii::$app->authManager;
         $role = $auth->getRole($this->role);
         $auth->revokeAll($this->id);
@@ -106,6 +129,13 @@ class UserForm extends Model
         $userForm->username = $user->username;
         $userForm->email = $user->email;
         $userForm->role = $user->getRole();
+
+        // Load profile data
+        $profile = $user->profile;  // Assuming the relation is set
+        if ($profile) {
+            $userForm->ntelefone = $profile->ntelefone;
+            $userForm->morada = $profile->morada;
+        }
 
         return $userForm;
     }

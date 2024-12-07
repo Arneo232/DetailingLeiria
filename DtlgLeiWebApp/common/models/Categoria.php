@@ -9,10 +9,7 @@ use app\models\Produto;
  *
  * @property int $idCategoria
  * @property string|null $designacao
- * @property int $idCategoriaPai
  *
- * @property Categoria[] $categorias
- * @property Categoria $idCategoriaPai0
  * @property Produto[] $produtos
  */
 class Categoria extends \yii\db\ActiveRecord
@@ -31,10 +28,7 @@ class Categoria extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['idCategoriaPai'], 'required'],
-            [['idCategoriaPai'], 'integer'],
             [['designacao'], 'string', 'max' => 45],
-            [['idCategoriaPai'], 'exist', 'skipOnError' => true, 'targetClass' => Categoria::class, 'targetAttribute' => ['idCategoriaPai' => 'idCategoria']],
         ];
     }
 
@@ -46,28 +40,7 @@ class Categoria extends \yii\db\ActiveRecord
         return [
             'idCategoria' => 'Id Categoria',
             'designacao' => 'Designacao',
-            'idCategoriaPai' => 'Id Categoria Pai',
         ];
-    }
-
-    /**
-     * Gets query for [[Categorias]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public function getCategorias()
-    {
-        return $this->hasMany(Categoria::class, ['idCategoriaPai' => 'idCategoria']);
-    }
-
-    /**
-     * Gets query for [[IdCategoriaPai0]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public function getIdCategoriaPai0()
-    {
-        return $this->hasOne(Categoria::class, ['idCategoria' => 'idCategoriaPai']);
     }
 
     /**
