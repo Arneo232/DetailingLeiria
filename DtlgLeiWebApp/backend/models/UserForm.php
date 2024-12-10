@@ -97,25 +97,23 @@ class UserForm extends Model
         //update user
         $user->username = $this->username;
         $user->email = $this->email;
-        // $user->setPassword($this->password);
+        //$user->setPassword($this->password);
         $user->generateAuthKey();
         $user->generateEmailVerificationToken();
         $user->save(false);
 
         // Update profile data
         $profile = $user->profile; // Use the relationship
-        $profile = new Profile();
         $profile->userId = $user->id;
         $profile->ntelefone = $this->ntelefone;
         $profile->morada = $this->morada;
-        $profile->save();
+        $profile->save(false);
 
         //update role
         $auth = Yii::$app->authManager;
         $role = $auth->getRole($this->role);
         $auth->revokeAll($this->id);
         $auth->assign($role, $user->id);
-
 
         return true;
     }

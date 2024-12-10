@@ -55,9 +55,7 @@ AppAsset::register($this);
         ];
     } else {
         $myAccountItems = [
-            HTML::beginForm(['/user/profile'], 'get'),
-            HTML::submitButton('Profile', ['class' => 'btn text-decoration-none']),
-            HTML::endForm(),
+            ['label' => 'Profile', 'url' => ['/site/detailed-profile']],
             HTML::beginForm(['/site/logout'], 'post'),
             HTML::submitButton('Logout ('. Yii::$app->user->identity->username .')', ['class' => 'btn text-decoration-none']),
             HTML::endForm()

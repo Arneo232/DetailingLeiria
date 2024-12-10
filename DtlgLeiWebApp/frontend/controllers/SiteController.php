@@ -2,6 +2,8 @@
 
 namespace frontend\controllers;
 
+use backend\models\UserForm;
+use common\models\User;
 use frontend\models\ResendVerificationEmailForm;
 use frontend\models\VerifyEmailForm;
 use Yii;
@@ -15,6 +17,7 @@ use frontend\models\PasswordResetRequestForm;
 use frontend\models\ResetPasswordForm;
 use frontend\models\SignupForm;
 use frontend\models\ContactForm;
+use yii\web\NotFoundHttpException;
 
 /**
  * Site controller
@@ -263,6 +266,34 @@ class SiteController extends Controller
     public function actionProductDetail()
     {
         return $this->render('ProductDetail');
+    }
+
+    public function actionDetailedProfile()
+    {
+        $userId = Yii::$app->user->id; // Get the currently logged-in user's ID
+
+        $model = \common\models\User::findOne($userId); // Fetch the user data
+
+        if (!$model) {
+            throw new NotFoundHttpException('The requested profile does not exist.');
+        }
+
+        return $this->render('/profile/detailedProfile', [
+            'model' => $model,
+        ]);
+    }
+    public function actionUpdate($id)
+    {
+        $model = new SignupForm;
+        $model = $model->ColocarDados($id);
+
+        if ($model->load(Yii::$app->request->post()) && $model->updateForm()) {
+            return $this->redirect(['view', 'id' => $model->id]);
+        }
+
+        return $this->render('/profile/update', [
+            'model' => $model,
+        ]);
     }
 
 }
