@@ -25,7 +25,9 @@
                     ['label' => 'Gii',  'icon' => 'file-code', 'url' => ['/gii'], 'target' => '_blank'],
                     ['label' => 'Gestão de Utilizadores', 'url' => ['/user/index'], 'icon' => 'fa fa-users'],
                     ['label' => 'Gestão de Categorias', 'url' => ['/categoria/index'], 'icon' => 'fa fa-icons'],
-                    ['label' => 'Gestão de Métodos de Pagamento', 'url' => ['/metodoPagamento/index'], 'icon' => 'fa fa-credit-card'],
+                    ['label' => 'Gestão de Métodos de Pagamento', 'url' => ['/metodopagamento/index'], 'icon' => 'fa fa-credit-card'],
+                    ['label' => 'Gestão de Métodos de Entrega', 'url' => ['/metodoentrega/index'], 'icon' => 'fa fa-truck'],
+                    ['label' => 'Gestão de Fornecedores', 'url' => ['/fornecedor/index'], 'icon' => 'fa fa-industry'],
                 ],
             ]);
             ?>

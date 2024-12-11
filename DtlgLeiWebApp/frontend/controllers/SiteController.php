@@ -288,7 +288,7 @@ class SiteController extends Controller
         $model = $model->ColocarDados($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->updateForm()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['detailed-profile']);
         }
 
         return $this->render('/profile/update', [
