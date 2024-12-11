@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">AMSI</string>
     <string name="txt_email">Insira o email</string>
+    <string name="txt_username">Insira um username</string>
     <string name="txt_password">Insira a Palavra-Passe</string>
+    <string name="txt_confirm_password">Repita a Palavra-Passe</string>
+    <string name="txt_register">Registar</string>
 </resources>
