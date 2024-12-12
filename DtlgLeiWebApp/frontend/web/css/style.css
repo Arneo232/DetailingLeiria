@@ -296,7 +296,7 @@ a:focus {
 .slider_section .detail-box .btn-box .btn1 {
   display: inline-block;
   padding: 10px 15px;
-  background-color: #858585;
+  background-color: #2bd374;
   color: #000000;
   border-radius: 0;
   -webkit-transition: all 0.3s;
@@ -305,7 +305,7 @@ a:focus {
 }
 
 .slider_section .detail-box .btn-box .btn1:hover {
-  background-color: #858585;
+  background-color: #2bd374;
 }
 
 .slider_section .detail-box .btn-box .btn2 {
@@ -350,7 +350,7 @@ a:focus {
 .slider_section .carousel-indicators li.active {
   width: 23px;
   height: 23px;
-  background-color: #858585;
+  background-color: #2bd374;
 }
 
 .slider_bg_box {
@@ -410,7 +410,7 @@ a:focus {
 }
 
 .service_section .box .detail-box a {
-  color: #858585;
+  color: #2bd374;
   font-weight: 600;
 }
 
@@ -529,7 +529,7 @@ a:focus {
 
 .product_section .product_heading h2 {
   padding: 10px 20px;
-  background-color: #858585;
+  background-color: #2bd374;
   color: #000000;
   font-weight: bold;
   font-size: 24px;
@@ -657,7 +657,7 @@ a:focus {
   overflow: hidden;
   margin-right: -65px;
   position: relative;
-  border: 5px solid #858585;
+  border: 5px solid #2bd374;
 }
 
 .client_section .box .img-box img {
@@ -682,7 +682,7 @@ a:focus {
 
 .client_section .box .client_info .client_name h6 {
   margin-bottom: 0;
-  color: #858585;
+  color: #2bd374;
   font-weight: normal;
   font-size: 14px;
   text-transform: uppercase;
@@ -727,7 +727,7 @@ a:focus {
 .client_section .carousel-indicators li.active {
   width: 20px;
   height: 20px;
-  background-color: #858585;
+  background-color: #2bd374;
 }
 
 .contact_section {
