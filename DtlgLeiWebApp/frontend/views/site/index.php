@@ -4,14 +4,17 @@
 
 use frontend\assets\AppAsset;
 
+$this->title = 'Detailing Leiria';
+$this->params['breadcrumbs'][] = $this->title;
 ?>
 <head>
-    <title>HandTime</title>
+    <title>Detailing Leiria</title>
 </head>
 
 <body>
 <div class="hero_area">
     <!-- end header section -->
+
     <!-- slider section -->
     <section class="slider_section ">
         <div class="slider_bg_box">
@@ -25,16 +28,17 @@ use frontend\assets\AppAsset;
                             <div class="col-md-7">
                                 <div class="detail-box">
                                     <h1>
-                                        Stylish Watches
+                                        Bem-vindo ao Detailing Leiria!
                                     </h1>
                                     <p>
-                                        Lorem ipsum, dolor sit amet consectetur adipisicing elit. Minus quidem maiores perspiciatis, illo maxime voluptatem a itaque suscipit.
+                                        A sua plataforma de referência para encontrar os melhores produtos e serviços de limpeza automóvel.
+                                        Aqui, ajudamos a cuidar do seu carro como ele merece!
                                     </p>
                                     <div class="btn-box">
-                                        <a href="" class="btn1">
+                                        <a href="http://localhost/detailingleiria/DtlgLeiWebApp/frontend/web/index.php?r=site%2Fcontact" class="btn1">
                                             Contact Us
                                         </a>
-                                        <a href="" class="btn2">
+                                        <a href="http://localhost/detailingleiria/DtlgLeiWebApp/frontend/web/index.php?r=site%2Fabout" class="btn2">
                                             About Us
                                         </a>
                                     </div>
@@ -55,10 +59,10 @@ use frontend\assets\AppAsset;
                                         Lorem ipsum, dolor sit amet consectetur adipisicing elit. Minus quidem maiores perspiciatis, illo maxime voluptatem a itaque suscipit.
                                     </p>
                                     <div class="btn-box">
-                                        <a href="" class="btn1">
+                                        <a href="http://localhost/detailingleiria/DtlgLeiWebApp/frontend/web/index.php?r=site%2Fcontact" class="btn1">
                                             Contact Us
                                         </a>
-                                        <a href="" class="btn2">
+                                        <a href="http://localhost/detailingleiria/DtlgLeiWebApp/frontend/web/index.php?r=site%2Fabout" class="btn2">
                                             About Us
                                         </a>
                                     </div>
@@ -79,58 +83,10 @@ use frontend\assets\AppAsset;
                                         Lorem ipsum, dolor sit amet consectetur adipisicing elit. Minus quidem maiores perspiciatis, illo maxime voluptatem a itaque suscipit.
                                     </p>
                                     <div class="btn-box">
-                                        <a href="" class="btn1">
+                                        <a href="http://localhost/detailingleiria/DtlgLeiWebApp/frontend/web/index.php?r=site%2Fcontact" class="btn1">
                                             Contact Us
                                         </a>
-                                        <a href="" class="btn2">
-                                            About Us
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="carousel-item">
-                    <div class="container ">
-                        <div class="row">
-                            <div class="col-md-7">
-                                <div class="detail-box">
-                                    <h1>
-                                        Stylish Watches
-                                    </h1>
-                                    <p>
-                                        Lorem ipsum, dolor sit amet consectetur adipisicing elit. Minus quidem maiores perspiciatis, illo maxime voluptatem a itaque suscipit.
-                                    </p>
-                                    <div class="btn-box">
-                                        <a href="" class="btn1">
-                                            Contact Us
-                                        </a>
-                                        <a href="" class="btn2">
-                                            About Us
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="carousel-item">
-                    <div class="container ">
-                        <div class="row">
-                            <div class="col-md-7">
-                                <div class="detail-box">
-                                    <h1>
-                                        Stylish Watches
-                                    </h1>
-                                    <p>
-                                        Lorem ipsum, dolor sit amet consectetur adipisicing elit. Minus quidem maiores perspiciatis, illo maxime voluptatem a itaque suscipit.
-                                    </p>
-                                    <div class="btn-box">
-                                        <a href="" class="btn1">
-                                            Contact Us
-                                        </a>
-                                        <a href="" class="btn2">
+                                        <a href="http://localhost/detailingleiria/DtlgLeiWebApp/frontend/web/index.php?r=site%2Fabout" class="btn2">
                                             About Us
                                         </a>
                                     </div>
@@ -144,8 +100,6 @@ use frontend\assets\AppAsset;
                 <li data-target="#customCarousel1" data-slide-to="0" class="active"></li>
                 <li data-target="#customCarousel1" data-slide-to="1"></li>
                 <li data-target="#customCarousel1" data-slide-to="2"></li>
-                <li data-target="#customCarousel1" data-slide-to="3"></li>
-                <li data-target="#customCarousel1" data-slide-to="4"></li>
             </ol>
         </div>
 
@@ -377,246 +331,6 @@ use frontend\assets\AppAsset;
         </div>
     </div>
 </section>
-
-<!-- end product section -->
-
-
-<!-- product section -->
-
-<section class="product_section ">
-    <div class="container">
-        <div class="product_heading">
-            <h2>
-                Feature Watches
-            </h2>
-        </div>
-        <div class="product_container">
-            <div class="box">
-                <div class="box-content">
-                    <div class="img-box">
-                        <img src="images/w4.png" alt="">
-                    </div>
-                    <div class="detail-box">
-                        <div class="text">
-                            <h6>
-                                Men's Watch
-                            </h6>
-                            <h5>
-                                <span>$</span> 300
-                            </h5>
-                        </div>
-                        <div class="like">
-                            <h6>
-                                Like
-                            </h6>
-                            <div class="star_container">
-                                <i class="fa fa-star" aria-hidden="true"></i>
-                                <i class="fa fa-star" aria-hidden="true"></i>
-                                <i class="fa fa-star" aria-hidden="true"></i>
-                                <i class="fa fa-star" aria-hidden="true"></i>
-                                <i class="fa fa-star" aria-hidden="true"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="btn-box">
-                    <a href="">
-                        Add To Cart
-                    </a>
-                </div>
-            </div>
-            <div class="box">
-                <div class="box-content">
-                    <div class="img-box">
-                        <img src="images/w5.png" alt="">
-                    </div>
-                    <div class="detail-box">
-                        <div class="text">
-                            <h6>
-                                Men's Watch
-                            </h6>
-                            <h5>
-                                <span>$</span> 300
-                            </h5>
-                        </div>
-                        <div class="like">
-                            <h6>
-                                Like
-                            </h6>
-                            <div class="star_container">
-                                <i class="fa fa-star" aria-hidden="true"></i>
-                                <i class="fa fa-star" aria-hidden="true"></i>
-                                <i class="fa fa-star" aria-hidden="true"></i>
-                                <i class="fa fa-star" aria-hidden="true"></i>
-                                <i class="fa fa-star" aria-hidden="true"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="btn-box">
-                    <a href="">
-                        Add To Cart
-                    </a>
-                </div>
-            </div>
-            <div class="box">
-                <div class="box-content">
-                    <div class="img-box">
-                        <img src="images/w6.png" alt="">
-                    </div>
-                    <div class="detail-box">
-                        <div class="text">
-                            <h6>
-                                Men's Watch
-                            </h6>
-                            <h5>
-                                <span>$</span> 300
-                            </h5>
-                        </div>
-                        <div class="like">
-                            <h6>
-                                Like
-                            </h6>
-                            <div class="star_container">
-                                <i class="fa fa-star" aria-hidden="true"></i>
-                                <i class="fa fa-star" aria-hidden="true"></i>
-                                <i class="fa fa-star" aria-hidden="true"></i>
-                                <i class="fa fa-star" aria-hidden="true"></i>
-                                <i class="fa fa-star" aria-hidden="true"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="btn-box">
-                    <a href="">
-                        Add To Cart
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-
-<!-- end product section -->
-
-
-<!-- product section -->
-
-<section class="product_section ">
-    <div class="container">
-        <div class="product_heading">
-            <h2>
-                New Arrivals
-            </h2>
-        </div>
-        <div class="product_container">
-            <div class="box">
-                <div class="box-content">
-                    <div class="img-box">
-                        <img src="images/w7.png" alt="">
-                    </div>
-                    <div class="detail-box">
-                        <div class="text">
-                            <h6>
-                                Men's Watch
-                            </h6>
-                            <h5>
-                                <span>$</span> 300
-                            </h5>
-                        </div>
-                        <div class="like">
-                            <h6>
-                                Like
-                            </h6>
-                            <div class="star_container">
-                                <i class="fa fa-star" aria-hidden="true"></i>
-                                <i class="fa fa-star" aria-hidden="true"></i>
-                                <i class="fa fa-star" aria-hidden="true"></i>
-                                <i class="fa fa-star" aria-hidden="true"></i>
-                                <i class="fa fa-star" aria-hidden="true"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="btn-box">
-                    <a href="">
-                        Add To Cart
-                    </a>
-                </div>
-            </div>
-            <div class="box">
-                <div class="box-content">
-                    <div class="img-box">
-                        <img src="images/w8.png" alt="">
-                    </div>
-                    <div class="detail-box">
-                        <div class="text">
-                            <h6>
-                                Men's Watch
-                            </h6>
-                            <h5>
-                                <span>$</span> 300
-                            </h5>
-                        </div>
-                        <div class="like">
-                            <h6>
-                                Like
-                            </h6>
-                            <div class="star_container">
-                                <i class="fa fa-star" aria-hidden="true"></i>
-                                <i class="fa fa-star" aria-hidden="true"></i>
-                                <i class="fa fa-star" aria-hidden="true"></i>
-                                <i class="fa fa-star" aria-hidden="true"></i>
-                                <i class="fa fa-star" aria-hidden="true"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="btn-box">
-                    <a href="">
-                        Add To Cart
-                    </a>
-                </div>
-            </div>
-            <div class="box">
-                <div class="box-content">
-                    <div class="img-box">
-                        <img src="images/w9.png" alt="">
-                    </div>
-                    <div class="detail-box">
-                        <div class="text">
-                            <h6>
-                                Men's Watch
-                            </h6>
-                            <h5>
-                                <span>$</span> 300
-                            </h5>
-                        </div>
-                        <div class="like">
-                            <h6>
-                                Like
-                            </h6>
-                            <div class="star_container">
-                                <i class="fa fa-star" aria-hidden="true"></i>
-                                <i class="fa fa-star" aria-hidden="true"></i>
-                                <i class="fa fa-star" aria-hidden="true"></i>
-                                <i class="fa fa-star" aria-hidden="true"></i>
-                                <i class="fa fa-star" aria-hidden="true"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="btn-box">
-                    <a href="">
-                        Add To Cart
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
 
 <!-- end product section -->
 
