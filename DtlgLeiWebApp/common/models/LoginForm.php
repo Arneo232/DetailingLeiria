@@ -57,12 +57,6 @@ class LoginForm extends Model
     public function login()
     {
         if ($this->validate()) {
-            $user = $this->getUser();
-            // Verificar se o usuário possui permissão para acessar o backend
-            if (!Yii::$app->authManager->checkAccess($user->id, 'accessBackend')) {
-                $this->addError('password', 'Você não tem permissão para aceder a esta área.');
-                return false;
-            }
 
             return Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600 * 24 * 30 : 0);
         }
