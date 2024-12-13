@@ -23,7 +23,7 @@
             echo \hail812\adminlte\widgets\Menu::widget([
                 'items' => [
                     ['label' => 'Gii',  'icon' => 'file-code', 'url' => ['/gii'], 'target' => '_blank'],
-                    ['label' => 'Gestão de Utilizadores', 'url' => ['/user/index'], 'icon' => 'fa fa-users'],
+                    ['label' => 'Gestão de Utilizadores', 'url' => ['/user/index'], 'icon' => 'fa fa-users', 'visible' => Yii::$app->user->can('UserIndexAccounts')],
                     ['label' => 'Gestão de Categorias', 'url' => ['/categoria/index'], 'icon' => 'fa fa-icons'],
                     ['label' => 'Gestão de Métodos de Pagamento', 'url' => ['/metodopagamento/index'], 'icon' => 'fa fa-credit-card'],
                     ['label' => 'Gestão de Métodos de Entrega', 'url' => ['/metodoentrega/index'], 'icon' => 'fa fa-truck'],

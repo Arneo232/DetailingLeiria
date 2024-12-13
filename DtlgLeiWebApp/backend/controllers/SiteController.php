@@ -80,6 +80,13 @@ class SiteController extends Controller
 
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
+            // Verificar se o usuário tem permissão para acessar o backend
+            if (!Yii::$app->authManager->checkAccess(Yii::$app->user->id, 'accessBackend')) {
+                Yii::$app->user->logout(); // Desloga o usuário se não tiver permissão
+                Yii::$app->session->setFlash('error', 'Você não tem permissão para acessar esta área.');
+                return $this->redirect(['site/login']); // Redireciona para a página de login
+            }
+
             return $this->goBack();
         }
 
@@ -89,6 +96,7 @@ class SiteController extends Controller
             'model' => $model,
         ]);
     }
+
 
     /**
      * Logout action.

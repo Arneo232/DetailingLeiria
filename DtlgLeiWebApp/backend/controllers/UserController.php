@@ -40,6 +40,9 @@ class UserController extends Controller
      */
     public function actionIndex()
     {
+        if (!Yii::$app->user->can('UserIndexAccounts')) {
+            return $this->redirect(['site/login']);
+        }
         $searchModel = new UserSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
@@ -57,6 +60,9 @@ class UserController extends Controller
      */
     public function actionView($id)
     {
+        if (!Yii::$app->user->can('viewUserAccounts')) {
+            return $this->redirect(['site/login']);
+        }
         $model = User::findOne($id);
 
         if ($model === null) {
@@ -75,6 +81,9 @@ class UserController extends Controller
      */
     public function actionCreate()
     {
+        if (!Yii::$app->user->can('createUserAccounts')) {
+            return $this->redirect(['site/login']);
+        }
         $model = new UserForm();
 
         if ($model->load(Yii::$app->request->post()) && $model->createForm()) {
@@ -95,6 +104,10 @@ class UserController extends Controller
      */
     public function actionUpdate($id)
     {
+        if (!Yii::$app->user->can('updateUserAccounts')) {
+            return $this->redirect(['site/login']);
+        }
+
         $model = new UserForm;
         $model = $model->ColocarDados($id);
 
@@ -116,6 +129,10 @@ class UserController extends Controller
      */
     public function actionDelete($id)
     {
+        if (!Yii::$app->user->can('DeleteuserAccounts')) {
+
+            return $this->redirect(['site/login']);
+        }
         $user = $this->findModel($id);
 
         // Check if the user has an associated profile and delete it
