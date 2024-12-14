@@ -72,6 +72,7 @@ AppAsset::register($this);
             [
                 'label' => Html::tag('i', '', ['class' => 'fa fa-shopping-cart', 'aria-hidden' => 'true']),
                 'encode' => false,
+                'url' => ['/site/cart'],
             ],
         ],
     ]);

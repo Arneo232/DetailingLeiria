@@ -188,10 +188,10 @@ $this->params['breadcrumbs'][] = $this->title;
             <div class="col-md-6">
                 <div class="img_container">
                     <div class="img-box b1">
-                        <img src="images/a-1.jpg" alt="">
+                        <img src="images/about-img.jpg" alt="selo de qualidade">
                     </div>
                     <div class="img-box b2">
-                        <img src="images/a-2.jpg" alt="">
+                        <img src="images/Logo_white.png" alt="Logo do DL">
                     </div>
                 </div>
             </div>
@@ -201,13 +201,10 @@ $this->params['breadcrumbs'][] = $this->title;
                         About Our Shop
                     </h2>
                     <p>
-                        There are many variations of passages of Lorem Ipsum
-                        There are many variations of
-                        passages of Lorem Ipsum
+                        O Detailing Leiria é um site dedicado à venda de produtos de limpeza para automóveis, com foco na facilidade de navegação e segurança nas transações.
+                        O objetivo é garantir que os clientes encontrem rapidamente o que precisam, com informações claras sobre os produtos e opções de pagamento seguras.
+                        O site também visa oferecer um bom desempenho e qualidade nas entregas, proporcionando uma experiência de compra confiável e prática.
                     </p>
-                    <a href="">
-                        Read More
-                    </a>
                 </div>
             </div>
         </div>
@@ -222,7 +219,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="container">
         <div class="product_heading">
             <h2>
-                Top Sale Watches
+                Top Sale Products
             </h2>
         </div>
         <div class="product_container">
