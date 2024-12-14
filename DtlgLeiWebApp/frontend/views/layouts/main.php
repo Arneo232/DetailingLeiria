@@ -74,6 +74,10 @@ AppAsset::register($this);
                 'encode' => false,
                 'url' => ['/site/cart'],
             ],
+            [
+                'label' => Html::tag('i', '', ['class' => 'fa fa-star', 'aria-hidden' => 'true']),
+                'encode' => false,
+            ],
         ],
     ]);
     NavBar::end();
