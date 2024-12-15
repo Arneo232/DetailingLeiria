@@ -82,7 +82,7 @@ class Produto extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getFornecedoresIdfornecedores()
+    public function getFornecedor()
     {
         return $this->hasOne(Fornecedor::class, ['idfornecedor' => 'fornecedores_idfornecedores']);
     }
@@ -92,7 +92,7 @@ class Produto extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getIdCategoria0()
+    public function getCategoria()
     {
         return $this->hasOne(Categoria::class, ['idCategoria' => 'idCategoria']);
     }
@@ -102,7 +102,7 @@ class Produto extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getImagems()
+    public function getImagem()
     {
         return $this->hasMany(Imagem::class, ['produtoId' => 'idProduto']);
     }

@@ -3,6 +3,7 @@
 namespace common\models;
 
 use common\models\Produto;
+use Yii;
 
 /**
  * This is the model class for table "imagem".
@@ -56,5 +57,21 @@ class Imagem extends \yii\db\ActiveRecord
     public function getProduto()
     {
         return $this->hasOne(Produto::class, ['idProduto' => 'produtoId']);
+    }
+
+    public function deleteImage(){
+        // Specify the absolute path to the uploads directory
+        $uploadsDirectory = dirname(dirname(__DIR__)) . '/frontend/web/uploads/';
+
+        // Build the full file path for the image
+        $filePath = $uploadsDirectory . $this->fileName;
+
+        // Check if the file exists and delete it
+        if (file_exists($filePath)) {
+            unlink($filePath); // Delete the file
+        }
+
+        // Delete the database record for the image
+        return $this->delete();
     }
 }

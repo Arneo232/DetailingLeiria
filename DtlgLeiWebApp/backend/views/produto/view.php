@@ -34,8 +34,41 @@ $this->params['breadcrumbs'][] = $this->title;
             'descricao',
             'preco',
             'stock',
-            'idCategoria',
-            'fornecedores_idfornecedores',
+            [
+                'label' => 'Categoria',
+                'value' => function ($model) {
+                    return $model->categoria ? $model->categoria->designacao : 'No Category selected';
+                },
+            ],
+            [
+                'label' => 'Fornecedor',
+                'value' => function ($model) {
+                    return $model->fornecedor ? $model->fornecedor->nome : 'No Category selected';
+                },
+            ],
+            [
+                'attribute' => 'idImagem',
+                'label' => 'Imagem',
+                'value' => function ($model) {
+                    // Specify the base path to the uploads folder
+                    $uploadsPath = '/frontend/web/uploads/';
+                    $imagens = $model->imagem;
+
+                    if (empty($imagens)) {
+                        return '/path/to/default/image.png';
+                    }
+
+                    $imageUrls = [];
+                    foreach ($imagens as $imagem) {
+                        // Check if the fileName exists
+                        if (isset($imagem->fileName)) {
+                            $imageUrls[] = $uploadsPath . $imagem->fileName;
+                        }
+                    }
+                    return implode(', ', $imageUrls);
+                },
+                'format' => ['image', ['width' => '100', 'height' => '100']],
+            ],
         ],
     ]) ?>
 

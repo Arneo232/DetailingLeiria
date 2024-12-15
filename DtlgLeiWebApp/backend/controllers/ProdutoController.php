@@ -57,11 +57,33 @@ class ProdutoController extends Controller
      * @return string
      * @throws NotFoundHttpException if the model cannot be found
      */
+
     public function actionView($idProduto)
     {
+        $imagem = $this->getImageAndPath($idProduto);
+
         return $this->render('view', [
             'model' => $this->findModel($idProduto),
+            'imagem' => $imagem,
         ]);
+    }
+
+    public function getImageAndPath($idProduto) {
+        // Fetch the image object related to the product
+        $imagem = Imagem::findOne(['produtoId' => $idProduto]);
+
+        // Check if the imagem is found and is an object (not an array)
+        if ($imagem === null || !is_object($imagem)) {
+            return null;  // Return null if imagem is not found or it's not an object
+        }
+
+        // Directly specify the path to the uploads folder
+        $uploadsPath = '/frontend/web/uploads/';
+
+        // Combine the path with the file name
+        $imagem->fileName = $uploadsPath . $imagem->fileName;
+
+        return $imagem;
     }
 
     /**
@@ -99,6 +121,26 @@ class ProdutoController extends Controller
         return false;
     }
 
+    public function actionDeleteImage($id) {
+        $imagem = Imagem::findOne($id);
+
+        if(!$imagem){
+            throw new Exception("Error Processing Request", 1);
+        }
+
+        if($imagem->deleteImage()){
+            Yii::$app->session->setFlash('success', 'Image deleted successfully.');
+        } else {
+            Yii::$app->session->setFlash('success', 'Image deleted successfully.');
+        }
+
+        return $this->render('update', [
+            'model' => $this->findModel($imagem->produtoId),
+            'imagem' => $imagem,
+        ]);
+
+    }
+
     /**
      * Updates an existing Produto model.
      * If update is successful, the browser will be redirected to the 'view' page.
@@ -109,13 +151,26 @@ class ProdutoController extends Controller
     public function actionUpdate($idProduto)
     {
         $model = $this->findModel($idProduto);
+        $imagemProduto = Imagem::findAll(['produtoId' => $idProduto]) ?? null;
+
+        if ($imagemProduto) {
+            foreach ($imagemProduto as $img) {
+                // Directly set the path to the uploads folder
+                $img->fileName = '/frontend/web/uploads/' . $img->fileName;
+            }
+        }
+
+        $imagem = new ImagemForm();
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
+            $this->uploadImage($model->idProduto, $imagem);
             return $this->redirect(['view', 'idProduto' => $model->idProduto]);
         }
 
         return $this->render('update', [
             'model' => $model,
+            'imagemProduto' => $imagemProduto,
+            'imagem' => $imagem,
         ]);
     }
 
@@ -128,6 +183,12 @@ class ProdutoController extends Controller
      */
     public function actionDelete($idProduto)
     {
+        $images = Imagem::findAll(['produtoId' => $idProduto]);
+
+        foreach ($images as $image) {
+            $image->deleteImage(); // Delete associated images
+        }
+
         $this->findModel($idProduto)->delete();
 
         return $this->redirect(['index']);

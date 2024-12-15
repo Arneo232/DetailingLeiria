@@ -2,7 +2,7 @@
 
 namespace common\models;
 
-use app\models\Produto;
+use common\models\Produto;
 
 /**
  * This is the model class for table "fornecedor".
