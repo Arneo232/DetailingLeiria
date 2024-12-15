@@ -5,4 +5,10 @@
     <string name="txt_password">Insira a Palavra-Passe</string>
     <string name="txt_confirm_password">Repita a Palavra-Passe</string>
     <string name="txt_register">Registar</string>
+
+    <string name="contact_us">Contacte-nos</string>
+    <string name="name" >Nome</string>
+    <string name="email">Email</string>
+    <string name="message">Mensagem</string>
+    <string name="submit">Enviar</string>
 </resources>
