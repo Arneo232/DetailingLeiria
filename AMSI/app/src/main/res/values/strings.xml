@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">AMSI</string>
+    <string name="app_name">Detailing Leiria</string>
     <string name="txt_email">Insira o email</string>
     <string name="txt_username">Insira um username</string>
     <string name="txt_password">Insira a Palavra-Passe</string>
@@ -7,8 +7,12 @@
     <string name="txt_register">Registar</string>
 
     <string name="contact_us">Contacte-nos</string>
-    <string name="name" >Nome</string>
+    <string name="name">Nome</string>
     <string name="email">Email</string>
     <string name="message">Mensagem</string>
     <string name="submit">Enviar</string>
+
+    <string name="filters">Filtros</string>
+    <string name="search_hint">Pesquisar</string>
+    <string name="add_to_cart">Adicionar</string>
 </resources>

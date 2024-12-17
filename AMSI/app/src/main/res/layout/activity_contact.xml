@@ -85,7 +85,7 @@
             android:layout_gravity="center_horizontal"
             android:text="@string/submit"
             android:textColor="@android:color/white"
-            app:boxStrokeColor="@color/blue">
+            app:boxStrokeColor="@color/blue"/>
 
     </LinearLayout>
 
