@@ -45,7 +45,24 @@ return [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
-                ['class' => 'yii\rest\UrlRule', 'controller' => ['api/user', 'api/category']],
+                [
+                    'class' => 'yii\rest\UrlRule', 'controller' => 'api/user',
+                    'extraPatterns' => [
+                        'GET contagem' => 'contagem', // actionContagem
+                    ],
+                ],
+                [
+                    'class' => 'yii\rest\UrlRule', 'controller' => 'api/fornecedor',
+                    'extraPatterns' => [
+                        'GET contagem' => 'contagem', // actionContagem
+                    ],
+                ],
+                [
+                    'class' => 'yii\rest\UrlRule', 'controller' => 'api/categoria',
+                    'extraPatterns' => [
+                        'GET contagem' => 'contagem', // actionContagem
+                    ],
+                ],
             ],
         ],
     ],

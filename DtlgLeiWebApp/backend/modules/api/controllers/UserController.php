@@ -22,4 +22,11 @@ class UserController extends ActiveController
         ];
         return $behaviors;
     }
+    public function actionContagem()
+    {
+        $usersmodel = new $this->modelClass;
+        $usercontador = $usersmodel::find()->all();
+        return ['contagem' => count($usercontador)];
+    }
+
 }

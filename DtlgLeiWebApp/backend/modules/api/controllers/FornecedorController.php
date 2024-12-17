@@ -6,9 +6,9 @@ use yii\filters\ContentNegotiator;
 use yii\rest\ActiveController;
 use yii\web\Response;
 
-class CategoriaController extends ActiveController
+class FornecedorController extends ActiveController
 {
-    public $modelClass = 'common\models\Categoria';
+    public $modelClass = 'common\models\Fornecedor';
     public function behaviors()
     {
         $behaviors = parent::behaviors();
@@ -26,4 +26,5 @@ class CategoriaController extends ActiveController
         $usercontador = $usersmodel::find()->all();
         return ['contagem' => count($usercontador)];
     }
+
 }
