@@ -4,13 +4,11 @@ namespace backend\modules\api\controllers;
 
 use yii\filters\ContentNegotiator;
 use yii\rest\ActiveController;
-use yii\web\Controller;
 use yii\web\Response;
 
-class UserController extends ActiveController
+class CategoriaController extends ActiveController
 {
-
-    public $modelClass = 'common\models\User';
+    public $modelClass = 'common\models\Categoria';
     public function behaviors()
     {
         $behaviors = parent::behaviors();
