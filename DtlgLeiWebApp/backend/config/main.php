@@ -63,6 +63,14 @@ return [
                         'GET contagem' => 'contagem', // actionContagem
                     ],
                 ],
+                [
+                    'class' => 'yii\rest\UrlRule', 'controller' => 'api/produto',
+                    'extraPatterns' => [
+                        'GET contagem' => 'contagem', // actionContagem
+                        'GET precoAlto' => 'preco-alto', //actionPrecoAlto
+                        'GET precoBaixo' => 'preco-baixo', //actionPrecoBaixo
+                    ],
+                ],
             ],
         ],
     ],
