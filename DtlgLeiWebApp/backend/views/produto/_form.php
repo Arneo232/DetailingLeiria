@@ -4,6 +4,7 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use common\models\Categoria;
 use common\models\Fornecedor;
+use common\models\Desconto;
 
 /** @var yii\web\View $this */
 /** @var common\models\Produto $model */
@@ -25,6 +26,8 @@ use common\models\Fornecedor;
     <?= $form->field($model, 'idCategoria')->dropDownList(\yii\helpers\ArrayHelper::map(Categoria::find()->all(), 'idCategoria', 'designacao'), ['prompt' => 'Selecione uma categoria']) ?>
 
     <?= $form->field($model, 'fornecedores_idfornecedores')->dropDownList(\yii\helpers\ArrayHelper::map(Fornecedor::find()->all(), 'idfornecedor', 'nome'), ['prompt' => 'Selecione uma fornecedor']) ?>
+
+    <?= $form->field($model, 'idDesconto')->dropDownList(\yii\helpers\ArrayHelper::map(Desconto::find()->all(), 'iddesconto', 'desconto'), ['prompt' => 'Selecione uma desconto (Não é obrigatório)']) ?>
 
     <?= $form->field($imagem, 'imagens[]')->fileInput(['multiple' => true, 'accept' => 'image/*']) ?>
 

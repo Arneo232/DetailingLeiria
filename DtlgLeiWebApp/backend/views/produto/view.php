@@ -47,28 +47,18 @@ $this->params['breadcrumbs'][] = $this->title;
                 },
             ],
             [
-                'attribute' => 'idImagem',
-                'label' => 'Imagem',
+                'label' => 'Desconto',
                 'value' => function ($model) {
-                    // Specify the base path to the uploads folder
-                    $uploadsPath = '/frontend/web/uploads/';
-                    $imagens = $model->imagem;
-
-                    if (empty($imagens)) {
-                        return '/path/to/default/image.png';
-                    }
-
-                    $imageUrls = [];
-                    foreach ($imagens as $imagem) {
-                        // Check if the fileName exists
-                        if (isset($imagem->fileName)) {
-                            $imageUrls[] = $uploadsPath . $imagem->fileName;
-                        }
-                    }
-                    return implode(', ', $imageUrls);
+                    return $model->desconto ? $model->desconto->desconto : '(No Discount selected)';
                 },
-                'format' => ['image', ['width' => '100', 'height' => '100']],
             ],
+            [
+                'attribute' => 'imagemID',
+                'label' => 'Imagem',
+                'value' => $imagem->fileName,
+                'format' => ['image',['width'=>'100','height'=>'100']],
+            ],
+
         ],
     ]) ?>
 

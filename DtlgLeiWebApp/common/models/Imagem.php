@@ -59,19 +59,15 @@ class Imagem extends \yii\db\ActiveRecord
         return $this->hasOne(Produto::class, ['idProduto' => 'produtoId']);
     }
 
+    public static function getPath(){
+        return Yii::getAlias('@web') . '/uploads/';
+    }
+
     public function deleteImage(){
-        // Specify the absolute path to the uploads directory
-        $uploadsDirectory = dirname(dirname(__DIR__)) . '/frontend/web/uploads/';
-
-        // Build the full file path for the image
-        $filePath = $uploadsDirectory . $this->fileName;
-
-        // Check if the file exists and delete it
+        $filePath = Yii::getAlias('@backend/web/uploads/') . $this->fileName;
         if (file_exists($filePath)) {
-            unlink($filePath); // Delete the file
+            unlink($filePath);
         }
-
-        // Delete the database record for the image
         return $this->delete();
     }
 }

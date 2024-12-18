@@ -4,6 +4,7 @@ namespace backend\controllers;
 
 use common\models\Produto;
 use common\models\Imagem;
+use common\models\Desconto;
 use backend\models\ImagemForm;
 use backend\models\ProdutoSearch;
 use Yii;
@@ -68,24 +69,6 @@ class ProdutoController extends Controller
         ]);
     }
 
-    public function getImageAndPath($idProduto) {
-        // Fetch the image object related to the product
-        $imagem = Imagem::findOne(['produtoId' => $idProduto]);
-
-        // Check if the imagem is found and is an object (not an array)
-        if ($imagem === null || !is_object($imagem)) {
-            return null;  // Return null if imagem is not found or it's not an object
-        }
-
-        // Directly specify the path to the uploads folder
-        $uploadsPath = '/frontend/web/uploads/';
-
-        // Combine the path with the file name
-        $imagem->fileName = $uploadsPath . $imagem->fileName;
-
-        return $imagem;
-    }
-
     /**
      * Creates a new Produto model.
      * If creation is successful, the browser will be redirected to the 'view' page.
@@ -121,24 +104,41 @@ class ProdutoController extends Controller
         return false;
     }
 
-    public function actionDeleteImage($id) {
-        $imagem = Imagem::findOne($id);
+    public function getImageAndPath($idProduto) {
+        // Fetch the image object related to the product
+        $imagem = Imagem::findOne(['produtoId' => $idProduto]);
 
-        if(!$imagem){
-            throw new Exception("Error Processing Request", 1);
+        $imagem->fileName = Yii::getAlias('@backendUploads') . '/' . $imagem->fileName;
+
+        return $imagem;
+    }
+
+    public function calcDesconto($preco, $idDesconto) {
+        if($idDesconto == null) {
+            return $preco;
         }
 
-        if($imagem->deleteImage()){
+        $desconto = Desconto::findOne($idDesconto);
+
+        $preco = $preco - ($preco * ($desconto->desconto / 100));
+
+        return $preco;
+    }
+
+    public function actionDeleteImage($idimagem) {
+        $imagem = Imagem::findOne($idimagem);
+
+        if (!$imagem) {
+            throw new \yii\web\NotFoundHttpException("The requested image does not exist.");
+        }
+
+        if ($imagem->deleteImage()) {
             Yii::$app->session->setFlash('success', 'Image deleted successfully.');
         } else {
-            Yii::$app->session->setFlash('success', 'Image deleted successfully.');
+            Yii::$app->session->setFlash('error', 'Failed to delete the image.');
         }
 
-        return $this->render('update', [
-            'model' => $this->findModel($imagem->produtoId),
-            'imagem' => $imagem,
-        ]);
-
+        return $this->redirect(['update', 'idProduto' => $imagem->produtoId]);
     }
 
     /**
@@ -155,12 +155,12 @@ class ProdutoController extends Controller
 
         if ($imagemProduto) {
             foreach ($imagemProduto as $img) {
-                // Directly set the path to the uploads folder
-                $img->fileName = '/frontend/web/uploads/' . $img->fileName;
+                $img->fileName = Yii::getAlias('@backendUploads') . '/' . $img->fileName;
             }
         }
 
         $imagem = new ImagemForm();
+        $model->preco = $this->calcDesconto($model->preco, $model->idDesconto);
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
             $this->uploadImage($model->idProduto, $imagem);
