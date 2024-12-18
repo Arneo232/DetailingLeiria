@@ -46,7 +46,7 @@ class ProdutoController extends ActiveController
         $produtosmodel = new $this->modelClass;
         $produtoMaisBarato = $produtosmodel::find()
             ->orderBy(['preco' => SORT_ASC])
-            ->all(); // Mostra todos os resultados \ (one(); -> mostra só o 1 resultado)
+            ->all(); // Mostra todos os resultados \ (one(); -> mostra só o 1º resultado)
 
         if ($produtoMaisBarato) {
             return $produtoMaisBarato;

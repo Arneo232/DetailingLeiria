@@ -15,4 +15,7 @@
     <string name="filters">Filtros</string>
     <string name="search_hint">Pesquisar</string>
     <string name="add_to_cart">Adicionar</string>
+
+    <string name="title_faturas">Lista de faturas</string>
+    <string name="download_icon">Download fatura</string>
 </resources>
