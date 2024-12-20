@@ -19,6 +19,9 @@ return [
     'components' => [
         'request' => [
             'csrfParam' => '_csrf-backend',
+            'parsers' => [
+                'application/json' => 'yii\web\JsonParser',
+            ]
         ],
         'user' => [
             'identityClass' => 'common\models\User',
@@ -69,6 +72,12 @@ return [
                         'GET contagem' => 'contagem', // actionContagem
                         'GET precoAlto' => 'preco-alto', //actionPrecoAlto
                         'GET precoBaixo' => 'preco-baixo', //actionPrecoBaixo
+                    ],
+                ],
+                [
+                    'class' => 'yii\rest\UrlRule', 'controller' => 'api/desconto',
+                    'extraPatterns' => [
+                        'GET contagem' => 'contagem', // actionContagem
                     ],
                 ],
             ],

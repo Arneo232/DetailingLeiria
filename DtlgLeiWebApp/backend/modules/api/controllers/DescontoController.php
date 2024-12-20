@@ -4,12 +4,13 @@ namespace backend\modules\api\controllers;
 
 use yii\filters\ContentNegotiator;
 use yii\rest\ActiveController;
+use yii\web\Controller;
 use yii\web\Response;
 
-class UserController extends ActiveController
+class DescontoController extends ActiveController
 {
+    public $modelClass = 'common\models\Desconto';
 
-    public $modelClass = 'common\models\User';
     public function behaviors()
     {
         $behaviors = parent::behaviors();
@@ -21,11 +22,12 @@ class UserController extends ActiveController
         ];
         return $behaviors;
     }
+
     public function actionContagem()
     {
-        $usersmodel = new $this->modelClass;
-        $usercontador = $usersmodel::find()->all();
-        return ['contagem' => count($usercontador)];
+        $descontosmodel = new $this->modelClass;
+        $descontoscontador = $descontosmodel::find()->all();
+        return ['contagem' => count($descontoscontador)];
     }
 
 }

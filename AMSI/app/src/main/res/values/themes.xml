@@ -1,9 +1,15 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Base.Theme.AMSI"
-        parent="Theme.MaterialComponents.DayNight.DarkActionBar">
-        <!-- Customize your light theme here. -->
-        <item name="colorPrimary">@color/blue</item>
-    </style>
-    <style name="Theme.AMSI" parent="Base.Theme.AMSI" />
+<!-- Base application theme. -->
+<style name="Base.Theme.AMSI"
+    parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+    <!-- Customize your light theme here. -->
+    <item name="colorPrimary">@color/blue</item>
+</style>
+
+<style name="Theme.AMSI" parent="Base.Theme.AMSI" />
+
+<style name="Theme.AMSI.NoActionBar">
+    <item name="windowActionBar">false</item>
+    <item name="windowNoTitle">true</item>
+</style>
 </resources>
