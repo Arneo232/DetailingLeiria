@@ -151,7 +151,11 @@ class SiteController extends Controller
 
     public function actionProduct()
     {
-        return $this->render('product');
+        $products = \common\models\Produto::find()->all(); // Certifique-se de que o modelo Product está configurado corretamente
+
+        return $this->render('product', [
+            'products' => $products,
+        ]);
     }
     /**
      * Signs user up.
