@@ -7,6 +7,7 @@ use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
+use yii\db\Expression;
 
 /**
  * User model
@@ -223,6 +224,26 @@ class User extends ActiveRecord implements IdentityInterface
         $roles = $auth->getRolesByUser($this->id);
         return array_keys($roles)[0] ?? null;
     }
+    public static function getUsersByDay()
+    {
+        $data = self::find()
+            ->select([
+                'date' => new Expression("DATE(created_at)"), // Agrupa por data
+                'count' => new Expression("COUNT(*)")        // Conta os registos
+            ])
+            ->groupBy(new Expression("DATE(created_at)"))
+            ->orderBy('date')
+            ->asArray()
+            ->all();
 
+        $categories = [];
+        $counts = [];
 
+        foreach ($data as $row) {
+            $categories[] = $row['date']; // Eixo X (datas)
+            $counts[] = (int)$row['count']; // Eixo Y (número de utilizadores)
+        }
+
+        return ['categories' => $categories, 'counts' => $counts];
+    }
 }
