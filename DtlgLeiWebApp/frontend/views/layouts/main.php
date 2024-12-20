@@ -22,6 +22,7 @@ AppAsset::register($this);
     <?php $this->registerCsrfMetaTags() ?>
     <title><?= Html::encode($this->title) ?></title>
     <?php $this->head() ?>
+    <link rel="icon" type="image/x-icon" href="<?= Yii::getAlias('@web') ?>/images/favicon.ico">
 </head>
 <body class="d-flex flex-column h-100">
 <?php $this->beginBody() ?>
