@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use common\models\Categoria;
 use common\models\Produto;
 use common\models\Imagem;
 use common\models\Desconto;
@@ -35,7 +36,6 @@ class ProdutoController extends Controller
             ]
         );
     }
-
     /**
      * Lists all Produto models.
      *
@@ -45,27 +45,29 @@ class ProdutoController extends Controller
     {
         $searchModel = new ProdutoSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
+        $categorias = Categoria::find()->all();
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'categorias' => $categorias,
         ]);
     }
-
     /**
      * Displays a single Produto model.
      * @param int $idProduto Id Produto
      * @return string
      * @throws NotFoundHttpException if the model cannot be found
      */
-
     public function actionView($idProduto)
     {
         $imagem = $this->getImageAndPath($idProduto);
+        $categorias = Categoria::find()->all();
 
         return $this->render('view', [
             'model' => $this->findModel($idProduto),
             'imagem' => $imagem,
+            'categorias' => $categorias,
         ]);
     }
 

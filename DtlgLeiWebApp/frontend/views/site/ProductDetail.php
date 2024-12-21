@@ -96,7 +96,7 @@ $this->params['breadcrumbs'][] = $this->title;
             <div class="box-content">
                 <!-- Nota: colocar Carousel de imgs -->
                 <div class="img-box">
-                    <img src="images/w1.png" alt="Principal">
+                    <img src="<?= Yii::getAlias('@web') ?>/images/w1.png" alt="Principal">
                 </div>
 
                 <!-- Informações do Produto -->

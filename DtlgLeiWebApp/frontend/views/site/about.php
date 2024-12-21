@@ -22,10 +22,10 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div class="col-md-6">
                     <div class="img_container">
                         <div class="img-box b1">
-                            <img src="../web/images/DL_Logo.jpg" alt="Logo do site">
+                            <img src="<?= Yii::getAlias('@web') ?>/images/DL_Logo.jpg" alt="Logo do site">
                         </div>
                         <div class="img-box b2">
-                            <img src="../web/images/C_Limpo.jpg" alt="Carro Limpo">
+                            <img src="<?= Yii::getAlias('@web') ?>/images/C_Limpo.jpg" alt="Carro Limpo">
                         </div>
                     </div>
                 </div>

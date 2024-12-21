@@ -18,7 +18,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <!-- slider section -->
     <section class="slider_section ">
         <div class="slider_bg_box">
-            <img src="images/slider-bg.jpg" alt="">
+            <img src="<?= Yii::getAlias('@web') ?>/images/slider-bg.jpg" alt="">
         </div>
         <div id="customCarousel1" class="carousel slide" data-ride="carousel">
             <div class="carousel-inner">
@@ -116,7 +116,7 @@ $this->params['breadcrumbs'][] = $this->title;
             <div class="col-md-6 col-lg-3">
                 <div class="box ">
                     <div class="img-box">
-                        <img src="images/feature-1.png" alt="">
+                        <img src="<?= Yii::getAlias('@web') ?>/images/feature-1.png" alt="">
                     </div>
                     <div class="detail-box">
                         <h5>
@@ -131,7 +131,7 @@ $this->params['breadcrumbs'][] = $this->title;
             <div class="col-md-6 col-lg-3">
                 <div class="box ">
                     <div class="img-box">
-                        <img src="images/feature-2.png" alt="">
+                        <img src="<?= Yii::getAlias('@web') ?>/images/feature-2.png" alt="">
                     </div>
                     <div class="detail-box">
                         <h5>
@@ -146,7 +146,7 @@ $this->params['breadcrumbs'][] = $this->title;
             <div class="col-md-6 col-lg-3">
                 <div class="box ">
                     <div class="img-box">
-                        <img src="images/feature-3.png" alt="">
+                        <img src="<?= Yii::getAlias('@web') ?>/images/feature-3.png" alt="">
                     </div>
                     <div class="detail-box">
                         <h5>
@@ -161,7 +161,7 @@ $this->params['breadcrumbs'][] = $this->title;
             <div class="col-md-6 col-lg-3">
                 <div class="box ">
                     <div class="img-box">
-                        <img src="images/feature-4.png" alt="">
+                        <img src="<?= Yii::getAlias('@web') ?>/images/feature-4.png" alt="">
                     </div>
                     <div class="detail-box">
                         <h5>
@@ -188,10 +188,10 @@ $this->params['breadcrumbs'][] = $this->title;
             <div class="col-md-6">
                 <div class="img_container">
                     <div class="img-box b1">
-                        <img src="images/about-img.jpg" alt="selo de qualidade">
+                        <img src="<?= Yii::getAlias('@web') ?>/images/about-img.jpg" alt="selo de qualidade">
                     </div>
                     <div class="img-box b2">
-                        <img src="images/Logo_white.png" alt="Logo do DL">
+                        <img src="<?= Yii::getAlias('@web') ?>/images/Logo_white.png" alt="Logo do DL">
                     </div>
                 </div>
             </div>
@@ -226,7 +226,7 @@ $this->params['breadcrumbs'][] = $this->title;
             <div class="box">
                 <div class="box-content">
                     <div class="img-box">
-                        <img src="images/w1.png" alt="">
+                        <img src="<?= Yii::getAlias('@web') ?>/images/w1.png" alt="">
                     </div>
                     <div class="detail-box">
                         <div class="text">
@@ -260,7 +260,7 @@ $this->params['breadcrumbs'][] = $this->title;
             <div class="box">
                 <div class="box-content">
                     <div class="img-box">
-                        <img src="images/w2.png" alt="">
+                        <img src="<?= Yii::getAlias('@web') ?>/images/w2.png" alt="">
                     </div>
                     <div class="detail-box">
                         <div class="text">
@@ -294,7 +294,7 @@ $this->params['breadcrumbs'][] = $this->title;
             <div class="box">
                 <div class="box-content">
                     <div class="img-box">
-                        <img src="images/w3.png" alt="">
+                        <img src="<?= Yii::getAlias('@web') ?>/images/w3.png" alt="">
                     </div>
                     <div class="detail-box">
                         <div class="text">

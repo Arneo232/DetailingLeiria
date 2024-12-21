@@ -942,5 +942,63 @@ a:focus {
   color: inherit;
 }
 
+/* Título */
+.dl-products-title {
+  color: #57AFEE;
+  font-weight: bold;
+}
 
+/* Filtros */
+.dl-filters-section {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+.dl-filters-title {
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  color: #57AFEE;
+  text-transform: uppercase;
+  padding-left: 10px;
+  transition: color 0.3s ease-in-out;
+}
+.dl-filters-title:hover {
+  color: #004ee0;
+}
+.dl-filters-container {
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  margin-top: 15px;
+}
+.dl-filter-form .form-group {
+  margin-bottom: 10px;
+  width: 30%;
+  display: inline-block;
+  margin-right: 10px;
+}
+.dl-filter-form .form-control {
+  width: 100%;
+}
+.dl-filter-form button {
+  margin-top: 10px;
+}
+
+/* Divisória */
+.dl-divider {
+  border-top: 2px solid #57AFEE;
+  margin: 20px 0;
+}
+
+/* Botões */
+.dl-btn-primary {
+  background-color: #57AFEE;
+  border-color: #57AFEE;
+  color: #fff;
+}
+.dl-btn-primary:hover {
+  background-color: #004ee0;
+  border-color: #004ee0;
+}
 /*# sourceMappingURL=style.css.map */

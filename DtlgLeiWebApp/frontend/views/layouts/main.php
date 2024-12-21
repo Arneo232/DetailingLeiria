@@ -113,7 +113,7 @@ AppAsset::register($this);
                     </h5>
                     <div>
                         <div class="img-box">
-                            <img src="images/telephone-white.png" width="12px" alt="">
+                            <img src="<?= Yii::getAlias('@web') ?>/images/telephone-white.png" width="12px" alt="">
                         </div>
                         <p>
                             Download our App!
@@ -142,21 +142,21 @@ AppAsset::register($this);
                             <div class="col-4 px-0">
                                 <a href="">
                                     <div class="insta-box b-1">
-                                        <img src="images/w1.png" alt="">
+                                        <img src="<?= Yii::getAlias('@web') ?>/images/w1.png" alt="">
                                     </div>
                                 </a>
                             </div>
                             <div class="col-4 px-0">
                                 <a href="">
                                     <div class="insta-box b-1">
-                                        <img src="images/w2.png" alt="">
+                                        <img src="<?= Yii::getAlias('@web') ?>/images/w2.png" alt="">
                                     </div>
                                 </a>
                             </div>
                             <div class="col-4 px-0">
                                 <a href="">
                                     <div class="insta-box b-1">
-                                        <img src="images/w3.png" alt="">
+                                        <img src="<?= Yii::getAlias('@web') ?>/images/w3.png" alt="">
                                     </div>
                                 </a>
                             </div>
@@ -178,16 +178,16 @@ AppAsset::register($this);
                     </form>
                     <div class="social_box">
                         <a href="">
-                            <img src="images/fb.png" alt="">
+                            <img src="<?= Yii::getAlias('@web') ?>/images/fb.png" alt="">
                         </a>
                         <a href="">
-                            <img src="images/twitter.png" alt="">
+                            <img src="<?= Yii::getAlias('@web') ?>/images/twitter.png" alt="">
                         </a>
                         <a href="">
-                            <img src="images/linkedin.png" alt="">
+                            <img src="<?= Yii::getAlias('@web') ?>/images/linkedin.png" alt="">
                         </a>
                         <a href="">
-                            <img src="images/youtube.png" alt="">
+                            <img src="<?= Yii::getAlias('@web') ?>/images/youtube.png" alt="">
                         </a>
                     </div>
                 </div>

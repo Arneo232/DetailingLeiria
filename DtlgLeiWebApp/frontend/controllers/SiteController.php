@@ -2,16 +2,19 @@
 
 namespace frontend\controllers;
 
+use common\models\Categoria;
+use common\models\Produto;
+use Yii;
+use yii\web\Controller;
+use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
+
 use backend\models\UserForm;
 use common\models\User;
 use frontend\models\ResendVerificationEmailForm;
 use frontend\models\VerifyEmailForm;
-use Yii;
 use yii\base\InvalidArgumentException;
 use yii\web\BadRequestHttpException;
-use yii\web\Controller;
-use yii\filters\VerbFilter;
-use yii\filters\AccessControl;
 use common\models\LoginForm;
 use frontend\models\PasswordResetRequestForm;
 use frontend\models\ResetPasswordForm;
@@ -148,13 +151,18 @@ class SiteController extends Controller
     {
         return $this->render('about');
     }
-
     public function actionProduct()
     {
-        $products = \common\models\Produto::find()->all(); // Certifique-se de que o modelo Product está configurado corretamente
+        // Buscar os produtos
+        $products = \common\models\Produto::find()->all();
 
+        // Buscar as categorias
+        $categorias = Categoria::find()->all();
+
+        // Passar as variáveis para a view
         return $this->render('product', [
             'products' => $products,
+            'categorias' => $categorias,
         ]);
     }
     /**
