@@ -3,6 +3,7 @@
 /** @var common\models\Product[] $products */
 
 use yii\helpers\Html;
+use yii\helpers\Url;
 
 $this->title = 'DL | Produtos';
 $this->params['breadcrumbs'][] = $this->title;
@@ -27,11 +28,18 @@ $this->registerCssFile('@web/css/styledata.css', ['depends' => [\yii\web\YiiAsse
                     <input type="text" class="form-control" name="keyword" placeholder="Pesquisar por nome" />
                 </div>
                 <div method="GET" class="form-group">
-                    <select class="form-control" id="product-type" name="categoria">
-                        <option value="">Categorias</option>
-                        <?php foreach ($categorias as $categoria): ?>
-                            <option value="<?= $categoria->idCategoria ?>"><?= $categoria->designacao ?></option>
-                        <?php endforeach; ?>
+                    <label for="product-type">Escolha uma categoria:</label>
+                    <select class="form-control" id="product-type" name="categoria" aria-label="Escolha uma categoria">
+                        <option value="" selected>Categorias</option>
+                        <?php if (isset($categorias) && !empty($categorias)): ?>
+                            <?php foreach ($categorias as $categoria): ?>
+                                <option value="<?= htmlspecialchars($categoria->idCategoria, ENT_QUOTES, 'UTF-8') ?>">
+                                    <?= htmlspecialchars($categoria->designacao, ENT_QUOTES, 'UTF-8') ?>
+                                </option>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <option value="" disabled>Nenhuma categoria disponível</option>
+                        <?php endif; ?>
                     </select>
                 </div>
                 <div class="form-group">
@@ -66,14 +74,13 @@ $this->registerCssFile('@web/css/styledata.css', ['depends' => [\yii\web\YiiAsse
                     <div class="card-body text-center">
                         <h5 class="card-title"><?= Html::encode($product->nome) ?></h5>
                         <p class="card-text">Preço: €<?= Html::encode(number_format($product->preco, 2, ',', '.')) ?></p>
-                        <a href="#" class="btn dl-btn-primary">Adicionar ao Carrinho</a>
+                        <div class="dl-btn-container">
+                            <a href="<?= Url::to(['site/product-detail', 'idProduto' => $product->idProduto]) ?>" class="btn dl-btn-primary">Ver Detalhes</a>
+                            <a href="#" class="btn dl-btn-secondary">Adicionar ao Carrinho</a>
+                        </div>
                     </div>
                 </div>
             </div>
         <?php endforeach; ?>
     </div>
-
-    <style>
-
-    </style>
 </div>

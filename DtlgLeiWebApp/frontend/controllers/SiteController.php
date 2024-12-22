@@ -275,9 +275,17 @@ class SiteController extends Controller
             'model' => $model
         ]);
     }
-    public function actionProductDetail()
+    public function actionProductDetail($idProduto)
     {
-        return $this->render('ProductDetail');
+        $product = Produto::findOne($idProduto);
+
+        if (!$product) {
+            throw new \yii\web\NotFoundHttpException("Produto não encontrado");
+        }
+
+        return $this->render('productDetail', [
+            'product' => $product,
+        ]);
     }
 
     public function actionDetailedProfile()
@@ -311,4 +319,5 @@ class SiteController extends Controller
     {
         return $this->render('cart');
     }
+
 }
