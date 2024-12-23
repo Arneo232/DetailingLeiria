@@ -33,12 +33,12 @@ $this->params['breadcrumbs'][] = 'Update';
     <?= $form->field($imagem, 'imagens[]')->fileInput(['multiple' => true, 'accept' => 'image/*']) ?>
 
     <!-- Display existing images with delete option -->
-    <?php if (!empty($model->imagem)): ?>
+    <?php if (!empty($imgProduto)): ?>
         <h4>Imagens no produto</h4>
         <div>
-            <?php foreach ($model->imagem as $img): ?>
+            <?php foreach ($imgProduto as $img): ?>
                 <div style="display: inline-block; margin: 10px; text-align: center;">
-                        <img src='<?= $img->fileName ?>' width = "100" class="" >
+                    <img src="<?= $img->fileName ?>" width="100">
                     <br>
                     <?= Html::a('Delete', ['delete-image', 'idimagem' => $img->idimagem], [
                         'class' => 'btn btn-danger btn-sm',

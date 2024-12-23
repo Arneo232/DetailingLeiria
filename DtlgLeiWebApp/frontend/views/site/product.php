@@ -4,15 +4,14 @@
 
 use yii\helpers\Html;
 use yii\helpers\Url;
+use common\models\Favorito;
 
 $this->title = 'DL | Produtos';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<?php
-$this->registerCssFile('@web/css/styledata.css', ['depends' => [\yii\web\YiiAsset::class]]);
-?>
-
-
+<header>
+<link rel="stylesheet" href="<?= Yii::getAlias('@web') ?>/css/styledata.css">
+</header>
 <div class="container">
     <h2 class="text-center my-4 font-weight-bold">Lista de Produtos</h2>
 
@@ -67,8 +66,6 @@ $this->registerCssFile('@web/css/styledata.css', ['depends' => [\yii\web\YiiAsse
                                 'class' => 'card-img-top',
                                 'style' => 'height: 200px; object-fit: cover;',
                             ]) ?>
-                        <?php else: ?>
-                            <img src="/images/default-product.png" alt="Produto sem imagem" class="card-img-top" style="height: 200px; object-fit: cover;">
                         <?php endif; ?>
                     </div>
                     <div class="card-body text-center">
@@ -76,7 +73,11 @@ $this->registerCssFile('@web/css/styledata.css', ['depends' => [\yii\web\YiiAsse
                         <p class="card-text">Preço: €<?= Html::encode(number_format($product->preco, 2, ',', '.')) ?></p>
                         <div class="dl-btn-container">
                             <a href="<?= Url::to(['site/product-detail', 'idProduto' => $product->idProduto]) ?>" class="btn dl-btn-primary">Ver Detalhes</a>
-                            <a href="#" class="btn dl-btn-secondary">Adicionar ao Carrinho</a>
+                            <a href="#" class="btn dl-btn-primary"><i class="fa fa-cart-plus"></i></a>
+                            <?php if (!Yii::$app->user->isGuest):
+                                $favorito = Favorito::find()->where(['produto_id' => $product->idProduto, 'profile_id' => Yii::$app->user->identity->profile->idprofile])->one(); ?>
+                                <a class="btn dl-btn-primary" href="<?= yii\helpers\Url::to(['favorito/adicionar', 'produto_id' => $product->idProduto]) ?>"><i class="fa fa-star"></i></a>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>

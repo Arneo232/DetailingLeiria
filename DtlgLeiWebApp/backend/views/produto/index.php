@@ -37,6 +37,12 @@ $this->params['breadcrumbs'][] = $this->title;
             //'idCategoria',
             //'fornecedores_idfornecedores',
             [
+                'label' => 'Desconto',
+                'value' => function ($model) {
+                    return $model->desconto ? $model->desconto->desconto : 'Sem desconto';
+                },
+            ],
+            [
                 'class' => ActionColumn::className(),
                 'urlCreator' => function ($action, Produto $model, $key, $index, $column) {
                     return Url::toRoute([$action, 'idProduto' => $model->idProduto]);

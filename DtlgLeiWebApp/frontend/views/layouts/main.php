@@ -56,20 +56,16 @@ AppAsset::register($this);
         ];
     } else {
         $myAccountItems = [
-            ['label' => 'Profile', 'url' => ['/site/detailed-profile']],
+            ['label' => 'Profile', 'url' => ['/site/profile']],
             HTML::beginForm(['/site/logout'], 'post'),
             HTML::submitButton('Logout ('. Yii::$app->user->identity->username .')', ['class' => 'btn text-decoration-none']),
             HTML::endForm()
         ];
     }
-    echo Nav::widget([
-        'options' => ['class' => 'navbar-nav ms-auto mb-2 mb-md-0 d-flex'],
-        'items' => [
-            [
-                'label' => Html::tag('i', '', ['class' => 'fa fa-user', 'aria-hidden' => 'true']),
-                'encode' => false,
-                'items' => $myAccountItems,
-            ],
+
+    $additionalItems = [];
+    if (!Yii::$app->user->isGuest) {
+        $additionalItems = [
             [
                 'label' => Html::tag('i', '', ['class' => 'fa fa-shopping-cart', 'aria-hidden' => 'true']),
                 'encode' => false,
@@ -78,8 +74,20 @@ AppAsset::register($this);
             [
                 'label' => Html::tag('i', '', ['class' => 'fa fa-star', 'aria-hidden' => 'true']),
                 'encode' => false,
+                'url' => ['/favorito/index'],
             ],
-        ],
+        ];
+    }
+
+    echo Nav::widget([
+        'options' => ['class' => 'navbar-nav ms-auto mb-2 mb-md-0 d-flex'],
+        'items' => array_merge([
+            [
+                'label' => Html::tag('i', '', ['class' => 'fa fa-user', 'aria-hidden' => 'true']),
+                'encode' => false,
+                'items' => $myAccountItems,
+            ],
+        ], $additionalItems),
     ]);
     NavBar::end();
     ?>

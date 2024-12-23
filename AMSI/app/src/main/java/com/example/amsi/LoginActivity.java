@@ -48,8 +48,6 @@ public class LoginActivity extends AppCompatActivity {
             etPassword.setError("Sem car. necessários");
             return;
         }
-        //Toast.makeText(this, "Login efetuado com sucesso", Toast.LENGTH_LONG).show();
-        // Intent intent = new Intent(this, MainActivity.class);
         Intent intent = new Intent(this, MenuMainActivity.class);
         intent.putExtra(EMAIL, email);
         startActivity(intent);

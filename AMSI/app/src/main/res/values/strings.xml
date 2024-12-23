@@ -22,4 +22,5 @@
 
     <string name="ndOpen">Open Navigation Drawer</string>
     <string name="ndClose">Close Navigation Drawer</string>
+    <string name="txt_login">Login</string>
 </resources>

@@ -74,7 +74,7 @@
             android:layout_marginEnd="16dp"
             android:layout_weight="1"
             android:hint="Pesquisar"
-            android:background="@drawable/edittext_background"
+            android:background="@drawable/ic_launcher_background"
             android:paddingStart="8dp"
             android:textColorHint="#999999" />
     </LinearLayout>

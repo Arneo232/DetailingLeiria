@@ -46,9 +46,10 @@
         android:id="@+id/btnLogin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Login"
+        android:text="@string/txt_login"
         tools:layout_editor_absoluteX="160dp"
-        tools:layout_editor_absoluteY="505dp" />
+        tools:layout_editor_absoluteY="505dp"
+        android:onClick="onClickLogin"/>
 
     <Space
         android:layout_width="match_parent"

@@ -42,12 +42,10 @@ public class MenuMainActivity extends AppCompatActivity  implements NavigationVi
         carregarCabecalho();
     }
 
-
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         if(item.getItemId()==R.id.navPerfil)
             System.out.println("-->Nav Estatico");
-
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }

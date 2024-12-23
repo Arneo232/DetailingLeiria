@@ -47,6 +47,8 @@ class Produto extends \yii\db\ActiveRecord
             [['stock', 'idCategoria', 'fornecedores_idfornecedores'], 'integer'],
             [['idCategoria', 'fornecedores_idfornecedores'], 'required'],
             [['nome', 'descricao'], 'string', 'max' => 45],
+            [['idDesconto'], 'default', 'value' => null], // Allow NULL
+            [['idDesconto'], 'integer'], // Ensure idDesconto is an integer when provided
             [['idCategoria'], 'exist', 'skipOnError' => true, 'targetClass' => Categoria::class, 'targetAttribute' => ['idCategoria' => 'idCategoria']],
             [['fornecedores_idfornecedores'], 'exist', 'skipOnError' => true, 'targetClass' => Fornecedor::class, 'targetAttribute' => ['fornecedores_idfornecedores' => 'idfornecedor']],
             [['idDesconto'], 'exist', 'skipOnError' => true, 'targetClass' => Desconto::class, 'targetAttribute' => ['idDesconto' => 'iddesconto']],
@@ -71,14 +73,30 @@ class Produto extends \yii\db\ActiveRecord
     }
 
     public function addDescontoPreco($preco, $idDesconto){
+        // If no discount is provided, return the original price
+        if ($idDesconto === null) {
+            return $preco;
+        }
+
+        // Find the discount
         $desconto = Desconto::findOne($idDesconto);
-        $preco = ($preco - ($preco * ($desconto->desconto / 100)));
+
+        // If the discount doesn't exist, return the original price
+        if ($desconto === null) {
+            return $preco;
+        }
+
+        // Apply the discount
+        $preco = $preco - ($preco * ($desconto->desconto / 100));
         return $preco;
     }
 
-    public function beforeSave($insert){
-        if(parent::beforeSave($insert)){
-            $this->preco = $this->addDescontoPreco($this->preco, $this->idDesconto);
+    public function beforeSave($insert) {
+        if (parent::beforeSave($insert)) {
+            // Only apply discount if idDesconto is not null
+            if ($this->idDesconto !== null) {
+                $this->preco = $this->addDescontoPreco($this->preco, $this->idDesconto);
+            }
             return true;
         }
         return false;
