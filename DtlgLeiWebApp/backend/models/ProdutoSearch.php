@@ -71,4 +71,35 @@ class ProdutoSearch extends Produto
 
         return $dataProvider;
     }
+    public function searchWithFilters($params)
+    {
+        $query = Produto::find();
+        $this->load($params);
+
+        // Validação de dados
+        if (!$this->validate()) {
+            return new ActiveDataProvider([
+                'query' => Produto::find()->where('0=1'), // Retorna sem resultados se a validação falhar
+            ]);
+        }
+
+        // Aplica o filtro de categoria
+        $query->andFilterWhere([
+            'idCategoria' => $this->idCategoria,
+        ]);
+
+        // Aplica o filtro de palavra-chave
+        if (!empty($this->nome)) {
+            $query->andFilterWhere(['like', 'nome', $this->nome]);
+        }
+
+        // Retorna o dataProvider
+        return new ActiveDataProvider([
+            'query' => $query,
+            'pagination' => [
+                'pageSize' => 10,
+            ],
+        ]);
+    }
+
 }

@@ -26,10 +26,10 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div class="form-group">
                     <input type="text" class="form-control" name="keyword" placeholder="Pesquisar por nome" />
                 </div>
-                <div method="GET" class="form-group">
+                <div class="form-group">
                     <label for="product-type">Escolha uma categoria:</label>
                     <select class="form-control" id="product-type" name="categoria" aria-label="Escolha uma categoria">
-                        <option value="" selected>Categorias</option>
+                        <option value="" selected>Categorias</option> <!-- Categoria como null -->
                         <?php if (isset($categorias) && !empty($categorias)): ?>
                             <?php foreach ($categorias as $categoria): ?>
                                 <option value="<?= htmlspecialchars($categoria->idCategoria, ENT_QUOTES, 'UTF-8') ?>">
@@ -84,4 +84,34 @@ $this->params['breadcrumbs'][] = $this->title;
             </div>
         <?php endforeach; ?>
     </div>
+    <!-- Produtos -->
+    <!--<div class="row">
+        <?php /*foreach ($dataProvider->models as $product): */?>
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-img-top">
+                        <?php /*if (!empty($product->imagem)): */?>
+                            <?php /*= Html::img('../uploads/' . $product->imagem[0]->fileName, [
+                                'alt' => $product->nome,
+                                'class' => 'card-img-top',
+                                'style' => 'height: 200px; object-fit: cover;',
+                            ]) */?>
+                        <?php /*endif; */?>
+                    </div>
+                    <div class="card-body text-center">
+                        <h5 class="card-title"><?php /*= Html::encode($product->nome) */?></h5>
+                        <p class="card-text">Preço: €<?php /*= Html::encode(number_format($product->preco, 2, ',', '.')) */?></p>
+                        <div class="dl-btn-container">
+                            <a href="<?php /*= Url::to(['site/product-detail', 'idProduto' => $product->idProduto]) */?>" class="btn dl-btn-primary">Ver Detalhes</a>
+                            <a href="#" class="btn dl-btn-primary"><i class="fa fa-cart-plus"></i></a>
+                            <?php /*if (!Yii::$app->user->isGuest):
+                                $favorito = Favorito::find()->where(['produto_id' => $product->idProduto, 'profile_id' => Yii::$app->user->identity->profile->idprofile])->one(); */?>
+                                <a class="btn dl-btn-primary" href="<?php /*= yii\helpers\Url::to(['favorito/adicionar', 'produto_id' => $product->idProduto]) */?>"><i class="fa fa-star"></i></a>
+                            <?php /*endif; */?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <?php /*endforeach; */?>
+    </div>-->
 </div>

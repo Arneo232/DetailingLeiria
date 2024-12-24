@@ -18,7 +18,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <!-- slider section -->
     <section class="slider_section ">
         <div class="slider_bg_box">
-            <img src="<?= Yii::getAlias('@web') ?>/images/slider-bg.jpg" alt="">
+            <img src="<?= Yii::getAlias('@web') ?>/images/Abutre.jpg" alt="Capa do site">
         </div>
         <div id="customCarousel1" class="carousel slide" data-ride="carousel">
             <div class="carousel-inner">

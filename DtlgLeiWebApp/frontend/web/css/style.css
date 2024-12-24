@@ -104,6 +104,10 @@ a:focus {
   padding-left: 25px;
 }
 
+.navbar {
+  background-color: #0c1423 !important;
+}
+
 .navbar-brand span {
   font-weight: bold;
   color: #000000;
@@ -355,23 +359,28 @@ a:focus {
 
 .slider_bg_box {
   position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   z-index: -1;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: end;
-      -ms-flex-pack: end;
-          justify-content: flex-end;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center; /* Centraliza horizontalmente */
   -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  overflow: hidden;
+  -ms-flex-align: center;
+  align-items: center; /* Centraliza verticalmente */
+  overflow: hidden; /* Esconde o que passar dos limites */
 }
 
 .slider_bg_box img {
-  height: 100%;
+  width: 100%; /* Preenche a largura total */
+  height: 100%; /* Preenche a altura total */
+  object-fit: cover; /* Garante que preencha o espaço */
+  object-position: center; /* Centraliza a imagem */
 }
 
 .service_section {

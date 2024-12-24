@@ -211,4 +211,22 @@ class ProdutoController extends Controller
 
         throw new NotFoundHttpException('The requested page does not exist.');
     }
+
+    public function actionProduct()
+    {
+        $searchModel = new ProdutoSearch();
+
+        // Obtém os parâmetros da URL (keyword e categoria)
+        $params = Yii::$app->request->queryParams;
+
+        // Chama o método searchWithFilters e obtém o dataProvider com os filtros aplicados
+        $dataProvider = $searchModel->searchWithFilters($params);
+
+        // Passa o searchModel e o dataProvider para a view
+        return $this->render('product', [
+            'searchModel' => $searchModel,  // Passando o modelo de busca para a view
+            'dataProvider' => $dataProvider,  // Passando o dataProvider para a view
+        ]);
+    }
+
 }
