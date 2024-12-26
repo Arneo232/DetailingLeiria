@@ -30,12 +30,12 @@
                 'items' => [
                     ['label' => 'Gii',  'icon' => 'file-code', 'url' => ['/gii'], 'target' => '_blank'],
                     ['label' => 'Gestão de Utilizadores', 'url' => ['/user/index'], 'icon' => 'fa fa-users', 'visible' => Yii::$app->user->can('UserIndexAccounts')],
-                    ['label' => 'Gestão de Categorias', 'url' => ['/categoria/index'], 'icon' => 'fa fa-icons'],
-                    ['label' => 'Gestão de Fornecedores', 'url' => ['/fornecedor/index'], 'icon' => 'fa fa-industry'],
-                    ['label' => 'Gestão de Descontos', 'url' => ['/desconto/index'], 'icon' => 'fa fa-tag'],
-                    ['label' => 'Gestão de Produtos', 'url' => ['/produto/index'], 'icon' => 'fa fa-spray-can'],
-                    ['label' => 'Gestão de Métodos de Pagamento', 'url' => ['/metodopagamento/index'], 'icon' => 'fa fa-credit-card'],
-                    ['label' => 'Gestão de Métodos de Entrega', 'url' => ['/metodoentrega/index'], 'icon' => 'fa fa-truck'],
+                    ['label' => 'Gestão de Categorias', 'url' => ['/categoria/index'], 'icon' => 'fa fa-icons','visible' => Yii::$app->user->can('GestaoIndexCategorias')],
+                    ['label' => 'Gestão de Fornecedores', 'url' => ['/fornecedor/index'], 'icon' => 'fa fa-industry','visible' => Yii::$app->user->can('FornecedorIndex')],
+                    ['label' => 'Gestão de Descontos', 'url' => ['/desconto/index'], 'icon' => 'fa fa-tag','visible' => Yii::$app->user->can('DescontosIndex')],
+                    ['label' => 'Gestão de Produtos', 'url' => ['/produto/index'], 'icon' => 'fa fa-spray-can','visible' => Yii::$app->user->can('GestaoIndexProdutos')],
+                    ['label' => 'Gestão de Métodos de Pagamento', 'url' => ['/metodopagamento/index'], 'icon' => 'fa fa-credit-card','visible' => Yii::$app->user->can('GestaoMetodosPagamentos')],
+                    ['label' => 'Gestão de Métodos de Entrega', 'url' => ['/metodoentrega/index'], 'icon' => 'fa fa-truck','visible' => Yii::$app->user->can('GestaoMetodosEntrega')],
                 ],
             ]);
             ?>

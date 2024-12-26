@@ -10,6 +10,7 @@ use backend\models\ImagemForm;
 use backend\models\ProdutoSearch;
 use Yii;
 use yii\web\Controller;
+use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\web\UploadedFile;
@@ -43,6 +44,9 @@ class ProdutoController extends Controller
      */
     public function actionIndex()
     {
+        if(!Yii::$app->user->can('GestaoIndexProdutos')) {
+                throw new ForbiddenHttpException('Access denied');
+        }
         $searchModel = new ProdutoSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
         $categorias = Categoria::find()->all();
@@ -52,6 +56,7 @@ class ProdutoController extends Controller
             'dataProvider' => $dataProvider,
             'categorias' => $categorias,
         ]);
+
     }
     /**
      * Displays a single Produto model.
@@ -61,6 +66,9 @@ class ProdutoController extends Controller
      */
     public function actionView($idProduto)
     {
+        if(!Yii::$app->user->can('ProdutoIndexView')) {
+            throw new ForbiddenHttpException('Access denied');
+        }
         $imagem = $this->getImageAndPath($idProduto);
         $categorias = Categoria::find()->all();
 
@@ -78,6 +86,9 @@ class ProdutoController extends Controller
      */
     public function actionCreate()
     {
+        if(!Yii::$app->user->can('ProdutoIndexCreate')) {
+            throw new ForbiddenHttpException('Access denied');
+        }
         $model = new Produto();
         $imagem = new ImagemForm();
 
@@ -128,6 +139,7 @@ class ProdutoController extends Controller
     }
 
     public function actionDeleteImage($idimagem) {
+
         $imagem = Imagem::findOne($idimagem);
 
         if (!$imagem) {
@@ -152,6 +164,9 @@ class ProdutoController extends Controller
      */
     public function actionUpdate($idProduto)
     {
+        if(!Yii::$app->user->can('ProdutoIndexUpdate')) {
+            throw new ForbiddenHttpException('Access denied');
+        }
         $model = $this->findModel($idProduto);
         $imagemProduto = Imagem::findAll(['produtoId' => $idProduto]) ?? null;
 
@@ -185,6 +200,9 @@ class ProdutoController extends Controller
      */
     public function actionDelete($idProduto)
     {
+        if(!Yii::$app->user->can('ProdutoIndexDelete')) {
+            throw new ForbiddenHttpException('Access denied');
+        }
         $images = Imagem::findAll(['produtoId' => $idProduto]);
 
         foreach ($images as $image) {

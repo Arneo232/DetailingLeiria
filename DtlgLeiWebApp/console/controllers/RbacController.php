@@ -38,6 +38,47 @@ class RbacController extends Controller
         $UserIndexAccounts->description = 'Permite visualizar o index dos utilizadores';
         $auth->add($UserIndexAccounts);
 
+        $GestaoIndexCategorias = $auth->createPermission('GestaoIndexCategorias');
+        $GestaoIndexCategorias->description = 'Permite visualizar o Gestão de Categorias';
+        $auth->add($GestaoIndexCategorias);
+
+        $FornecedorIndex = $auth->createPermission('FornecedorIndex');
+        $FornecedorIndex->description = 'Permite visualizar a lista de fornecedores';
+        $auth->add($FornecedorIndex);
+
+        $DescontosIndex = $auth->createPermission('DescontosIndex');
+        $DescontosIndex->description = 'Permite visualizar os descontos e gerir';
+        $auth->add($DescontosIndex);
+
+        $GestaoIndexProdutos = $auth->createPermission('GestaoIndexProdutos');
+        $GestaoIndexProdutos->description = 'Permite visualizar o Gestão de Produtos';
+        $auth->add($GestaoIndexProdutos);
+
+        $GestaoMetodosPagamentos = $auth->createPermission('GestaoMetodosPagamentos');
+        $GestaoMetodosPagamentos->description = 'Permite visualizar o Gestão de metodos de pagamentos';
+        $auth->add($GestaoMetodosPagamentos);
+
+        $GestaoMetodosEntrega = $auth->createPermission('GestaoMetodosEntrega');
+        $GestaoMetodosEntrega->description = 'Permite visualizar o Gestão Métodos de Entrega';
+        $auth->add($GestaoMetodosEntrega);
+
+        $ProdutoIndexView = $auth->createPermission('ProdutoIndexView');
+        $ProdutoIndexView->description = 'Permite visualizar a View dos produtos';
+        $auth->add($ProdutoIndexView);
+
+        $ProdutoIndexUpdate = $auth->createPermission('ProdutoIndexUpdate');
+        $ProdutoIndexUpdate->description = 'Permite visualizar o Update dos produtos';
+        $auth->add($ProdutoIndexUpdate);
+
+        $ProdutoIndexDelete = $auth->createPermission('ProdutoIndexDelete');
+        $ProdutoIndexDelete->description = 'Permite deletar os produtos';
+        $auth->add($ProdutoIndexDelete);
+
+       $ProdutoIndexCreate = $auth->createPermission('ProdutoIndexCreate');
+        $ProdutoIndexCreate->description = 'Permite criar produtos';
+        $auth->add($ProdutoIndexCreate);
+
+
         $viewUserAccounts = $auth->createPermission('viewUserAccounts');
         $viewUserAccounts->description = 'Permite visualizar contas de utilizadores e funcionários';
         $auth->add($viewUserAccounts);
@@ -65,11 +106,23 @@ class RbacController extends Controller
         $auth->add($funcionario);
         $auth->addChild($funcionario, $accessBackend);
         $auth->addChild($funcionario, $viewUser);
+        $auth->addChild($funcionario,$DescontosIndex);
+        $auth->addChild($funcionario,$GestaoIndexProdutos);
+        $auth->addChild($funcionario,$GestaoMetodosEntrega);
 
 
         // Papel: gestor (herda de funcionário, adiciona CRUD de categorias, pagamentos e entregas)
         $gestor = $auth->createRole('gestor');
         $auth->add($gestor);
+        $auth->addChild($gestor,$GestaoIndexCategorias);
+        $auth->addChild($gestor,$FornecedorIndex);
+        $auth->addChild($gestor,$DescontosIndex);
+        $auth->addChild($gestor,$GestaoMetodosEntrega);
+        $auth->addChild($gestor,$GestaoMetodosPagamentos);
+        $auth->addChild($gestor,$ProdutoIndexView);
+        $auth->addChild($gestor,$ProdutoIndexCreate);
+        $auth->addChild($gestor,$ProdutoIndexUpdate);
+        $auth->addChild($gestor,$ProdutoIndexDelete);
         $auth->addChild($gestor, $funcionario);
 
 
@@ -87,10 +140,11 @@ class RbacController extends Controller
 
 
 
+
         // Atribuir papéis aos usuários
         $auth->assign($admin, 1); // ID do admin
         $auth->assign($client, 3); // ID do cliente
-        $auth->assign($funcionario, 4); // ID do funcionário
-        $auth->assign($gestor, 5); // ID do gestor
+        $auth->assign($funcionario, 7); // ID do funcionário
+        $auth->assign($gestor, 8); // ID do gestor
     }
 }
