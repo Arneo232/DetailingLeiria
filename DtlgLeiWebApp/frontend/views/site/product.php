@@ -56,7 +56,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <!-- Produtos -->
     <div class="row">
-        <?php foreach ($products as $product): ?>
+        <?php foreach ($dataProvider->models as $product): ?>
             <div class="col-md-4 mb-4">
                 <div class="card h-100 shadow-sm">
                     <div class="card-img-top">
@@ -73,9 +73,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         <p class="card-text">Preço: €<?= Html::encode(number_format($product->preco, 2, ',', '.')) ?></p>
                         <div class="dl-btn-container">
                             <a href="<?= Url::to(['site/product-detail', 'idProduto' => $product->idProduto]) ?>" class="btn dl-btn-primary">Ver Detalhes</a>
-                            <?php if (!Yii::$app->user->isGuest): ?>
-                                <a class="btn dl-btn-primary" href="<?= yii\helpers\Url::to(['linhas-carrinho/adicionar', 'produto_id' => $product->idProduto]) ?>"><i class="fa fa-cart-plus"></i></a>
-                            <?php endif; ?>
+                            <a href="#" class="btn dl-btn-primary"><i class="fa fa-cart-plus"></i></a>
                             <?php if (!Yii::$app->user->isGuest):
                                 $favorito = Favorito::find()->where(['produto_id' => $product->idProduto, 'profile_id' => Yii::$app->user->identity->profile->idprofile])->one(); ?>
                                 <a class="btn dl-btn-primary" href="<?= yii\helpers\Url::to(['favorito/adicionar', 'produto_id' => $product->idProduto]) ?>"><i class="fa fa-star"></i></a>
@@ -86,34 +84,4 @@ $this->params['breadcrumbs'][] = $this->title;
             </div>
         <?php endforeach; ?>
     </div>
-    <!-- Produtos -->
-    <!--<div class="row">
-        <?php /*foreach ($dataProvider->models as $product): */?>
-            <div class="col-md-4 mb-4">
-                <div class="card h-100 shadow-sm">
-                    <div class="card-img-top">
-                        <?php /*if (!empty($product->imagem)): */?>
-                            <?php /*= Html::img('../uploads/' . $product->imagem[0]->fileName, [
-                                'alt' => $product->nome,
-                                'class' => 'card-img-top',
-                                'style' => 'height: 200px; object-fit: cover;',
-                            ]) */?>
-                        <?php /*endif; */?>
-                    </div>
-                    <div class="card-body text-center">
-                        <h5 class="card-title"><?php /*= Html::encode($product->nome) */?></h5>
-                        <p class="card-text">Preço: €<?php /*= Html::encode(number_format($product->preco, 2, ',', '.')) */?></p>
-                        <div class="dl-btn-container">
-                            <a href="<?php /*= Url::to(['site/product-detail', 'idProduto' => $product->idProduto]) */?>" class="btn dl-btn-primary">Ver Detalhes</a>
-                            <a href="#" class="btn dl-btn-primary"><i class="fa fa-cart-plus"></i></a>
-                            <?php /*if (!Yii::$app->user->isGuest):
-                                $favorito = Favorito::find()->where(['produto_id' => $product->idProduto, 'profile_id' => Yii::$app->user->identity->profile->idprofile])->one(); */?>
-                                <a class="btn dl-btn-primary" href="<?php /*= yii\helpers\Url::to(['favorito/adicionar', 'produto_id' => $product->idProduto]) */?>"><i class="fa fa-star"></i></a>
-                            <?php /*endif; */?>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        <?php /*endforeach; */?>
-    </div>-->
 </div>

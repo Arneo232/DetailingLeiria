@@ -99,4 +99,8 @@ class Carrinho extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Linhascarrinho::class, ['carrinho_id' => 'idCarrinho']);
     }
+    public function getVenda()
+    {
+        return $this->hasOne(Venda::class, ['idVenda' => 'idVendaFK']);
+    }
 }

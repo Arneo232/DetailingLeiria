@@ -49,9 +49,9 @@ class Metodopagamento extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getVendas()
+    public function getVenda()
     {
-        return $this->hasMany(Venda::class, ['metodoPagamento_id' => 'idMetodoPagamento']);
+        return $this->hasMany(Venda::class, ['idMetodoPagamentoFK' => 'idmetodoPagamento']);
     }
 
     public function getCarrinho(){

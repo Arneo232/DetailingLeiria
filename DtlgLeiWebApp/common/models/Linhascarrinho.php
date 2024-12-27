@@ -75,4 +75,8 @@ class Linhascarrinho extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Produto::class, ['idProduto' => 'produtos_id']);
     }
+    public function getLinhaVenda()
+    {
+        return $this->hasMany(Linhasvenda::class, ['idLinhasCarrinhoFK' => 'idLinhasCarrinho']);
+    }
 }

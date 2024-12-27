@@ -2,8 +2,10 @@
 
 namespace frontend\controllers;
 
+use common\models\Venda;
 use common\models\Categoria;
 use common\models\Produto;
+use backend\models\ProdutoSearch;
 use Yii;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
@@ -155,14 +157,22 @@ class SiteController extends Controller
     {
         // Buscar os produtos
         $products = \common\models\Produto::find()->all();
-
+        $searchModel = new ProdutoSearch();
         // Buscar as categorias
         $categorias = Categoria::find()->all();
+
+        // Obtém os parâmetros da URL (keyword e categoria)
+        $params = Yii::$app->request->queryParams;
+
+        // Chama o método searchWithFilters e obtém o dataProvider com os filtros aplicados
+        $dataProvider = $searchModel->searchWithFilters($params);
 
         // Passar as variáveis para a view
         return $this->render('product', [
             'products' => $products,
             'categorias' => $categorias,
+            'searchModel' => $searchModel,  // Passando o modelo de busca para a view
+            'dataProvider' => $dataProvider,  // Passando o dataProvider para a view
         ]);
     }
     /**
@@ -313,6 +323,14 @@ class SiteController extends Controller
 
         return $this->render('/profile/update', [
             'model' => $model,
+        ]);
+    }
+    public function actionFaturas()
+    {
+        $vendas = Venda::find()->with(['metodoPagamento', 'metodoEntrega'])->all();
+
+        return $this->render('faturas', [
+            'vendas' => $vendas,
         ]);
     }
 

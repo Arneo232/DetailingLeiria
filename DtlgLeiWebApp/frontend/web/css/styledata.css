@@ -208,6 +208,31 @@ body {
 }
 
 
+.table {
+  background-color: #fff;
+  color: #0c1423;
+}
+
+.thead-dark th {
+  background-color: #00B4FD;
+  color: #fff;
+}
+
+.dl-btn-primary {
+  background-color: #00B4FD;
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1rem;
+  text-decoration: none;
+  border-radius: 5px;
+  transition: 0.3s;
+}
+
+.dl-btn-primary:hover {
+  background-color: #007bbd;
+  color: #fff;
+}
+
 
 
 

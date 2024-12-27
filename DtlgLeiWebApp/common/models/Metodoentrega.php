@@ -49,9 +49,9 @@ class Metodoentrega extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getVendas()
+    public function getVenda()
     {
-        return $this->hasMany(Venda::class, ['metodoEntrega_id' => 'idmetodoEntrega']);
+        return $this->hasMany(Venda::class, ['idMetodoEntregaFK' => 'idmetodoEntrega']);
     }
 
     public function getCarrinho(){
