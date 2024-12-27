@@ -81,15 +81,16 @@ class CarrinhoController extends Controller
         $carrinho = Carrinho::findOne(['idProfile' => $userId]);
         $linhasCarrinho = Linhascarrinho::findAll(['carrinho_id' => $carrinho->idCarrinho]);
 
+        // Vai buscar os metodos de entrega pela designacao
         $metodoEntrega = Metodoentrega::find()
-            ->select(['designacao']) // Use 'nome' as the value
-            ->indexBy('idMetodoEntrega') // Use 'idMetodoEntrega' as the key
+            ->select(['designacao'])
+            ->indexBy('idMetodoEntrega')
             ->column();
 
-
+        // Vai buscar os metodos de pagamento pela designacao
         $metodoPagamento = Metodopagamento::find()
-            ->select(['designacao']) // Use 'nome' as the value
-            ->indexBy('idMetodoPagamento') // Use 'idMetodoPagamento' as the key
+            ->select(['designacao'])
+            ->indexBy('idMetodoPagamento')
             ->column();
 
         return $this->render('checkout', [
