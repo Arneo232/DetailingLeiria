@@ -10,7 +10,7 @@ use common\models\Favorito;
 $this->title = 'DL | Favoritos';
 $this->params['breadcrumbs'][] = $this->title;
 
-// Fetch the user's favorites
+// Fetch the user's favourites
 $favoritos = Favorito::find()->where(['profile_id' => Yii::$app->user->identity->profile->idprofile])->all();
 ?>
 

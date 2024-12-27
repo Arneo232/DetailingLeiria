@@ -60,6 +60,9 @@ class Profile extends \yii\db\ActiveRecord
         return $this->hasMany(Favorito::class, ['profile_id' => 'idprofile']);
     }
 
+    public function getCarrinho(){
+        return $this->hasMany(Carrinho::class, ['profile_id' => 'idprofile']);
+    }
     public function getUser()
     {
         return $this->hasOne(User::class, ['id' => 'userId']);

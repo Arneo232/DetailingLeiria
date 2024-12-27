@@ -2,8 +2,8 @@
 
 namespace common\models;
 
-use app\models\Venda;
-
+use common\models\Venda;
+use common\models\Carrinho;
 
 /**
  * This is the model class for table "metodopagamento".
@@ -52,5 +52,9 @@ class Metodopagamento extends \yii\db\ActiveRecord
     public function getVendas()
     {
         return $this->hasMany(Venda::class, ['metodoPagamento_id' => 'idMetodoPagamento']);
+    }
+
+    public function getCarrinho(){
+        return $this->HasMany(Carrinho::class, ['idMetodoPagamento' => 'idmetodoPagamento']);
     }
 }

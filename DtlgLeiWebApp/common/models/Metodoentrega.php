@@ -2,7 +2,8 @@
 
 namespace common\models;
 
-use app\models\Venda;
+use common\models\Venda;
+use common\models\Carrinho;
 
 /**
  * This is the model class for table "metodoentrega".
@@ -51,5 +52,9 @@ class Metodoentrega extends \yii\db\ActiveRecord
     public function getVendas()
     {
         return $this->hasMany(Venda::class, ['metodoEntrega_id' => 'idmetodoEntrega']);
+    }
+
+    public function getCarrinho(){
+        return $this->HasMany(Carrinho::class, ['idMetodoEntrega' => 'idmetodoEntrega']);
     }
 }

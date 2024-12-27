@@ -56,7 +56,7 @@ AppAsset::register($this);
         ];
     } else {
         $myAccountItems = [
-            ['label' => 'Profile', 'url' => ['/site/profile']],
+            ['label' => 'Profile', 'url' => ['/site/detailed-profile']],
             HTML::beginForm(['/site/logout'], 'post'),
             HTML::submitButton('Logout ('. Yii::$app->user->identity->username .')', ['class' => 'btn text-decoration-none']),
             HTML::endForm()
@@ -69,7 +69,7 @@ AppAsset::register($this);
             [
                 'label' => Html::tag('i', '', ['class' => 'fa fa-shopping-cart', 'aria-hidden' => 'true']),
                 'encode' => false,
-                'url' => ['/site/cart'],
+                'url' => ['/carrinho/index'],
             ],
             [
                 'label' => Html::tag('i', '', ['class' => 'fa fa-star', 'aria-hidden' => 'true']),
