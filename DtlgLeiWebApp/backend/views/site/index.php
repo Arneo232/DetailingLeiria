@@ -72,3 +72,5 @@ $counts = $chartData['counts']; // Número de utilizadores no eixo Y
         ]
     ]) ?>
 </div>
+
+

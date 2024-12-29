@@ -53,7 +53,6 @@ class FavoritoController extends Controller
                 Yii::$app->session->setFlash('error', 'Erro ao adicionar produto aos favoritos');
             }
         }
-
         return $this->redirect(['site/product']);
     }
 

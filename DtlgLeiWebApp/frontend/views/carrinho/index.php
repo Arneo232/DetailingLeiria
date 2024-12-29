@@ -10,15 +10,19 @@ use yii\helpers\Url;
 
 /** @var yii\web\View $this */
 
-$this->title = 'Carrinhos';
+$this->title = 'DL | Carrinho';
 $this->params['breadcrumbs'][] = $this->title;
 
 // Fetch the user's cart
 $carrinho = Carrinho::find()->where(['idProfile' => Yii::$app->user->identity->profile->idprofile])->one();
 $linhasCarrinho = $carrinho ? Linhascarrinho::findAll(['carrinho_id' => $carrinho->idCarrinho]) : [];
 ?>
+<header>
+    <link rel="stylesheet" href="<?= Yii::getAlias('@web') ?>/css/styledata.css">
+</header>
 <div class="container">
-    <h1>Shopping Cart</h1>
+    <h2 class="text-center my-4 font-weight-bold">Carrinho de Compras</h2>
+    <hr class="dl-divider">
 
     <?php if (!empty($linhasCarrinho)): ?>
         <table class="table">
@@ -65,6 +69,7 @@ $linhasCarrinho = $carrinho ? Linhascarrinho::findAll(['carrinho_id' => $carrinh
         </table>
         <p>Total: <?= number_format($carrinho->total, 2) ?>€</p>
         <?= Html::a('Checkout', ['carrinho/checkout'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Voltar aos Produtos', ['site/product'], ['class' => 'btn dl-btn-secondary']) ?>
     <?php else: ?>
         <p>O seu carrinho está vazio.</p>
     <?php endif; ?>
