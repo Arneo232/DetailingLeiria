@@ -3,6 +3,7 @@
 /** @var yii\web\View $this */
 
 use yii\helpers\Html;
+use yii\helpers\Url;
 use frontend\assets\AppAsset;
 
 $this->title = 'DL | About Us';
@@ -10,8 +11,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 ?>
 <head>
-    <!-- fonts style -->
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+
 </head>
 
 <!-- about section -->

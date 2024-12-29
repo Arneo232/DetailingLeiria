@@ -25,35 +25,34 @@ $this->params['breadcrumbs'][] = $this->title;
 <body>
 <section class="product_section">
     <div class="container">
-        <div class="product_heading">
+        <div class="product-heading">
             <h2>Detalhes do Produto</h2>
         </div>
         <div class="product-container">
-            <div class="box-content">
-                <!-- Exibir a imagem do produto ou imagem padrão -->
+            <!-- Coluna Esquerda -->
+            <div class="product-box">
                 <div class="img-box">
                     <?php if (!empty($product->imagem)): ?>
                         <?= Html::img('@web/uploads/' . $product->imagem[0]->fileName, [
                             'alt' => $product->nome,
                             'class' => 'card-img-top',
-                            'style' => 'height: 300px; object-fit: cover;',
                         ]) ?>
                     <?php else: ?>
-                        <img src="/images/default-product.png" alt="Produto sem imagem" class="card-img-top" style="height: 300px; object-fit: cover;">
+                        <img src="/images/default-product.png" alt="Produto sem imagem" class="card-img-top">
                     <?php endif; ?>
                 </div>
+            </div>
 
-                <!-- Informações do Produto -->
+            <!-- Coluna Direita -->
+            <div class="product-box">
                 <div class="product-title">
                     <h2><?= Html::encode($product->nome) ?></h2>
                 </div>
-                <p><?= Html::encode($product->descricao) ?></p>
+                <p class="product-description"><?= Html::encode($product->descricao) ?></p>
                 <div class="product-price">
                     <?= Html::encode(number_format($product->preco, 2, ',', '.')) ?>€
                     <span class="stock-status"><?= $product->stock > 0 ? '| Em stock' : '| Esgotado' ?></span>
                 </div>
-
-                <!-- Botoes -->
                 <div class="add-to-cart">
                     <div class="quantity-selector">
                         <button onclick="decreaseQuantity()">-</button>
@@ -61,7 +60,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         <button onclick="increaseQuantity()">+</button>
                         <button class="btn-add-to-cart">Adicionar ao carrinho</button>
                     </div>
-                    <div class="btn-voltar">
+                    <div>
                         <?= Html::a('Voltar para os Produtos', Url::to(['site/product']), [
                             'class' => 'btn-voltar-button'
                         ]) ?>

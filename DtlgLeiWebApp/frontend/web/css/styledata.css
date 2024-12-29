@@ -90,19 +90,11 @@ body {
   margin: 0 auto;
 }
 
-/* Título da Página */
-.product-heading h2 {
-  font-size: 28px;
-  font-weight: bold;
-  color: #333;
-  margin-bottom: 20px;
-}
-
 /* Caixa de Produto */
 .product-container {
   display: flex;
   justify-content: space-between;
-  flex-wrap: wrap;
+  gap: 20px; /* Adiciona espaçamento entre as colunas */
 }
 
 .product-box {
@@ -111,21 +103,19 @@ body {
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   width: 48%;
   padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .img-box img {
   max-width: 100%;
   height: auto;
   border-radius: 8px;
+  margin-bottom: 15px;
 }
 
-/* Título e Descrição */
-.product-title h2 {
-  font-size: 24px;
-  color: #333;
-  margin: 10px 0;
-}
-
+/* Descrição do Produto */
 .product-description {
   color: #666;
   font-size: 16px;
@@ -133,22 +123,27 @@ body {
   margin-bottom: 15px;
 }
 
-/* Preço e Estoque */
 .product-price {
-  font-size: 22px;
+  font-size: 20px;
   font-weight: bold;
   color: #28a745;
+  margin-top: 20px;
+  margin-bottom: -50px;
+  justify-content: space-between;
 }
 .stock-status {
   font-size: 16px;
   color: #888;
+  margin-top: 20px;
+  margin-bottom: -50px;
+  justify-content: space-between;
 }
 
 /* Botões */
 .add-to-cart {
   display: flex;
-  flex-direction: column;
-  gap: 10px;
+  justify-content: space-between;
+  align-items: center;
   margin-top: 20px;
 }
 
@@ -157,28 +152,37 @@ body {
   align-items: center;
   gap: 10px;
 }
+
 .quantity-selector button {
   background-color: #57AFEE;
   border: none;
-  padding: 10px;
-  font-size: 18px;
+  padding: 8px;
+  font-size: 14px;
   color: white;
   cursor: pointer;
   border-radius: 5px;
 }
+
 .quantity-selector input {
-  width: 50px;
-  padding: 8px;
+  width: 40px;
+  padding: 6px;
   text-align: center;
   border: 1px solid #ccc;
   border-radius: 5px;
 }
 
-/* Botões Adicionar ao Carrinho e Voltar */
-
-.quantity-selector button:hover {
-  background-color: #004ee0;
+.btn-add-to-cart {
+  background-color: #57AFEE;
+  border: none;
+  padding: 8px 15px;
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
+
 .btn-add-to-cart:hover {
   background-color: #004ee0;
 }
@@ -186,7 +190,8 @@ body {
 .btn-voltar-button {
   background-color: #333;
   color: white;
-  padding: 10px 20px;
+  padding: 8px 15px;
+  font-size: 14px;
   border-radius: 5px;
   text-decoration: none;
   transition: background-color 0.3s ease;
@@ -205,9 +210,20 @@ body {
   .product-box {
     width: 100%;
   }
+  .quantity-selector {
+    flex-wrap: wrap;
+  }
 }
 
 
+
+
+
+
+
+
+
+/* Tabela */
 .table {
   background-color: #fff;
   color: #0c1423;
@@ -233,6 +249,104 @@ body {
   color: #fff;
 }
 
+
+/* Estilo Geral para o Perfil */
+.user-view {
+  background-color: #f8f9fa;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.profile-header {
+  margin-bottom: 20px;
+}
+
+.profile-logo img {
+  max-width: 50% !important;
+  width: 50% !important;
+  height: auto !important;
+  display: block;
+  margin: 0 auto;
+}
+
+.profile-title {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.profile-subtitle {
+  color: #6c757d;
+  font-size: 1.1rem;
+}
+
+.profile-details {
+  margin-top: 30px;
+}
+
+.card {
+  border-radius: 10px;
+  background-color: #ffffff;
+  margin-top: 20px;
+}
+
+.card-body {
+  padding: 30px;
+}
+
+.card h4 {
+  font-size: 1.4rem;
+  margin-bottom: 20px;
+}
+
+.card p {
+  margin-bottom: 15px;
+}
+
+.btn {
+  border-radius: 5px;
+}
+
+.btn-block {
+  width: 100%;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+  border-color: #004085;
+}
+
+.btn-danger {
+  background-color: #dc3545;
+  border-color: #dc3545;
+}
+
+.btn-danger:hover {
+  background-color: #c82333;
+  border-color: #bd2130;
+}
+
+/* Ícones */
+.fas {
+  margin-right: 8px;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .profile-header {
+    padding: 10px;
+  }
+
+  .card-body {
+    padding: 15px;
+  }
+}
 
 
 

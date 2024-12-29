@@ -935,20 +935,40 @@ a:focus {
 }
 
 /* footer section*/
+
+/* Ajusta o footer para ficar sempre no fundo */
 .footer_section {
   position: relative;
   background-color: #ffffff;
   text-align: center;
+  width: 100%;
+  padding: 25px 0;
+  bottom: 0;
+  margin-top: auto; /* Isso ajuda a empurrar o footer para o fundo se o conteúdo for pequeno */
 }
 
 .footer_section p {
   color: #000000;
-  padding: 25px 0;
   margin: 0;
 }
 
 .footer_section p a {
   color: inherit;
 }
+
+/* Garantir que o layout ocupe 100% da altura */
+html, body {
+  height: 100%;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex-grow: 1; /* Faz o conteúdo ocupar o espaço restante */
+}
+
 
 /*# sourceMappingURL=style.css.map */
