@@ -37,13 +37,12 @@ class Linhasvenda extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['quantidade', 'idVendaFK', 'idProdutoFK', 'idAvaliacaoFK', 'idLinhasCarrinhoFK'], 'integer'],
+            [['quantidade', 'idVendaFK', 'idProdutoFK', 'idAvaliacaoFK'], 'integer'],
             [['precounitario', 'subtotal'], 'number'],
-            [['idVendaFK', 'idProdutoFK', 'idLinhasCarrinhoFK'], 'required'],
+            [['idVendaFK', 'idProdutoFK'], 'required'],
             [['idProdutoFK'], 'exist', 'skipOnError' => true, 'targetClass' => Produto::class, 'targetAttribute' => ['idProdutoFK' => 'idProduto']],
             [['idVendaFK'], 'exist', 'skipOnError' => true, 'targetClass' => Venda::class, 'targetAttribute' => ['idVendaFK' => 'idVenda']],
             [['idAvaliacaoFK'], 'exist', 'skipOnError' => true, 'targetClass' => Avaliacao::class, 'targetAttribute' => ['idAvaliacaoFK' => 'idavaliacao']],
-            [['idLinhasCarrinhoFK'], 'exist', 'skipOnError' => true, 'targetClass' => Linhascarrinho::class, 'targetAttribute' => ['idLinhasCarrinhoFK' => 'idLinhasCarrinho']],
         ];
     }
 
@@ -60,7 +59,6 @@ class Linhasvenda extends \yii\db\ActiveRecord
             'idVendaFK' => 'Id Venda Fk',
             'idProdutoFK' => 'Id Produto Fk',
             'idAvaliacaoFK' => 'Id Avaliacao Fk',
-            'idLinhasCarrinhoFK' => 'Id Linhas Carrinho Fk',
         ];
     }
 
@@ -72,16 +70,6 @@ class Linhasvenda extends \yii\db\ActiveRecord
     public function getAvaliacao()
     {
         return $this->hasOne(Avaliacao::class, ['idavaliacao' => 'idAvaliacaoFK']);
-    }
-
-    /**
-     * Gets query for [[IdLinhasCarrinhoFK0]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public function getLinhasCarrinho()
-    {
-        return $this->hasOne(Linhascarrinho::class, ['idLinhasCarrinho' => 'idLinhasCarrinhoFK']);
     }
 
     /**

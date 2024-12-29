@@ -6,6 +6,8 @@ use common\models\Carrinho;
 use common\models\Metodoentrega;
 use common\models\Metodopagamento;
 use common\models\Linhascarrinho;
+use common\models\Venda;
+use common\models\Linhasvenda;
 use common\models\Profile;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
@@ -47,13 +49,12 @@ class CarrinhoController extends Controller
 
         $carrinho = Carrinho::findOne(['idProfile' => $userId]);
 
-        //Cria um novo carrinho caso não exista
         if($carrinho === NULL) {
             if($this->CreateCarrinho($userId)) {
                 $carrinho = Carrinho::findOne(['idProfile' => $userId]);
             }
         }
-        // Busca as linhas do carrinho
+
         $linhasCarrinho = Linhascarrinho::findAll(['carrinho_id' => $carrinho->idCarrinho]);
 
         return $this->render('index', [
@@ -81,13 +82,11 @@ class CarrinhoController extends Controller
         $carrinho = Carrinho::findOne(['idProfile' => $userId]);
         $linhasCarrinho = Linhascarrinho::findAll(['carrinho_id' => $carrinho->idCarrinho]);
 
-        // Vai buscar os metodos de entrega pela designacao
         $metodoEntrega = Metodoentrega::find()
             ->select(['designacao'])
             ->indexBy('idMetodoEntrega')
             ->column();
 
-        // Vai buscar os metodos de pagamento pela designacao
         $metodoPagamento = Metodopagamento::find()
             ->select(['designacao'])
             ->indexBy('idMetodoPagamento')
@@ -110,34 +109,6 @@ class CarrinhoController extends Controller
 
         return $this->redirect(['index']);
     }
-
-    public function actionFinalizarCompra()
-    {
-        $userId = Yii::$app->user->identity->profile->idprofile;
-        $carrinho = Carrinho::find()->where(['idProfile' => $userId])->one();
-
-        if (!$carrinho) {
-            Yii::$app->session->setFlash('error', 'No active cart found.');
-            return $this->redirect(['carrinho/index']);
-        }
-
-        $idMetodoEntrega = Yii::$app->request->post('idMetodoEntrega');
-        $idMetodoPagamento = Yii::$app->request->post('idMetodoPagamento');
-
-        if ($idMetodoEntrega && $idMetodoPagamento) {
-            $carrinho->idMetodoEntrega = $idMetodoEntrega;
-            $carrinho->idMetodoPagamento = $idMetodoPagamento;
-
-            if ($carrinho->save(false)) {
-                Yii::$app->session->setFlash('success', 'Compra efetuada com sucesso!');
-                return $this->redirect(['fatura/detail-fatura']);
-            }
-        }
-
-        Yii::$app->session->setFlash('error', 'Porfavor selecione um método de entrega e pagamento.');
-        return $this->redirect(['carrinho/checkout']);
-    }
-
 
     /**
      * Displays a single Carrinho model.

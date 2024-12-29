@@ -30,14 +30,15 @@ $this->params['breadcrumbs'][] = $this->title;
             <tbody>
             <?php foreach ($vendas as $venda): ?>
                 <tr>
-                    <td><?= Html::encode($venda->idvenda) ?></td>
+                    <td><?= Html::encode($venda->idVenda) ?></td>
                     <td><?= Html::encode(number_format($venda->total, 2, ',', '.')) ?></td>
                     <td><?= Html::encode(Yii::$app->formatter->asDatetime($venda->datavenda, 'php:d-m-Y H:i')) ?></td>
                     <td><?= Html::encode($venda->metodoPagamento->designacao ?? 'Não definido') ?></td>
                     <td><?= Html::encode($venda->metodoEntrega->designacao ?? 'Não definido') ?></td>
                     <td>
-                        <a href="<?= Url::to(['venda/view', 'id' => $venda->idvenda]) ?>" class="btn btn-primary btn-sm">Detalhes</a>
-                        <a href="<?= Url::to(['venda/pdf', 'id' => $venda->idvenda]) ?>" class="btn btn-secondary btn-sm">Gerar PDF</a>
+                        <!-- Action Buttons -->
+                        <a href="<?= Url::to(['venda/view', 'id' => $venda->idVenda]) ?>" class="btn btn-primary btn-sm">Detalhes</a>
+                        <a href="<?= Url::to(['venda/pdf', 'id' => $venda->idVenda]) ?>" class="btn btn-secondary btn-sm">Gerar PDF</a>
                     </td>
                 </tr>
             <?php endforeach; ?>

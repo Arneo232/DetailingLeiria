@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Tempo de geração: 19-Dez-2024 às 17:23
+-- Tempo de geração: 29-Dez-2024 às 02:26
 -- Versão do servidor: 8.3.0
 -- versão do PHP: 8.3.6
 
@@ -41,10 +41,10 @@ CREATE TABLE IF NOT EXISTS `auth_assignment` (
 --
 
 INSERT INTO `auth_assignment` (`item_name`, `user_id`, `created_at`) VALUES
-('admin', '1', 1734614481),
-('client', '3', 1734614481),
-('funcionario', '4', 1734614481),
-('gestor', '5', 1734614481);
+('admin', '1', 1735262648),
+('client', '3', 1735262648),
+('funcionario', '7', 1735262648),
+('gestor', '8', 1735262648);
 
 -- --------------------------------------------------------
 
@@ -71,17 +71,27 @@ CREATE TABLE IF NOT EXISTS `auth_item` (
 --
 
 INSERT INTO `auth_item` (`name`, `type`, `description`, `rule_name`, `data`, `created_at`, `updated_at`) VALUES
-('accessBackend', 2, 'Permite acesso ao backend do sistema', NULL, NULL, 1734614480, 1734614480),
-('admin', 1, NULL, NULL, NULL, 1734614481, 1734614481),
-('client', 1, NULL, NULL, NULL, 1734614480, 1734614480),
-('createUserAccounts', 2, 'Permite criar contas de utilizadores e funcionários', NULL, NULL, 1734614480, 1734614480),
-('deleteUserAccounts', 2, 'Permite deletar contas de utilizadores e funcionários', NULL, NULL, 1734614480, 1734614480),
-('funcionario', 1, NULL, NULL, NULL, 1734614481, 1734614481),
-('gestor', 1, NULL, NULL, NULL, 1734614481, 1734614481),
-('updateUserAccounts', 2, 'Permite editar contas de utilizadores e funcionários', NULL, NULL, 1734614480, 1734614480),
-('UserIndexAccounts', 2, 'Permite visualizar o index dos utilizadores', NULL, NULL, 1734614480, 1734614480),
-('viewUser', 2, 'Permite ao usuário visualizar seu próprio perfil', NULL, NULL, 1734614480, 1734614480),
-('viewUserAccounts', 2, 'Permite visualizar contas de utilizadores e funcionários', NULL, NULL, 1734614480, 1734614480);
+('accessBackend', 2, 'Permite acesso ao backend do sistema', NULL, NULL, 1735262647, 1735262647),
+('admin', 1, NULL, NULL, NULL, 1735262648, 1735262648),
+('client', 1, NULL, NULL, NULL, 1735262648, 1735262648),
+('createUserAccounts', 2, 'Permite criar contas de utilizadores e funcionários', NULL, NULL, 1735262648, 1735262648),
+('deleteUserAccounts', 2, 'Permite deletar contas de utilizadores e funcionários', NULL, NULL, 1735262648, 1735262648),
+('DescontosIndex', 2, 'Permite visualizar os descontos e gerir', NULL, NULL, 1735262647, 1735262647),
+('FornecedorIndex', 2, 'Permite visualizar a lista de fornecedores', NULL, NULL, 1735262647, 1735262647),
+('funcionario', 1, NULL, NULL, NULL, 1735262648, 1735262648),
+('GestaoIndexCategorias', 2, 'Permite visualizar o Gestão de Categorias', NULL, NULL, 1735262647, 1735262647),
+('GestaoIndexProdutos', 2, 'Permite visualizar o Gestão de Produtos', NULL, NULL, 1735262648, 1735262648),
+('GestaoMetodosEntrega', 2, 'Permite visualizar o Gestão Métodos de Entrega', NULL, NULL, 1735262648, 1735262648),
+('GestaoMetodosPagamentos', 2, 'Permite visualizar o Gestão de metodos de pagamentos', NULL, NULL, 1735262648, 1735262648),
+('gestor', 1, NULL, NULL, NULL, 1735262648, 1735262648),
+('ProdutoIndexCreate', 2, 'Permite criar produtos', NULL, NULL, 1735262648, 1735262648),
+('ProdutoIndexDelete', 2, 'Permite deletar os produtos', NULL, NULL, 1735262648, 1735262648),
+('ProdutoIndexUpdate', 2, 'Permite visualizar o Update dos produtos', NULL, NULL, 1735262648, 1735262648),
+('ProdutoIndexView', 2, 'Permite visualizar a View dos produtos', NULL, NULL, 1735262648, 1735262648),
+('updateUserAccounts', 2, 'Permite editar contas de utilizadores e funcionários', NULL, NULL, 1735262648, 1735262648),
+('UserIndexAccounts', 2, 'Permite visualizar o index dos utilizadores', NULL, NULL, 1735262647, 1735262647),
+('viewUser', 2, 'Permite ao usuário visualizar seu próprio perfil', NULL, NULL, 1735262647, 1735262647),
+('viewUserAccounts', 2, 'Permite visualizar contas de utilizadores e funcionários', NULL, NULL, 1735262648, 1735262648);
 
 -- --------------------------------------------------------
 
@@ -106,8 +116,20 @@ INSERT INTO `auth_item_child` (`parent`, `child`) VALUES
 ('funcionario', 'accessBackend'),
 ('admin', 'createUserAccounts'),
 ('admin', 'deleteUserAccounts'),
+('funcionario', 'DescontosIndex'),
+('gestor', 'DescontosIndex'),
+('gestor', 'FornecedorIndex'),
 ('gestor', 'funcionario'),
+('gestor', 'GestaoIndexCategorias'),
+('funcionario', 'GestaoIndexProdutos'),
+('funcionario', 'GestaoMetodosEntrega'),
+('gestor', 'GestaoMetodosEntrega'),
+('gestor', 'GestaoMetodosPagamentos'),
 ('admin', 'gestor'),
+('gestor', 'ProdutoIndexCreate'),
+('gestor', 'ProdutoIndexDelete'),
+('gestor', 'ProdutoIndexUpdate'),
+('gestor', 'ProdutoIndexView'),
 ('admin', 'updateUserAccounts'),
 ('admin', 'UserIndexAccounts'),
 ('admin', 'viewUser'),
@@ -152,11 +174,24 @@ CREATE TABLE IF NOT EXISTS `avaliacao` (
 
 DROP TABLE IF EXISTS `carrinho`;
 CREATE TABLE IF NOT EXISTS `carrinho` (
-  `idcarrinhoCompra` int NOT NULL,
+  `idCarrinho` int NOT NULL AUTO_INCREMENT,
   `total` decimal(10,0) DEFAULT NULL,
   `datavenda` datetime DEFAULT NULL,
-  PRIMARY KEY (`idcarrinhoCompra`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+  `idProfile` int NOT NULL,
+  `idMetodoEntrega` int DEFAULT NULL,
+  `idMetodoPagamento` int DEFAULT NULL,
+  PRIMARY KEY (`idCarrinho`),
+  KEY `idProfile` (`idProfile`),
+  KEY `idMetodoEntrega` (`idMetodoEntrega`,`idMetodoPagamento`),
+  KEY `idMetodoPagamento` (`idMetodoPagamento`)
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb3;
+
+--
+-- Extraindo dados da tabela `carrinho`
+--
+
+INSERT INTO `carrinho` (`idCarrinho`, `total`, `datavenda`, `idProfile`, `idMetodoEntrega`, `idMetodoPagamento`) VALUES
+(18, NULL, NULL, 9, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -169,14 +204,15 @@ CREATE TABLE IF NOT EXISTS `categoria` (
   `idCategoria` int NOT NULL AUTO_INCREMENT,
   `designacao` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`idCategoria`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb3;
 
 --
 -- Extraindo dados da tabela `categoria`
 --
 
 INSERT INTO `categoria` (`idCategoria`, `designacao`) VALUES
-(1, 'Liquidos');
+(1, 'Liquidos'),
+(2, 'Panos');
 
 -- --------------------------------------------------------
 
@@ -212,7 +248,7 @@ CREATE TABLE IF NOT EXISTS `favorito` (
   PRIMARY KEY (`idfavorito`),
   KEY `fk_favorito_produto1_idx` (`produto_id`),
   KEY `fk_favorito_profile1_idx` (`profile_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb3;
 
 -- --------------------------------------------------------
 
@@ -247,14 +283,15 @@ CREATE TABLE IF NOT EXISTS `imagem` (
   `produtoId` int NOT NULL,
   PRIMARY KEY (`idimagem`),
   KEY `produtoId` (`produtoId`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8mb3;
 
 --
 -- Extraindo dados da tabela `imagem`
 --
 
 INSERT INTO `imagem` (`idimagem`, `fileName`, `produtoId`) VALUES
-(18, 'Wi5H94o-dWmpGSZl6HlUiHKm6hcMzxjQ.jpg', 19);
+(26, 'VkLzOt2JkJ7NKDe_OPzLNAnGUYLnvLO5.png', 24),
+(27, 'k5l4wyw_a66PCqwDruyxORW9YGn1RlNW.jpg', 25);
 
 -- --------------------------------------------------------
 
@@ -264,14 +301,16 @@ INSERT INTO `imagem` (`idimagem`, `fileName`, `produtoId`) VALUES
 
 DROP TABLE IF EXISTS `linhascarrinho`;
 CREATE TABLE IF NOT EXISTS `linhascarrinho` (
+  `idLinhasCarrinho` int NOT NULL AUTO_INCREMENT,
   `quantidade` int DEFAULT NULL,
   `precounitario` decimal(10,0) DEFAULT NULL,
   `subtotal` decimal(10,0) DEFAULT NULL,
   `carrinho_id` int NOT NULL,
   `produtos_id` int NOT NULL,
+  PRIMARY KEY (`idLinhasCarrinho`),
   KEY `fk_linhasCarrinho_carrinho1_idx` (`carrinho_id`),
   KEY `fk_linhasCarrinho_produtos1_idx` (`produtos_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8mb3;
 
 -- --------------------------------------------------------
 
@@ -281,15 +320,18 @@ CREATE TABLE IF NOT EXISTS `linhascarrinho` (
 
 DROP TABLE IF EXISTS `linhasvenda`;
 CREATE TABLE IF NOT EXISTS `linhasvenda` (
+  `idLinhasVenda` int NOT NULL AUTO_INCREMENT,
   `quantidade` smallint DEFAULT NULL,
   `precounitario` decimal(10,0) DEFAULT NULL,
   `subtotal` decimal(10,0) DEFAULT NULL,
-  `vendas_idvenda` int NOT NULL,
-  `produtos_idProduto` int NOT NULL,
-  `produtos_vendas_idvenda` int NOT NULL,
-  KEY `fk_linhasvenda_vendas1_idx` (`vendas_idvenda`),
-  KEY `fk_linhasvenda_produtos1_idx` (`produtos_idProduto`,`produtos_vendas_idvenda`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+  `idVendaFK` int NOT NULL,
+  `idProdutoFK` int NOT NULL,
+  `idAvaliacaoFK` int DEFAULT NULL,
+  PRIMARY KEY (`idLinhasVenda`),
+  KEY `fk_linhasvenda_vendas1_idx` (`idVendaFK`),
+  KEY `fk_linhasvenda_produtos1_idx` (`idProdutoFK`),
+  KEY `idAvaliacaoFK` (`idAvaliacaoFK`)
+) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8mb3;
 
 -- --------------------------------------------------------
 
@@ -302,7 +344,15 @@ CREATE TABLE IF NOT EXISTS `metodoentrega` (
   `idmetodoEntrega` int NOT NULL AUTO_INCREMENT,
   `designacao` varchar(75) DEFAULT NULL,
   PRIMARY KEY (`idmetodoEntrega`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb3;
+
+--
+-- Extraindo dados da tabela `metodoentrega`
+--
+
+INSERT INTO `metodoentrega` (`idmetodoEntrega`, `designacao`) VALUES
+(1, 'CTT'),
+(2, 'FedEx');
 
 -- --------------------------------------------------------
 
@@ -315,7 +365,15 @@ CREATE TABLE IF NOT EXISTS `metodopagamento` (
   `idMetodoPagamento` int NOT NULL AUTO_INCREMENT,
   `designacao` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`idMetodoPagamento`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb3;
+
+--
+-- Extraindo dados da tabela `metodopagamento`
+--
+
+INSERT INTO `metodopagamento` (`idMetodoPagamento`, `designacao`) VALUES
+(1, 'MBWay'),
+(2, 'visa');
 
 -- --------------------------------------------------------
 
@@ -363,14 +421,15 @@ CREATE TABLE IF NOT EXISTS `produto` (
   KEY `fk_produtos_Categorias_idx` (`idCategoria`),
   KEY `fk_produtos_furnecedores1_idx` (`fornecedores_idfornecedores`),
   KEY `idDesconto` (`idDesconto`)
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb3;
 
 --
 -- Extraindo dados da tabela `produto`
 --
 
 INSERT INTO `produto` (`idProduto`, `nome`, `descricao`, `preco`, `stock`, `idCategoria`, `fornecedores_idfornecedores`, `idDesconto`) VALUES
-(19, 'Produto', 'açslkdpaokspdokaposkd', 90, 50, 1, 1, 1);
+(24, 'Produto', 'produto teste ijasodijaosijd', 100, 5, 1, 1, NULL),
+(25, 'Spray limpa-vidros', 'aoskdpaokspdokas', 10, 2, 2, 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -386,14 +445,15 @@ CREATE TABLE IF NOT EXISTS `profile` (
   `userId` int NOT NULL,
   PRIMARY KEY (`idprofile`),
   KEY `userId` (`userId`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb3;
 
 --
 -- Extraindo dados da tabela `profile`
 --
 
 INSERT INTO `profile` (`idprofile`, `morada`, `ntelefone`, `userId`) VALUES
-(9, 'rua lisboa 1', 123456789, 24);
+(9, 'rua lisboa 1', 123456789, 24),
+(11, 'rua coimbra 1', 912123123, 26);
 
 -- --------------------------------------------------------
 
@@ -417,7 +477,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   UNIQUE KEY `username` (`username`),
   UNIQUE KEY `email` (`email`),
   UNIQUE KEY `password_reset_token` (`password_reset_token`)
-) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 
 --
 -- Extraindo dados da tabela `user`
@@ -425,7 +485,8 @@ CREATE TABLE IF NOT EXISTS `user` (
 
 INSERT INTO `user` (`id`, `username`, `auth_key`, `password_hash`, `password_reset_token`, `email`, `status`, `created_at`, `updated_at`, `verification_token`) VALUES
 (1, 'admin', 'VhOSZK2O0x5plc0APurpqZrAFuij7-Jy', '$2y$13$I/0racfHKHiOj2Yn130NQelGjdS0bNk.YyFrGnsS1GTGkJoB3xhx.', NULL, 'admin@detailingleiria.com', 10, 1730204421, 1733359698, '_Rs4Jpt8PCpprMdb4bpWVNMhOiL_QGxc_1733359698'),
-(24, 'cliente2', '64xhxK8K9m6dZe70CZNIdigcfTkHthi-', '$2y$13$mpIEIROKqW1AmGqefrYuQO0FWIH1RR30lfJHGA/w8IpaHIcNFbpdu', NULL, 'cliente2@detailingleiria.pt', 10, 1733874704, 1734131802, 'rrd2Twd34JvLTqzBLgSyknZK7X_-8QTL_1734131802');
+(24, 'cliente2', 'yK0-qBCddtrAaT03jfnI6BLaJBzcYvuZ', '$2y$13$mpIEIROKqW1AmGqefrYuQO0FWIH1RR30lfJHGA/w8IpaHIcNFbpdu', NULL, 'cliente2@detailingleiria.pt', 10, 1733874704, 1734832136, 'Dwpjwiec7-QpQvsYhzreZpUPv18h7EWF_1734832136'),
+(26, 'gestor', 'h_3VhnxVuXI5fjXbzFfWbV8D_wWFuZj5', '$2y$13$Xqg8QPqJSxOtqOF.QbZ1AOLuXoRAKQ7UT.t0w4t10RfSzbc4tU3Im', NULL, 'gestor@detailing.leiria.pt', 10, 1734657301, 1734806132, 'oIDLKQ7XtMNQI4NJxsqz0Tyc86d1R3Sv_1734806132');
 
 -- --------------------------------------------------------
 
@@ -435,15 +496,19 @@ INSERT INTO `user` (`id`, `username`, `auth_key`, `password_hash`, `password_res
 
 DROP TABLE IF EXISTS `venda`;
 CREATE TABLE IF NOT EXISTS `venda` (
-  `idvenda` int NOT NULL AUTO_INCREMENT,
+  `idVenda` int NOT NULL AUTO_INCREMENT,
   `total` decimal(10,0) DEFAULT NULL,
   `datavenda` datetime DEFAULT NULL,
   `metodoPagamento_id` int NOT NULL,
   `metodoEntrega_id` int NOT NULL,
-  PRIMARY KEY (`idvenda`),
+  `idCarrinhoFK` int NOT NULL,
+  `idProfileFK` int NOT NULL,
+  PRIMARY KEY (`idVenda`),
   KEY `fk_vendas_metodoPagamento1_idx` (`metodoPagamento_id`),
-  KEY `fk_vendas_metodoEntrega1_idx` (`metodoEntrega_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+  KEY `fk_vendas_metodoEntrega1_idx` (`metodoEntrega_id`),
+  KEY `idCarrinhoFK` (`idCarrinhoFK`),
+  KEY `idProfileFK` (`idProfileFK`)
+) ENGINE=InnoDB AUTO_INCREMENT=42 DEFAULT CHARSET=utf8mb3;
 
 --
 -- Restrições para despejos de tabelas
@@ -469,6 +534,14 @@ ALTER TABLE `auth_item_child`
   ADD CONSTRAINT `auth_item_child_ibfk_2` FOREIGN KEY (`child`) REFERENCES `auth_item` (`name`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
+-- Limitadores para a tabela `carrinho`
+--
+ALTER TABLE `carrinho`
+  ADD CONSTRAINT `carrinho_ibfk_1` FOREIGN KEY (`idMetodoEntrega`) REFERENCES `metodoentrega` (`idmetodoEntrega`),
+  ADD CONSTRAINT `carrinho_ibfk_2` FOREIGN KEY (`idMetodoPagamento`) REFERENCES `metodopagamento` (`idMetodoPagamento`),
+  ADD CONSTRAINT `carrinho_ibfk_3` FOREIGN KEY (`idProfile`) REFERENCES `profile` (`idprofile`);
+
+--
 -- Limitadores para a tabela `favorito`
 --
 ALTER TABLE `favorito`
@@ -485,15 +558,16 @@ ALTER TABLE `imagem`
 -- Limitadores para a tabela `linhascarrinho`
 --
 ALTER TABLE `linhascarrinho`
-  ADD CONSTRAINT `fk_linhasCarrinho_carrinho1` FOREIGN KEY (`carrinho_id`) REFERENCES `carrinho` (`idcarrinhoCompra`),
-  ADD CONSTRAINT `fk_linhasCarrinho_produtos1` FOREIGN KEY (`produtos_id`) REFERENCES `produto` (`idProduto`);
+  ADD CONSTRAINT `fk_linhasCarrinho_produtos1` FOREIGN KEY (`produtos_id`) REFERENCES `produto` (`idProduto`),
+  ADD CONSTRAINT `linhascarrinho_ibfk_1` FOREIGN KEY (`carrinho_id`) REFERENCES `carrinho` (`idCarrinho`);
 
 --
 -- Limitadores para a tabela `linhasvenda`
 --
 ALTER TABLE `linhasvenda`
-  ADD CONSTRAINT `fk_linhasvenda_produtos1` FOREIGN KEY (`produtos_idProduto`) REFERENCES `produto` (`idProduto`),
-  ADD CONSTRAINT `fk_linhasvenda_vendas1` FOREIGN KEY (`vendas_idvenda`) REFERENCES `venda` (`idvenda`);
+  ADD CONSTRAINT `fk_linhasvenda_produtos1` FOREIGN KEY (`idProdutoFK`) REFERENCES `produto` (`idProduto`),
+  ADD CONSTRAINT `fk_linhasvenda_vendas1` FOREIGN KEY (`idVendaFK`) REFERENCES `venda` (`idVenda`),
+  ADD CONSTRAINT `linhasvenda_ibfk_1` FOREIGN KEY (`idAvaliacaoFK`) REFERENCES `avaliacao` (`idavaliacao`);
 
 --
 -- Limitadores para a tabela `produto`
@@ -514,7 +588,9 @@ ALTER TABLE `profile`
 --
 ALTER TABLE `venda`
   ADD CONSTRAINT `fk_vendas_metodoEntrega1` FOREIGN KEY (`metodoEntrega_id`) REFERENCES `metodoentrega` (`idmetodoEntrega`),
-  ADD CONSTRAINT `fk_vendas_metodoPagamento1` FOREIGN KEY (`metodoPagamento_id`) REFERENCES `metodopagamento` (`idMetodoPagamento`);
+  ADD CONSTRAINT `fk_vendas_metodoPagamento1` FOREIGN KEY (`metodoPagamento_id`) REFERENCES `metodopagamento` (`idMetodoPagamento`),
+  ADD CONSTRAINT `venda_ibfk_1` FOREIGN KEY (`idProfileFK`) REFERENCES `profile` (`idprofile`),
+  ADD CONSTRAINT `venda_ibfk_2` FOREIGN KEY (`idCarrinhoFK`) REFERENCES `carrinho` (`idCarrinho`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

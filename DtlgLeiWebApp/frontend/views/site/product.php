@@ -73,7 +73,9 @@ $this->params['breadcrumbs'][] = $this->title;
                         <p class="card-text">Preço: €<?= Html::encode(number_format($product->preco, 2, ',', '.')) ?></p>
                         <div class="dl-btn-container">
                             <a href="<?= Url::to(['site/product-detail', 'idProduto' => $product->idProduto]) ?>" class="btn dl-btn-primary">Ver Detalhes</a>
-                            <a href="#" class="btn dl-btn-primary"><i class="fa fa-cart-plus"></i></a>
+                            <?php if (!Yii::$app->user->isGuest): ?>
+                                <a class="btn dl-btn-primary" href="<?= yii\helpers\Url::to(['linhas-carrinho/adicionar', 'produto_id' => $product->idProduto]) ?>"><i class="fa fa-cart-plus"></i></a>
+                            <?php endif; ?>
                             <?php if (!Yii::$app->user->isGuest):
                                 $favorito = Favorito::find()->where(['produto_id' => $product->idProduto, 'profile_id' => Yii::$app->user->identity->profile->idprofile])->one(); ?>
                                 <a class="btn dl-btn-primary" href="<?= yii\helpers\Url::to(['favorito/adicionar', 'produto_id' => $product->idProduto]) ?>"><i class="fa fa-star"></i></a>

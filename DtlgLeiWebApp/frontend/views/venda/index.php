@@ -1,46 +1,49 @@
 <?php
+/** @var yii\web\View $this */
+/** @var common\models\Venda[] $vendas */
 
-use common\models\Venda;
 use yii\helpers\Html;
 use yii\helpers\Url;
-use yii\grid\ActionColumn;
-use yii\grid\GridView;
 
-/** @var yii\web\View $this */
-/** @var yii\data\ActiveDataProvider $dataProvider */
-
-$this->title = 'Vendas';
+$this->title = 'DL | Faturas';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="venda-index">
+<header>
+    <link rel="stylesheet" href="<?= Yii::getAlias('@web') ?>/css/styledata.css">
+</header>
+<div class="container">
+    <h2 class="text-center my-4 font-weight-bold">Lista de Faturas</h2>
 
-    <h1><?= Html::encode($this->title) ?></h1>
+    <!-- Tabela de Faturas -->
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+            <thead class="thead-dark">
+            <tr>
+                <th>ID</th>
+                <th>Total (€)</th>
+                <th>Data da Venda</th>
+                <th>Método de Pagamento</th>
+                <th>Método de Entrega</th>
+                <th>Ações</th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php foreach ($vendas as $fatura): ?>
+                <tr>
+                    <td><?= Html::encode($fatura->idVenda) ?></td>
+                    <td><?= Html::encode(number_format($fatura->total, 2, ',', '.')) ?></td>
+                    <td><?= Html::encode(Yii::$app->formatter->asDatetime($fatura->datavenda, 'php:d-m-Y H:i')) ?></td>
+                    <td><?= Html::encode($fatura->metodoPagamento->designacao ?? 'Não definido') ?></td>
+                    <td><?= Html::encode($fatura->metodoEntrega->designacao ?? 'Não definido') ?></td>
+                    <td>
+                        <!-- Action Buttons -->
+                        <a href="<?= Url::to(['venda/detail-venda', 'id' => $fatura->idVenda]) ?>" class="btn btn-primary btn-sm">Detalhes</a>
 
-    <p>
-        <?= Html::a('Create Venda', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
-
-
-    <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-        'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-
-            'idVenda',
-            'total',
-            'datavenda',
-            'metodoPagamento_id',
-            'metodoEntrega_id',
-            //'idCarrinhoFK',
-            //'idProfileFK',
-            [
-                'class' => ActionColumn::className(),
-                'urlCreator' => function ($action, Venda $model, $key, $index, $column) {
-                    return Url::toRoute([$action, 'idVenda' => $model->idVenda]);
-                 }
-            ],
-        ],
-    ]); ?>
-
-
+                        <a href="<?= Url::to(['venda/pdf', 'id' => $fatura->idVenda]) ?>" class="btn btn-secondary btn-sm">Gerar PDF</a>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
 </div>

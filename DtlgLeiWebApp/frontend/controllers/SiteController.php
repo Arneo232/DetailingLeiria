@@ -153,6 +153,7 @@ class SiteController extends Controller
     {
         return $this->render('about');
     }
+
     public function actionProduct()
     {
         // Buscar os produtos
@@ -164,7 +165,6 @@ class SiteController extends Controller
         // Obtém os parâmetros da URL (keyword e categoria)
         $params = Yii::$app->request->queryParams;
 
-        // Chama o método searchWithFilters e obtém o dataProvider com os filtros aplicados
         $dataProvider = $searchModel->searchWithFilters($params);
 
         // Passar as variáveis para a view

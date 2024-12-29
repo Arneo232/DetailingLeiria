@@ -2,7 +2,11 @@
 
 namespace frontend\controllers;
 
+use yii;
 use common\models\Venda;
+use common\models\Linhasvenda;
+use common\models\Carrinho;
+use common\models\Linhascarrinho;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -36,24 +40,98 @@ class VendaController extends Controller
      *
      * @return string
      */
+
+    public function actionFinalizarCompra()
+    {
+        $userId = Yii::$app->user->identity->profile->idprofile;
+
+        $carrinho = Carrinho::find()->where(['idProfile' => $userId])->one();
+
+        if (!$carrinho) {
+            Yii::$app->session->setFlash('error', 'Nenhum carrinho encontrado.');
+            return $this->redirect(['carrinho/index']);
+        }
+
+        $idMetodoEntrega = Yii::$app->request->post('idMetodoEntrega');
+        $idMetodoPagamento = Yii::$app->request->post('idMetodoPagamento');
+
+        if (!$idMetodoEntrega || !$idMetodoPagamento) {
+            Yii::$app->session->setFlash('error', 'Por favor, selecione um método de entrega e pagamento.');
+            return $this->redirect(['carrinho/checkout']);
+        }
+
+        $carrinho->idMetodoEntrega = $idMetodoEntrega;
+        $carrinho->idMetodoPagamento = $idMetodoPagamento;
+
+        if (!$carrinho->save(false)) {
+            Yii::$app->session->setFlash('error', 'Erro ao salvar os detalhes do carrinho.');
+            return $this->redirect(['carrinho/checkout']);
+        }
+
+        $venda = new Venda();
+        $venda->idProfileFK = $userId;
+        $venda->idCarrinhoFK = $carrinho->idCarrinho;
+        $venda->total = $carrinho->total;
+        $venda->datavenda = date('Y-m-d H:i:s');
+        $venda->metodoPagamento_id = $carrinho->idMetodoPagamento;
+        $venda->metodoEntrega_id = $carrinho->idMetodoEntrega;
+
+        if (!$venda->save()) {
+            Yii::$app->session->setFlash('error', 'Falha ao finalizar a compra.');
+            return $this->redirect(['carrinho/index']);
+        }
+
+        $linhasCarrinho = LinhasCarrinho::findAll(['carrinho_id' => $carrinho->idCarrinho]);
+
+        foreach ($linhasCarrinho as $linhaCarrinho) {
+            $linhaVenda = new LinhasVenda();
+            $linhaVenda->idVendaFK = $venda->idVenda;
+            $linhaVenda->idProdutoFK = $linhaCarrinho->produtos_id;
+            $linhaVenda->quantidade = $linhaCarrinho->quantidade;
+            $linhaVenda->precounitario = $linhaCarrinho->precounitario;
+            $linhaVenda->subtotal = $linhaCarrinho->subtotal;
+
+            if (!$linhaVenda->save()) {
+                Yii::$app->session->setFlash('error', 'Falha ao salvar as linhas da venda.');
+                return $this->redirect(['carrinho/index']);
+            }
+        }
+
+        LinhasCarrinho::deleteAll(['carrinho_id' => $carrinho->idCarrinho]);
+
+        Yii::$app->session->setFlash('success', 'Compra efetuada com sucesso.');
+        return $this->redirect(['venda/index', 'id' => $venda->idVenda]);
+    }
+
+
     public function actionIndex()
     {
         $dataProvider = new ActiveDataProvider([
             'query' => Venda::find(),
-            /*
-            'pagination' => [
-                'pageSize' => 50
-            ],
-            'sort' => [
-                'defaultOrder' => [
-                    'idVenda' => SORT_DESC,
-                ]
-            ],
-            */
         ]);
+
+        $vendas = Venda::find()->all();
 
         return $this->render('index', [
             'dataProvider' => $dataProvider,
+            'vendas' => $vendas,
+        ]);
+    }
+
+    public function actionDetailVenda($id)
+    {
+        $venda = Venda::findOne($id);
+
+        if (!$venda) {
+            throw new NotFoundHttpException('Venda not found.');
+        }
+
+        // Fetch LinhasVenda related to this Venda
+        $linhasVenda = LinhasVenda::find()->where(['idVendaFK' => $id])->all();
+
+        return $this->render('detailVenda', [
+            'venda' => $venda,
+            'linhasVenda' => $linhasVenda,
         ]);
     }
 

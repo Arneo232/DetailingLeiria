@@ -20,7 +20,7 @@ $carrinho = Carrinho::find()->where(['idProfile' => Yii::$app->user->identity->p
 <div class="container">
     <h1>Checkout</h1>
 
-    <?= Html::beginForm(['carrinho/finalizar-compra'], 'post') ?>
+    <?= Html::beginForm(['venda/finalizar-compra'], 'post') ?>
     <div class="form-group">
         <label for="metodo-entrega">Delivery Method</label>
         <?= Html::dropDownList('idMetodoEntrega', $carrinho->idMetodoEntrega, $metodoEntrega, ['class' => 'form-control', 'prompt' => 'Select a method']) ?>
@@ -30,7 +30,11 @@ $carrinho = Carrinho::find()->where(['idProfile' => Yii::$app->user->identity->p
         <?= Html::dropDownList('idMetodoPagamento', $carrinho->idMetodoPagamento, $metodoPagamento, ['class' => 'form-control', 'prompt' => 'Select a method']) ?>
     </div>
     <div class="form-group">
-        <button type="submit" class="btn btn-success">Finalizar Compra</button>
+        <?= Html::beginForm(['venda/finalizar-compra'], 'post') ?>
+        <!-- Add your form fields for payment and delivery method -->
+        <?= Html::submitButton('Finalizar Compra', ['class' => 'btn btn-success']) ?>
+        <?= Html::endForm() ?>
     </div>
     <?= Html::endForm() ?>
 </div>
+
