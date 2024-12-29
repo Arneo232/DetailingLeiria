@@ -29,45 +29,45 @@ $carrinho = Carrinho::find()->where(['idProfile' => Yii::$app->user->identity->p
     <div class="text-center mb-4">
         <?= Html::a('Voltar ao Carrinho', ['carrinho/index'], ['class' => 'btn btn-secondary']) ?>
     </div>
-
     <hr class="dl-divider">
-
-    <div class="row">
-        <!-- Método de entrega -->
-        <div class="col-md-6 mb-4">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title text-center">Método de Entrega</h5>
-                    <div class="form-group">
-                        <?= Html::dropDownList('idMetodoEntrega', $carrinho->idMetodoEntrega, $metodoEntrega, [
-                            'class' => 'form-control',
-                            'prompt' => 'Selecione um método'
-                        ]) ?>
+    <?= Html::beginForm(['venda/finalizar-compra'], 'post') ?>
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title text-center">Método de Entrega</h5>
+                        <div class="form-group">
+                            <?= Html::dropDownList('idMetodoEntrega', $carrinho->idMetodoEntrega, $metodoEntrega, [
+                                'class' => 'form-control',
+                                'prompt' => 'Selecione um método'
+                            ]) ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title text-center">Método de Pagamento</h5>
+                        <div class="form-group">
+                            <?= Html::dropDownList('idMetodoPagamento', $carrinho->idMetodoPagamento, $metodoPagamento, [
+                                'class' => 'form-control',
+                                'prompt' => 'Selecione um método'
+                            ]) ?>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Método de pagamento -->
-        <div class="col-md-6 mb-4">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title text-center">Método de Pagamento</h5>
-                    <div class="form-group">
-                        <?= Html::dropDownList('idMetodoPagamento', $carrinho->idMetodoPagamento, $metodoPagamento, [
-                            'class' => 'form-control',
-                            'prompt' => 'Selecione um método'
-                        ]) ?>
-                    </div>
-                </div>
-            </div>
+        <hr class="dl-divider">
+
+        <!-- Botão de Finalizar Compra -->
+        <div class="text-center">
+            <?= Html::beginForm(['venda/finalizar-compra'], 'post') ?>
+            <!-- Add your form fields for payment and delivery method -->
+            <?= Html::submitButton('Finalizar Compra', ['class' => 'btn btn-success']) ?>
+            <?= Html::endForm() ?>
         </div>
-    </div>
-
-    <hr class="dl-divider">
-
-    <!-- Botão de Finalizar Compra -->
-    <div class="text-center">
-        <?= Html::submitButton('Finalizar Compra', ['class' => 'btn btn-primary']) ?>
-    </div>
+    <?= Html::endForm() ?>
 </div>
