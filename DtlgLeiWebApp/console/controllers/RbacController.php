@@ -62,6 +62,10 @@ class RbacController extends Controller
         $GestaoMetodosEntrega->description = 'Permite visualizar o Gestão Métodos de Entrega';
         $auth->add($GestaoMetodosEntrega);
 
+        $GestaoEncomendas = $auth->createPermission('GestaoEncomendas');
+        $GestaoEncomendas->description = 'Permite visualizar o Gestão encomendas';
+        $auth->add($GestaoEncomendas);
+
         $ProdutoIndexView = $auth->createPermission('ProdutoIndexView');
         $ProdutoIndexView->description = 'Permite visualizar a View dos produtos';
         $auth->add($ProdutoIndexView);
@@ -109,6 +113,7 @@ class RbacController extends Controller
         $auth->addChild($funcionario,$DescontosIndex);
         $auth->addChild($funcionario,$GestaoIndexProdutos);
         $auth->addChild($funcionario,$GestaoMetodosEntrega);
+        $auth->addChild($funcionario,$GestaoEncomendas);
 
 
         // Papel: gestor (herda de funcionário, adiciona CRUD de categorias, pagamentos e entregas)
