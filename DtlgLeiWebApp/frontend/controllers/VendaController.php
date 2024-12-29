@@ -11,6 +11,8 @@ use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use Mpdf\Mpdf;
+
 
 /**
  * VendaController implements the CRUD actions for Venda model.
@@ -101,6 +103,27 @@ class VendaController extends Controller
 
         Yii::$app->session->setFlash('success', 'Compra efetuada com sucesso.');
         return $this->redirect(['venda/index', 'id' => $venda->idVenda]);
+    }
+    public function actionPdf($id)
+    {
+        $venda = Venda::findOne($id);
+        if (!$venda) {
+            Yii::$app->session->setFlash('error', 'Venda não encontrada.');
+            return $this->redirect(['venda/index']);
+        }
+
+        $linhasVenda = $venda->getLinhasVenda()->all();
+        $content = $this->renderPartial('_fatura', [
+            'venda' => $venda,
+            'linhasVenda' => $linhasVenda,
+        ]);
+
+
+        $mpdf = new Mpdf();
+        $mpdf->WriteHTML($content);
+
+        $pdfFileName = "Fatura{$venda->idVenda}.pdf";
+        return $mpdf->Output($pdfFileName, \Mpdf\Output\Destination::DOWNLOAD);
     }
 
 

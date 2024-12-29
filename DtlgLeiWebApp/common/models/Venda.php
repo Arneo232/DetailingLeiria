@@ -61,9 +61,9 @@ class Venda extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getLinhasVendas()
+    public function getLinhasVenda()
     {
-        return $this->hasMany(Linhasvenda::class, ['vendas_idvenda' => 'idvenda']);
+        return $this->hasMany(Linhasvenda::class, ['idVendaFK' => 'idVenda']);
     }
 
     /**
