@@ -10,8 +10,9 @@ use Yii;
  * @property int $idavaliacao
  * @property string|null $comentario
  * @property float $rating
+ * @property int $idLinhasVendaFK
  *
- * @property Linhasvenda[] $linhasvendas
+ * @property Linhasvenda $linhasVenda
  */
 class Avaliacao extends \yii\db\ActiveRecord
 {
@@ -29,9 +30,12 @@ class Avaliacao extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['rating'], 'required'],
+            [['rating', 'idLinhasVendaFK'], 'required'],
             [['rating'], 'number'],
+            [['idLinhasVendaFK'], 'integer'],
             [['comentario'], 'string', 'max' => 256],
+            [['idLinhasVendaFK'], 'unique'],
+            [['idLinhasVendaFK'], 'exist', 'skipOnError' => true, 'targetClass' => Linhasvenda::class, 'targetAttribute' => ['idLinhasVendaFK' => 'idLinhasVenda']],
         ];
     }
 
@@ -41,19 +45,21 @@ class Avaliacao extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'idavaliacao' => 'Idavaliacao',
-            'comentario' => 'Comentario',
-            'rating' => 'Rating',
+            'idavaliacao' => 'Id Avaliação',
+            'comentario' => 'Comentário',
+            'rating' => 'Nota',
+            'idLinhasVendaFK' => 'Id Linha de Venda',
         ];
     }
 
     /**
-     * Gets query for [[Linhasvendas]].
+     * Gets query for [[LinhasVenda]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getLinhasvendas()
+    public function getLinhasVenda()
     {
-        return $this->hasMany(Linhasvenda::class, ['idAvaliacaoFK' => 'idavaliacao']);
+        return $this->hasOne(Linhasvenda::class, ['idLinhasVenda' => 'idLinhasVendaFK']);
     }
 }
+

@@ -1,5 +1,4 @@
 <?php
-
 namespace common\models;
 
 use Yii;
@@ -13,10 +12,8 @@ use Yii;
  * @property float|null $subtotal
  * @property int $idVendaFK
  * @property int $idProdutoFK
- * @property int|null $idAvaliacaoFK
  * @property int $idLinhasCarrinhoFK
  *
- * @property Avaliacao $idAvaliacaoFK0
  * @property Linhascarrinho $idLinhasCarrinhoFK0
  * @property Produto $idProdutoFK0
  * @property Venda $idVendaFK0
@@ -37,12 +34,11 @@ class Linhasvenda extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['quantidade', 'idVendaFK', 'idProdutoFK', 'idAvaliacaoFK'], 'integer'],
+            [['quantidade', 'idVendaFK', 'idProdutoFK'], 'integer'],
             [['precounitario', 'subtotal'], 'number'],
             [['idVendaFK', 'idProdutoFK'], 'required'],
             [['idProdutoFK'], 'exist', 'skipOnError' => true, 'targetClass' => Produto::class, 'targetAttribute' => ['idProdutoFK' => 'idProduto']],
             [['idVendaFK'], 'exist', 'skipOnError' => true, 'targetClass' => Venda::class, 'targetAttribute' => ['idVendaFK' => 'idVenda']],
-            [['idAvaliacaoFK'], 'exist', 'skipOnError' => true, 'targetClass' => Avaliacao::class, 'targetAttribute' => ['idAvaliacaoFK' => 'idavaliacao']],
         ];
     }
 
@@ -54,22 +50,11 @@ class Linhasvenda extends \yii\db\ActiveRecord
         return [
             'idLinhasVenda' => 'Id Linhas Venda',
             'quantidade' => 'Quantidade',
-            'precounitario' => 'Precounitario',
+            'precounitario' => 'Preço Unitário',
             'subtotal' => 'Subtotal',
             'idVendaFK' => 'Id Venda Fk',
             'idProdutoFK' => 'Id Produto Fk',
-            'idAvaliacaoFK' => 'Id Avaliacao Fk',
         ];
-    }
-
-    /**
-     * Gets query for [[IdAvaliacaoFK0]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public function getAvaliacao()
-    {
-        return $this->hasOne(Avaliacao::class, ['idavaliacao' => 'idAvaliacaoFK']);
     }
 
     /**

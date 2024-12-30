@@ -163,7 +163,7 @@ class Produto extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getLinhasvendas()
+    public function getLinhasVenda()
     {
         return $this->hasMany(Linhasvenda::class, ['idProdutoFK' => 'idProduto']);
     }

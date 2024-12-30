@@ -3,6 +3,7 @@
 namespace common\models;
 
 use Yii;
+use yii\debug\models\search\Profile;
 
 /**
  * This is the model class for table "venda".
@@ -84,5 +85,9 @@ class Venda extends \yii\db\ActiveRecord
     public function getMetodoPagamento()
     {
         return $this->hasOne(Metodopagamento::class, ['idMetodoPagamento' => 'metodoPagamento_id']);
+    }
+    public function getProfile()
+    {
+        return $this->hasOne(Profile::class, ['idprofile' => 'idProfileFK']);
     }
 }

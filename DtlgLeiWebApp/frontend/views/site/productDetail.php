@@ -1,5 +1,9 @@
 <?php
 /** @var yii\web\View $this */
+/** @var bool $isEligibleToReview */
+/** @var common\models\Produto $product */
+/** @var common\models\Avaliacao[] $avaliacoes */
+
 
 use yii\helpers\Html;
 use yii\helpers\Url;
@@ -68,6 +72,87 @@ $this->params['breadcrumbs'][] = $this->title;
                 </div>
             </div>
         </div>
+
+        <!-- Linha para dividir -->
+        <hr>
+
+        <!-- Comentário Section -->
+        <h3 class="dl-avaliacoes-title">Avaliações</h3>
+        <section class="dl-review-form-section">
+            <h3 class="dl-review-form-title">Deixe sua Avaliação</h3>
+            <?= Html::beginForm(['avaliacao/add-review'], 'post') ?>
+            <?= Html::hiddenInput('idProduto', $product->idProduto) ?>
+
+            <div class="dl-form-group">
+                <label for="rating" class="dl-form-label">Nota:</label>
+                <select name="rating" id="rating" class="dl-form-control">
+                    <option value="" disabled selected>Escolha uma opção</option>
+                    <option value="1">1 - Muito Mau</option>
+                    <option value="2">2 - Mau</option>
+                    <option value="3">3 - Satisfaz</option>
+                    <option value="4">4 - Bom</option>
+                    <option value="5">5 - Excelente</option>
+                </select>
+            </div>
+
+            <div class="dl-form-group">
+                <label for="comentario" class="dl-form-label">Comentário:</label>
+                <textarea name="comentario" id="comentario" class="dl-form-control" rows="4"></textarea>
+            </div>
+
+            <div class="dl-form-group">
+                <?= Html::submitButton('Enviar Avaliação', ['class' => 'dl-btn-primary']) ?>
+            </div>
+            <?= Html::endForm() ?>
+        </section>
+
+        <?php if (!empty($avaliacoes)): ?>
+            <section class="dl-reviews-list">
+                <?php foreach ($avaliacoes as $avaliacao): ?>
+                    <div class="dl-review">
+                        <p><strong>Nota:</strong> <?= Html::encode($avaliacao->rating) ?> / 5</p>
+                        <p><strong>Comentário:</strong> <?= Html::encode($avaliacao->comentario) ?></p>
+                    </div>
+                <?php endforeach; ?>
+            </section>
+        <?php else: ?>
+            <hr>
+            <p>Este produto ainda não possui avaliações.</p>
+        <?php endif; ?>
+
+        <?php if ($isEligibleToReview): ?>
+            <h3 class="dl-review-form-title">Deixe sua Avaliação</h3>
+            <?= Html::beginForm(['avaliacao/add-review'], 'post') ?>
+            <?= Html::hiddenInput('idProduto', $product->idProduto) ?>
+
+            <div class="dl-form-group">
+                <label for="rating" class="dl-form-label">Nota:</label>
+                <?= Html::input('number', 'rating', null, [
+                    'id' => 'rating',
+                    'class' => 'dl-form-control',
+                    'min' => 1,
+                    'max' => 5,
+                    'required' => true,
+                ]) ?>
+            </div>
+
+            <div class="dl-form-group">
+                <label for="comentario" class="dl-form-label">Comentário:</label>
+                <?= Html::textarea('comentario', '', [
+                    'id' => 'comentario',
+                    'class' => 'dl-form-control',
+                    'rows' => 4,
+                    'required' => true,
+                ]) ?>
+            </div>
+
+            <?= Html::submitButton('Enviar Avaliação', ['class' => 'dl-btn-primary']) ?>
+            <?= Html::endForm() ?>
+        <?php else: ?>
+            <p>Você deve comprar este produto antes de avaliá-lo.</p>
+        <?php endif; ?>
+
+
     </div>
 </section>
 

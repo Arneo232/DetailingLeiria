@@ -2,6 +2,8 @@
 
 namespace frontend\controllers;
 
+use yii;
+use common\models\Linhasvenda;
 use common\models\avaliacao;
 use frontend\models\AvaliacaoSearch;
 use yii\web\Controller;
@@ -36,6 +38,41 @@ class AvaliacaoController extends Controller
      *
      * @return string
      */
+    public function actionAddReview()
+    {
+        $idProduto = Yii::$app->request->post('idProduto');
+        $idUser = Yii::$app->user->id;
+        $comentario = Yii::$app->request->post('comentario');
+        $rating = Yii::$app->request->post('rating');
+
+        // Fetch the LinhasVenda record that corresponds to the product purchased by the user
+        $linhasVenda = Linhasvenda::find()
+            ->joinWith('venda') // Ensure this relation exists in the LinhasVenda model
+            ->where([
+                'linhasvenda.idProdutoFK' => $idProduto,
+                'venda.idProfileFK' => $idUser,
+            ])
+            ->one();
+
+        if (!$linhasVenda) {
+            Yii::$app->session->setFlash('error', 'Você não pode avaliar este produto porque não o comprou.');
+            return $this->redirect(['site/product-detail', 'idProduto' => $idProduto]);
+        }
+
+        // Create a new review and associate it with the LinhasVenda
+        $avaliacao = new Avaliacao();
+        $avaliacao->idLinhasVendaFK = $linhasVenda->idLinhasVenda;
+        $avaliacao->comentario = $comentario;
+        $avaliacao->rating = $rating;
+
+        if ($avaliacao->save()) {
+            Yii::$app->session->setFlash('success', 'Avaliação adicionada com sucesso.');
+        } else {
+            Yii::$app->session->setFlash('error', 'Erro ao salvar a avaliação.');
+        }
+
+        return $this->redirect(['site/product-detail', 'idProduto' => $idProduto]);
+    }
     public function actionIndex()
     {
         $searchModel = new AvaliacaoSearch();
