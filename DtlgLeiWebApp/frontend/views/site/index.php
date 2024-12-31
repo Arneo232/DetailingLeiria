@@ -35,10 +35,10 @@ $this->params['breadcrumbs'][] = $this->title;
                                         Aqui, ajudamos a cuidar do seu carro como ele merece!
                                     </p>
                                     <div class="btn-box">
-                                        <a href="http://localhost/detailingleiria/DtlgLeiWebApp/frontend/web/index.php?r=site%2Fcontact" class="btn1">
+                                        <a href="site/contact" class="btn1">
                                             Contact Us
                                         </a>
-                                        <a href="http://localhost/detailingleiria/DtlgLeiWebApp/frontend/web/index.php?r=site%2Fabout" class="btn2">
+                                        <a href="site/about" class="btn2">
                                             About Us
                                         </a>
                                     </div>
@@ -53,16 +53,16 @@ $this->params['breadcrumbs'][] = $this->title;
                             <div class="col-md-7">
                                 <div class="detail-box">
                                     <h1>
-                                        Stylish Watches
+                                        OS Melhores Produtos!
                                     </h1>
                                     <p>
-                                        Lorem ipsum, dolor sit amet consectetur adipisicing elit. Minus quidem maiores perspiciatis, illo maxime voluptatem a itaque suscipit.
+                                        Descubra qualidade e inovação nos melhores produtos para cuidar do seu automóvel!
                                     </p>
                                     <div class="btn-box">
-                                        <a href="http://localhost/detailingleiria/DtlgLeiWebApp/frontend/web/index.php?r=site%2Fcontact" class="btn1">
-                                            Contact Us
+                                        <a href="site/product" class="btn1">
+                                            Products
                                         </a>
-                                        <a href="http://localhost/detailingleiria/DtlgLeiWebApp/frontend/web/index.php?r=site%2Fabout" class="btn2">
+                                        <a href="site/about" class="btn2">
                                             About Us
                                         </a>
                                     </div>
@@ -77,16 +77,16 @@ $this->params['breadcrumbs'][] = $this->title;
                             <div class="col-md-7">
                                 <div class="detail-box">
                                     <h1>
-                                        Stylish Watches
+                                        Eleve a sua experiencia de compra!
                                     </h1>
                                     <p>
-                                        Lorem ipsum, dolor sit amet consectetur adipisicing elit. Minus quidem maiores perspiciatis, illo maxime voluptatem a itaque suscipit.
+                                        Junte-se a nós e transforme a sua experiência de compras numa jornada única e prática!
                                     </p>
                                     <div class="btn-box">
-                                        <a href="http://localhost/detailingleiria/DtlgLeiWebApp/frontend/web/index.php?r=site%2Fcontact" class="btn1">
-                                            Contact Us
+                                        <a href="site/signup" class="btn1">
+                                            Register
                                         </a>
-                                        <a href="http://localhost/detailingleiria/DtlgLeiWebApp/frontend/web/index.php?r=site%2Fabout" class="btn2">
+                                        <a href="site/about" class="btn2">
                                             About Us
                                         </a>
                                     </div>

@@ -76,37 +76,40 @@ $this->params['breadcrumbs'][] = $this->title;
 
         <hr>
 
-        <h3 class="dl-avaliacoes-title">Avaliações</h3>
+        <h3 class="dl-avaliacoes-title">Avaliações do Produto</h3>
         <div class="avaliacoes-container">
             <?php if (!empty($avaliacoes)): ?>
                 <?php foreach ($avaliacoes as $avaliacao): ?>
                     <div class="avaliacao">
-                        <strong>Nota:</strong> <?= Html::encode($avaliacao->rating) ?> / 5<br>
-                        <strong>Comentário:</strong> <?= Html::encode($avaliacao->comentario) ?><br>
+                        <p><strong>Nota:</strong> <?= Html::encode($avaliacao->rating) ?> / 5</p>
+                        <p><strong>Comentário:</strong> <?= Html::encode($avaliacao->comentario) ?></p>
                         <?php if (!Yii::$app->user->isGuest && Yii::$app->user->identity->id == $avaliacao->profile->user->id): ?>
                             <?= Html::a('Remover', ['avaliacao/remover-avaliacao', 'idavaliacao' => $avaliacao->idavaliacao, 'idProduto' => $idProduto], [
-                                'class' => 'btn btn-danger',
+                                'class' => 'btn-remove-avaliacao',
                                 'data' => [
-                                    'confirm' => 'Tem acerteza de que deseja apagar esta avaliação?',
+                                    'confirm' => 'Tem a certeza de que deseja apagar esta avaliação?',
                                     'method' => 'post',
                                 ],
                             ]) ?>
                         <?php endif; ?>
-                        <hr>
                     </div>
+                    <hr>
                 <?php endforeach; ?>
             <?php else: ?>
-                <p>Ninguém deu uma avaliação neste produto.</p>
+                <p>Este produto ainda não recebeu avaliações.</p>
             <?php endif; ?>
         </div>
+
         <?php if (!Yii::$app->user->isGuest): ?>
-            <h3 class="dl-avaliacoes-title">Escrever Avaliação</h3>
+            <hr class="dl-divider">
+            <h3 class="dl-avaliacoes-title">Deixe a Sua Avaliação</h3>
             <?= $this->render('//avaliacao/_form', [
                 'reviewModel' => $reviewModel,
                 'idProduto' => $product->idProduto,
             ]) ?>
         <?php endif; ?>
-    </div>
+
+
 </section>
 
 <script>

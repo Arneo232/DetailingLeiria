@@ -1,9 +1,19 @@
 <?php
 use yii\helpers\Html;
 ?>
-<div class="card">
-    <div class="card-body login-card-body">
-        <p class="login-box-msg">Sign in to start your session</p>
+
+<header>
+    <link rel="stylesheet" href="<?= Yii::getAlias('@web') ?>/css/site.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+</header>
+
+<div class="dl-login-section">
+    <div class="dl-login-card">
+        <div class="dl-logo-container">
+            <img src="<?= Yii::getAlias('@web') ?>/images/Logo_Solo.png" alt="Logo do DL" class="dl-login-logo">
+        </div>
+        <h1 class="dl-login-title">Log In</h1>
+        <p class="dl-login-description">Sign in to start your session</p>
 
         <?php $form = \yii\bootstrap4\ActiveForm::begin(['id' => 'login-form']) ?>
 
@@ -17,51 +27,22 @@ use yii\helpers\Html;
             </div>
         <?php endif; ?>
 
-        <?= $form->field($model,'username', [
-            'options' => ['class' => 'form-group has-feedback'],
-            'inputTemplate' => '{input}<div class="input-group-append"><div class="input-group-text"><span class="fas fa-envelope"></span></div></div>',
-            'template' => '{beginWrapper}{input}{error}{endWrapper}',
-            'wrapperOptions' => ['class' => 'input-group mb-3']
-        ])
-            ->label(false)
-            ->textInput(['placeholder' => $model->getAttributeLabel('username')]) ?>
+        <div class="dl-login-container">
+            <?= $form->field($model, 'username')->textInput(['placeholder' => $model->getAttributeLabel('username'), 'class' => 'dl-login-input']) ?>
 
-        <?= $form->field($model, 'password', [
-            'options' => ['class' => 'form-group has-feedback'],
-            'inputTemplate' => '{input}<div class="input-group-append"><div class="input-group-text"><span class="fas fa-lock"></span></div></div>',
-            'template' => '{beginWrapper}{input}{error}{endWrapper}',
-            'wrapperOptions' => ['class' => 'input-group mb-3']
-        ])
-            ->label(false)
-            ->passwordInput(['placeholder' => $model->getAttributeLabel('password')]) ?>
+            <?= $form->field($model, 'password')->passwordInput(['placeholder' => $model->getAttributeLabel('password'), 'class' => 'dl-login-input']) ?>
 
-        <div class="row">
-            <div class="col-8">
-                <?= $form->field($model, 'rememberMe')->checkbox([
-                    'template' => '<div class="icheck-primary">{input}{label}</div>',
-                    'labelOptions' => [
-                        'class' => ''
-                    ],
-                    'uncheck' => null
-                ]) ?>
+            <div class="dl-login-rememberme">
+                <?= $form->field($model, 'rememberMe')->checkbox([ 'template' => '<div class="icheck-primary">{input}{label}</div>', 'labelOptions' => ['class' => ''], 'uncheck' => null]) ?>
             </div>
-            <div class="col-4">
-                <?= Html::submitButton('Sign In', ['class' => 'btn btn-primary btn-block']) ?>
+
+            <div class="dl-login-button-container">
+                <?= Html::submitButton('Sign In', ['class' => 'dl-login-button']) ?>
             </div>
         </div>
 
         <?php \yii\bootstrap4\ActiveForm::end(); ?>
 
-        <div class="social-auth-links text-center mb-3">
-            <p>- OR -</p>
-            <a href="#" class="btn btn-block btn-primary">
-                <i class="fab fa-facebook mr-2"></i> Sign in using Facebook
-            </a>
-            <a href="#" class="btn btn-block btn-danger">
-                <i class="fab fa-google-plus mr-2"></i> Sign in using Google+
-            </a>
-        </div>
-        <!-- /.social-auth-links -->
 
         <p class="mb-1">
             <a href="forgot-password.html">I forgot my password</a>
@@ -70,5 +51,4 @@ use yii\helpers\Html;
             <a href="register.html" class="text-center">Register a new membership</a>
         </p>
     </div>
-    <!-- /.login-card-body -->
 </div>

@@ -88,3 +88,129 @@ a.desc:after {
 .nav > li > form > button.logout:focus {
     outline: none;
 }
+
+/*   Login   */
+
+.dl-login-section {
+    background: linear-gradient(135deg, #858585, #3a8dff);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    font-family: 'Poppins', sans-serif;
+    padding: 20px;
+}
+
+.dl-login-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(8px);
+    border-radius: 15px;
+    padding: 40px 30px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    max-width: 400px;
+    width: 100%;
+    text-align: center;
+}
+
+.dl-logo-container {
+    margin-bottom: 20px;
+}
+
+.dl-login-logo {
+    max-width: 120px;
+    height: auto;
+}
+
+.dl-login-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: #0052cc;
+    margin-bottom: 15px;
+}
+
+.dl-login-description {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 25px;
+}
+
+.dl-login-container {
+    width: 100%;
+}
+
+.dl-login-input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 25px;
+    font-size: 14px;
+    margin-bottom: 15px;
+    background: #f9f9f9;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+    color: #333;
+}
+
+.dl-login-input:focus {
+    border-color: #0052cc;
+    background-color: #ffffff;
+    outline: none;
+}
+
+.dl-login-rememberme {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    margin-bottom: 20px;
+}
+
+.dl-login-checkbox {
+    margin: 0;
+    margin-right: 10px;
+}
+
+.dl-login-checkbox-label {
+    font-size: 14px;
+    color: #555;
+}
+
+.dl-login-links {
+    font-size: 14px;
+    margin-bottom: 30px;
+    color: #777;
+}
+
+.dl-login-link {
+    color: #0052cc;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.dl-login-link:hover {
+    text-decoration: underline;
+}
+
+.dl-login-button-container {
+    text-align: center;
+}
+
+.dl-login-button {
+    background: linear-gradient(135deg, #0052cc, #003c99);
+    color: #ffffff;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 25px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+    text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.dl-login-button:hover {
+    background: linear-gradient(135deg, #003c99, #002866);
+    transform: translateY(-3px);
+}
+
+.dl-login-button:active {
+    transform: translateY(0);
+}
