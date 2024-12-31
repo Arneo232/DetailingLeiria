@@ -1,13 +1,14 @@
 <?php
 /** @var yii\web\View $this */
-/** @var bool $isEligibleToReview */
 /** @var common\models\Produto $product */
 /** @var common\models\Avaliacao[] $avaliacoes */
-
+/** @var common\models\Avaliacao $reviewModel */
 
 use yii\helpers\Html;
 use yii\helpers\Url;
+use yii\widgets\ActiveForm;
 use common\models\Produto;
+use common\models\Avaliacao;
 
 $idProduto = Yii::$app->request->get('idProduto');
 $product = Produto::findOne($idProduto);
@@ -33,7 +34,6 @@ $this->params['breadcrumbs'][] = $this->title;
             <h2>Detalhes do Produto</h2>
         </div>
         <div class="product-container">
-            <!-- Coluna Esquerda -->
             <div class="product-box">
                 <div class="img-box">
                     <?php if (!empty($product->imagem)): ?>
@@ -47,7 +47,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 </div>
             </div>
 
-            <!-- Coluna Direita -->
             <div class="product-box">
                 <div class="product-title">
                     <h2><?= Html::encode($product->nome) ?></h2>
@@ -59,10 +58,12 @@ $this->params['breadcrumbs'][] = $this->title;
                 </div>
                 <div class="add-to-cart">
                     <div class="quantity-selector">
-                        <button onclick="decreaseQuantity()">-</button>
-                        <input type="number" value="1" min="1" id="quantity">
-                        <button onclick="increaseQuantity()">+</button>
-                        <button class="btn-add-to-cart">Adicionar ao carrinho</button>
+                        <?php if (!Yii::$app->user->isGuest): ?>
+                            <button onclick="decreaseQuantity()">-</button>
+                            <input type="number" value="1" min="1" id="quantity">
+                            <button onclick="increaseQuantity()">+</button>
+                            <a class="btn dl-btn-primary" href="<?= yii\helpers\Url::to(['linhas-carrinho/adicionar', 'produto_id' => $product->idProduto]) ?>"><i class="fa fa-cart-plus"></i></a>
+                        <?php endif; ?>
                     </div>
                     <div>
                         <?= Html::a('Voltar para os Produtos', Url::to(['site/product']), [
@@ -73,86 +74,38 @@ $this->params['breadcrumbs'][] = $this->title;
             </div>
         </div>
 
-        <!-- Linha para dividir -->
         <hr>
 
-        <!-- Comentário Section -->
         <h3 class="dl-avaliacoes-title">Avaliações</h3>
-        <section class="dl-review-form-section">
-            <h3 class="dl-review-form-title">Deixe sua Avaliação</h3>
-            <?= Html::beginForm(['avaliacao/add-review'], 'post') ?>
-            <?= Html::hiddenInput('idProduto', $product->idProduto) ?>
-
-            <div class="dl-form-group">
-                <label for="rating" class="dl-form-label">Nota:</label>
-                <select name="rating" id="rating" class="dl-form-control">
-                    <option value="" disabled selected>Escolha uma opção</option>
-                    <option value="1">1 - Muito Mau</option>
-                    <option value="2">2 - Mau</option>
-                    <option value="3">3 - Satisfaz</option>
-                    <option value="4">4 - Bom</option>
-                    <option value="5">5 - Excelente</option>
-                </select>
-            </div>
-
-            <div class="dl-form-group">
-                <label for="comentario" class="dl-form-label">Comentário:</label>
-                <textarea name="comentario" id="comentario" class="dl-form-control" rows="4"></textarea>
-            </div>
-
-            <div class="dl-form-group">
-                <?= Html::submitButton('Enviar Avaliação', ['class' => 'dl-btn-primary']) ?>
-            </div>
-            <?= Html::endForm() ?>
-        </section>
-
-        <?php if (!empty($avaliacoes)): ?>
-            <section class="dl-reviews-list">
+        <div class="avaliacoes-container">
+            <?php if (!empty($avaliacoes)): ?>
                 <?php foreach ($avaliacoes as $avaliacao): ?>
-                    <div class="dl-review">
-                        <p><strong>Nota:</strong> <?= Html::encode($avaliacao->rating) ?> / 5</p>
-                        <p><strong>Comentário:</strong> <?= Html::encode($avaliacao->comentario) ?></p>
+                    <div class="avaliacao">
+                        <strong>Nota:</strong> <?= Html::encode($avaliacao->rating) ?> / 5<br>
+                        <strong>Comentário:</strong> <?= Html::encode($avaliacao->comentario) ?><br>
+                        <?php if (!Yii::$app->user->isGuest && Yii::$app->user->identity->id == $avaliacao->profile->user->id): ?>
+                            <?= Html::a('Remover', ['avaliacao/remover-avaliacao', 'idavaliacao' => $avaliacao->idavaliacao, 'idProduto' => $idProduto], [
+                                'class' => 'btn btn-danger',
+                                'data' => [
+                                    'confirm' => 'Tem acerteza de que deseja apagar esta avaliação?',
+                                    'method' => 'post',
+                                ],
+                            ]) ?>
+                        <?php endif; ?>
+                        <hr>
                     </div>
                 <?php endforeach; ?>
-            </section>
-        <?php else: ?>
-            <hr>
-            <p>Este produto ainda não possui avaliações.</p>
+            <?php else: ?>
+                <p>Ninguém deu uma avaliação neste produto.</p>
+            <?php endif; ?>
+        </div>
+        <?php if (!Yii::$app->user->isGuest): ?>
+            <h3 class="dl-avaliacoes-title">Escrever Avaliação</h3>
+            <?= $this->render('//avaliacao/_form', [
+                'reviewModel' => $reviewModel,
+                'idProduto' => $product->idProduto,
+            ]) ?>
         <?php endif; ?>
-
-        <?php if ($isEligibleToReview): ?>
-            <h3 class="dl-review-form-title">Deixe sua Avaliação</h3>
-            <?= Html::beginForm(['avaliacao/add-review'], 'post') ?>
-            <?= Html::hiddenInput('idProduto', $product->idProduto) ?>
-
-            <div class="dl-form-group">
-                <label for="rating" class="dl-form-label">Nota:</label>
-                <?= Html::input('number', 'rating', null, [
-                    'id' => 'rating',
-                    'class' => 'dl-form-control',
-                    'min' => 1,
-                    'max' => 5,
-                    'required' => true,
-                ]) ?>
-            </div>
-
-            <div class="dl-form-group">
-                <label for="comentario" class="dl-form-label">Comentário:</label>
-                <?= Html::textarea('comentario', '', [
-                    'id' => 'comentario',
-                    'class' => 'dl-form-control',
-                    'rows' => 4,
-                    'required' => true,
-                ]) ?>
-            </div>
-
-            <?= Html::submitButton('Enviar Avaliação', ['class' => 'dl-btn-primary']) ?>
-            <?= Html::endForm() ?>
-        <?php else: ?>
-            <p>Você deve comprar este produto antes de avaliá-lo.</p>
-        <?php endif; ?>
-
-
     </div>
 </section>
 

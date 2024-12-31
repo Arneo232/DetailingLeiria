@@ -10,9 +10,11 @@ use Yii;
  * @property int $idavaliacao
  * @property string|null $comentario
  * @property float $rating
- * @property int $idLinhasVendaFK
+ * @property int $idProdutoFK
+ * * @property int $idProfileFK
  *
- * @property Linhasvenda $linhasVenda
+ * @property Produto $produto
+ * * @property Profile $profile
  */
 class Avaliacao extends \yii\db\ActiveRecord
 {
@@ -30,12 +32,13 @@ class Avaliacao extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['rating', 'idLinhasVendaFK'], 'required'],
+            [['rating', 'idProdutoFK', 'idProfileFK'], 'required'],
+            [['rating'], 'in', 'range' => [1, 2, 3, 4, 5]],
             [['rating'], 'number'],
-            [['idLinhasVendaFK'], 'integer'],
+            [['idProdutoFK', 'idProfileFK'], 'integer'],
             [['comentario'], 'string', 'max' => 256],
-            [['idLinhasVendaFK'], 'unique'],
-            [['idLinhasVendaFK'], 'exist', 'skipOnError' => true, 'targetClass' => Linhasvenda::class, 'targetAttribute' => ['idLinhasVendaFK' => 'idLinhasVenda']],
+            [['idProdutoFK'], 'exist', 'skipOnError' => true, 'targetClass' => Produto::class, 'targetAttribute' => ['idProdutoFK' => 'idProduto']],
+            [['idProfileFK'], 'exist', 'skipOnError' => true, 'targetClass' => Profile::class, 'targetAttribute' => ['idProfileFK' => 'idprofile']],
         ];
     }
 
@@ -48,18 +51,29 @@ class Avaliacao extends \yii\db\ActiveRecord
             'idavaliacao' => 'Id Avaliação',
             'comentario' => 'Comentário',
             'rating' => 'Nota',
-            'idLinhasVendaFK' => 'Id Linha de Venda',
+            'idProdutoFK' => 'ID Produto',
+            'idProfileFK' => 'ID Profile',
         ];
     }
 
     /**
-     * Gets query for [[LinhasVenda]].
+     * Gets query for [[Produto]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getLinhasVenda()
+    public function getProduto()
     {
-        return $this->hasOne(Linhasvenda::class, ['idLinhasVenda' => 'idLinhasVendaFK']);
+        return $this->hasOne(Produto::class, ['idProduto' => 'idProdutoFK']);
+    }
+
+    /**
+     * Gets query for [[Profile]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getProfile()
+    {
+        return $this->hasOne(Profile::class, ['idprofile' => 'idProfileFK']);
     }
 }
 

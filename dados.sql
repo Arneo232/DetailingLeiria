@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Tempo de geração: 29-Dez-2024 às 02:26
+-- Tempo de geração: 31-Dez-2024 às 16:09
 -- Versão do servidor: 8.3.0
 -- versão do PHP: 8.3.6
 
@@ -163,8 +163,12 @@ CREATE TABLE IF NOT EXISTS `avaliacao` (
   `idavaliacao` int NOT NULL AUTO_INCREMENT,
   `comentario` varchar(256) DEFAULT NULL,
   `rating` decimal(5,0) NOT NULL,
-  PRIMARY KEY (`idavaliacao`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+  `idProfileFK` int NOT NULL,
+  `idProdutoFK` int NOT NULL,
+  PRIMARY KEY (`idavaliacao`),
+  KEY `idProfileFK` (`idProfileFK`,`idProdutoFK`),
+  KEY `idProdutoFK` (`idProdutoFK`)
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb3;
 
 -- --------------------------------------------------------
 
@@ -191,7 +195,7 @@ CREATE TABLE IF NOT EXISTS `carrinho` (
 --
 
 INSERT INTO `carrinho` (`idCarrinho`, `total`, `datavenda`, `idProfile`, `idMetodoEntrega`, `idMetodoPagamento`) VALUES
-(18, NULL, NULL, 9, NULL, NULL);
+(18, 90, NULL, 9, 1, 2);
 
 -- --------------------------------------------------------
 
@@ -248,7 +252,7 @@ CREATE TABLE IF NOT EXISTS `favorito` (
   PRIMARY KEY (`idfavorito`),
   KEY `fk_favorito_produto1_idx` (`produto_id`),
   KEY `fk_favorito_profile1_idx` (`profile_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb3;
 
 -- --------------------------------------------------------
 
@@ -283,7 +287,7 @@ CREATE TABLE IF NOT EXISTS `imagem` (
   `produtoId` int NOT NULL,
   PRIMARY KEY (`idimagem`),
   KEY `produtoId` (`produtoId`)
-) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8mb3;
 
 --
 -- Extraindo dados da tabela `imagem`
@@ -291,7 +295,8 @@ CREATE TABLE IF NOT EXISTS `imagem` (
 
 INSERT INTO `imagem` (`idimagem`, `fileName`, `produtoId`) VALUES
 (26, 'VkLzOt2JkJ7NKDe_OPzLNAnGUYLnvLO5.png', 24),
-(27, 'k5l4wyw_a66PCqwDruyxORW9YGn1RlNW.jpg', 25);
+(27, 'k5l4wyw_a66PCqwDruyxORW9YGn1RlNW.jpg', 25),
+(28, '2YJyM2fnHLPG04fqD0CP0k1JXDJ90h63.png', 24);
 
 -- --------------------------------------------------------
 
@@ -310,7 +315,7 @@ CREATE TABLE IF NOT EXISTS `linhascarrinho` (
   PRIMARY KEY (`idLinhasCarrinho`),
   KEY `fk_linhasCarrinho_carrinho1_idx` (`carrinho_id`),
   KEY `fk_linhasCarrinho_produtos1_idx` (`produtos_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8mb3;
 
 -- --------------------------------------------------------
 
@@ -326,12 +331,17 @@ CREATE TABLE IF NOT EXISTS `linhasvenda` (
   `subtotal` decimal(10,0) DEFAULT NULL,
   `idVendaFK` int NOT NULL,
   `idProdutoFK` int NOT NULL,
-  `idAvaliacaoFK` int DEFAULT NULL,
   PRIMARY KEY (`idLinhasVenda`),
   KEY `fk_linhasvenda_vendas1_idx` (`idVendaFK`),
-  KEY `fk_linhasvenda_produtos1_idx` (`idProdutoFK`),
-  KEY `idAvaliacaoFK` (`idAvaliacaoFK`)
-) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8mb3;
+  KEY `fk_linhasvenda_produtos1_idx` (`idProdutoFK`)
+) ENGINE=InnoDB AUTO_INCREMENT=45 DEFAULT CHARSET=utf8mb3;
+
+--
+-- Extraindo dados da tabela `linhasvenda`
+--
+
+INSERT INTO `linhasvenda` (`idLinhasVenda`, `quantidade`, `precounitario`, `subtotal`, `idVendaFK`, `idProdutoFK`) VALUES
+(44, 1, 90, 90, 48, 24);
 
 -- --------------------------------------------------------
 
@@ -428,7 +438,7 @@ CREATE TABLE IF NOT EXISTS `produto` (
 --
 
 INSERT INTO `produto` (`idProduto`, `nome`, `descricao`, `preco`, `stock`, `idCategoria`, `fornecedores_idfornecedores`, `idDesconto`) VALUES
-(24, 'Produto', 'produto teste ijasodijaosijd', 100, 5, 1, 1, NULL),
+(24, 'Produto', 'produto teste ijasodijaosijd', 90, 5, 1, 1, 1),
 (25, 'Spray limpa-vidros', 'aoskdpaokspdokas', 10, 2, 2, 1, NULL);
 
 -- --------------------------------------------------------
@@ -508,7 +518,14 @@ CREATE TABLE IF NOT EXISTS `venda` (
   KEY `fk_vendas_metodoEntrega1_idx` (`metodoEntrega_id`),
   KEY `idCarrinhoFK` (`idCarrinhoFK`),
   KEY `idProfileFK` (`idProfileFK`)
-) ENGINE=InnoDB AUTO_INCREMENT=42 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=49 DEFAULT CHARSET=utf8mb3;
+
+--
+-- Extraindo dados da tabela `venda`
+--
+
+INSERT INTO `venda` (`idVenda`, `total`, `datavenda`, `metodoPagamento_id`, `metodoEntrega_id`, `idCarrinhoFK`, `idProfileFK`) VALUES
+(48, 90, '2024-12-31 16:01:22', 2, 1, 18, 9);
 
 --
 -- Restrições para despejos de tabelas
@@ -532,6 +549,13 @@ ALTER TABLE `auth_item`
 ALTER TABLE `auth_item_child`
   ADD CONSTRAINT `auth_item_child_ibfk_1` FOREIGN KEY (`parent`) REFERENCES `auth_item` (`name`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `auth_item_child_ibfk_2` FOREIGN KEY (`child`) REFERENCES `auth_item` (`name`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Limitadores para a tabela `avaliacao`
+--
+ALTER TABLE `avaliacao`
+  ADD CONSTRAINT `avaliacao_ibfk_1` FOREIGN KEY (`idProfileFK`) REFERENCES `profile` (`idprofile`),
+  ADD CONSTRAINT `avaliacao_ibfk_2` FOREIGN KEY (`idProdutoFK`) REFERENCES `produto` (`idProduto`);
 
 --
 -- Limitadores para a tabela `carrinho`
@@ -566,8 +590,7 @@ ALTER TABLE `linhascarrinho`
 --
 ALTER TABLE `linhasvenda`
   ADD CONSTRAINT `fk_linhasvenda_produtos1` FOREIGN KEY (`idProdutoFK`) REFERENCES `produto` (`idProduto`),
-  ADD CONSTRAINT `fk_linhasvenda_vendas1` FOREIGN KEY (`idVendaFK`) REFERENCES `venda` (`idVenda`),
-  ADD CONSTRAINT `linhasvenda_ibfk_1` FOREIGN KEY (`idAvaliacaoFK`) REFERENCES `avaliacao` (`idavaliacao`);
+  ADD CONSTRAINT `fk_linhasvenda_vendas1` FOREIGN KEY (`idVendaFK`) REFERENCES `venda` (`idVenda`);
 
 --
 -- Limitadores para a tabela `produto`

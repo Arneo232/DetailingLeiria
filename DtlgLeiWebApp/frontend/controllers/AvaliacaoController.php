@@ -3,7 +3,10 @@
 namespace frontend\controllers;
 
 use yii;
+use yii\helpers\ArrayHelper;
 use common\models\Linhasvenda;
+use common\models\Venda;
+use common\models\Produto;
 use common\models\avaliacao;
 use frontend\models\AvaliacaoSearch;
 use yii\web\Controller;
@@ -38,41 +41,82 @@ class AvaliacaoController extends Controller
      *
      * @return string
      */
-    public function actionAddReview()
+
+    public function actionFazerAvaliacao($idProduto)
     {
-        $idProduto = Yii::$app->request->post('idProduto');
-        $idUser = Yii::$app->user->id;
-        $comentario = Yii::$app->request->post('comentario');
-        $rating = Yii::$app->request->post('rating');
+        if (Yii::$app->user->isGuest) {
+            Yii::$app->session->setFlash('error', 'Para deixar uma avaliação, é necessário estar logado.');
+            return $this->redirect(['site/login']);
+        }
 
-        // Fetch the LinhasVenda record that corresponds to the product purchased by the user
-        $linhasVenda = Linhasvenda::find()
-            ->joinWith('venda') // Ensure this relation exists in the LinhasVenda model
-            ->where([
-                'linhasvenda.idProdutoFK' => $idProduto,
-                'venda.idProfileFK' => $idUser,
-            ])
-            ->one();
+        $product = Produto::findOne($idProduto);
+        if (!$product) {
+            Yii::$app->session->setFlash('error', 'Produto não encontrado.');
+            return $this->redirect(['site/product']);
+        }
 
-        if (!$linhasVenda) {
-            Yii::$app->session->setFlash('error', 'Você não pode avaliar este produto porque não o comprou.');
+        $profileId = Yii::$app->user->identity->profile->idprofile;
+
+        $vendas = Venda::find()->where(['idProfileFK' => $profileId])->all();
+
+        $idsVenda = ArrayHelper::getColumn($vendas, 'idVenda');
+
+        $linhasVenda = LinhasVenda::find()->where(['idVendaFK' => $idsVenda])->all();
+
+        $productId = ArrayHelper::getColumn($linhasVenda, 'idProdutoFK');
+
+        if (!in_array($idProduto, $productId)) {
+            Yii::$app->session->setFlash('error', 'É necessário comprar este produto para poder deixar uma avaliação.');
             return $this->redirect(['site/product-detail', 'idProduto' => $idProduto]);
         }
 
-        // Create a new review and associate it with the LinhasVenda
-        $avaliacao = new Avaliacao();
-        $avaliacao->idLinhasVendaFK = $linhasVenda->idLinhasVenda;
-        $avaliacao->comentario = $comentario;
-        $avaliacao->rating = $rating;
+        $reviewModel = new Avaliacao();
 
-        if ($avaliacao->save()) {
-            Yii::$app->session->setFlash('success', 'Avaliação adicionada com sucesso.');
-        } else {
-            Yii::$app->session->setFlash('error', 'Erro ao salvar a avaliação.');
+        $reviewModel->idProfileFK = $profileId;
+        $reviewModel->idProdutoFK = $idProduto;
+
+        if ($reviewModel->load(Yii::$app->request->post()) && $reviewModel->validate()) {
+            $reviewModel->idProfileFK = $profileId;
+            $reviewModel->idProdutoFK = $idProduto;
+            if ($reviewModel->save()) {
+                Yii::$app->session->setFlash('success', 'A sua avaliação foi submetida com sucesso!');
+                return $this->redirect(['site/product-detail', 'idProduto' => $idProduto]);
+            } else {
+                Yii::$app->session->setFlash('error', 'Houve um erro ao submeter a avaliação.');
+            }
+        }else{
+            Yii::$app->session->setFlash('error', 'Houve um erro na validação da sua avaliação.');
         }
 
-        return $this->redirect(['site/product-detail', 'idProduto' => $idProduto]);
+        return $this->render('//site/product-detail', [
+            'product' => $product,
+            'avaliacoes' => Avaliacao::find()->where(['idProdutoFK' => $idProduto])->all(),
+            'reviewModel' => $reviewModel, // Pass the invalid model back to the view
+        ]);
     }
+
+
+    public function actionRemoverAvaliacao($idavaliacao)
+    {
+        $review = Avaliacao::findOne($idavaliacao);
+        if (!$review) {
+            Yii::$app->session->setFlash('error', 'A avaliação não existe.');
+            return $this->redirect(['site/product-detail', 'idProduto' => Yii::$app->request->get('idProduto')]);
+        }
+
+        if (Yii::$app->user->identity->id != $review->profile->user->id) {
+            Yii::$app->session->setFlash('error', 'Não pode apagar esta avaliação.');
+            return $this->redirect(['site/product-detail', 'idProduto' => Yii::$app->request->get('idProduto')]);
+        }
+
+        if ($review->delete()) {
+            Yii::$app->session->setFlash('success', 'Sua avaliação foi apagada.');
+        } else {
+            Yii::$app->session->setFlash('error', 'Houve um erro ao tentar apagar a avaliação.');
+        }
+        return $this->redirect(['site/product-detail', 'idProduto' => Yii::$app->request->get('idProduto')]);
+    }
+
     public function actionIndex()
     {
         $searchModel = new AvaliacaoSearch();

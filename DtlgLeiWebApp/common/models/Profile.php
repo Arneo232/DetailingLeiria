@@ -67,4 +67,14 @@ class Profile extends \yii\db\ActiveRecord
     {
         return $this->hasOne(User::class, ['id' => 'userId']);
     }
+
+    /**
+     * Gets query for [[Avaliacoes]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getAvaliacao()
+    {
+        return $this->hasMany(Avaliacao::class, ['idProfileFK' => 'idprofile']);
+    }
 }

@@ -1,25 +1,25 @@
 <?php
+/** @var yii\widgets\ActiveForm $form */
+/** @var common\models\Avaliacao $reviewModel */
+/** @var int $idProduto */
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
-/** @var yii\web\View $this */
-/** @var common\models\avaliacao $model */
-/** @var yii\widgets\ActiveForm $form */
 ?>
 
-<div class="avaliacao-form">
+<div class="review-form">
+    <?php $form = ActiveForm::begin([
+        'action' => ['avaliacao/fazer-avaliacao', 'idProduto' => $idProduto],
+        'method' => 'post',
+    ]); ?>
 
-    <?php $form = ActiveForm::begin(); ?>
-
-    <?= $form->field($model, 'comentario')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'rating')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($reviewModel, 'rating')->dropDownList([1, 2, 3, 4, 5], ['prompt' => 'Selecione uma avaliação']) ?>
+    <?= $form->field($reviewModel, 'comentario')->textarea(['rows' => 4]) ?>
 
     <div class="form-group">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+        <?= Html::submitButton('Submeter Avaliação', ['class' => 'btn btn-primary']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>
-
 </div>

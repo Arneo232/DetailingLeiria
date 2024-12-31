@@ -295,29 +295,16 @@ class SiteController extends Controller
             throw new \yii\web\NotFoundHttpException("Produto não encontrado");
         }
 
-        // Obter IDs de linhasvenda associadas ao produto
-        $linhasVendaIds = \common\models\Linhasvenda::find()
-            ->select('idLinhasVenda')
-            ->where(['idProdutoFK' => $idProduto])
-            ->column();
-
-        // Obter avaliações associadas às linhasvenda
-        $avaliacoes = \common\models\Avaliacao::find()
-            ->where(['idLinhasVendaFK' => $linhasVendaIds])
-            ->all();
-
-        // Verificar se o utilizador é elegível para avaliar
-        $userId = Yii::$app->user->id;
-        $isEligibleToReview = \common\models\Linhasvenda::find()
-            ->where(['idProdutoFK' => $idProduto, 'idVendaFK' => $userId])
-            ->exists();
+        $reviewModel = new Avaliacao();
+        $avaliacoes = Avaliacao::find()->where(['idProdutoFK' => $idProduto])->all();
 
         return $this->render('productDetail', [
             'product' => $product,
             'avaliacoes' => $avaliacoes,
-            'isEligibleToReview' => $isEligibleToReview,
+            'reviewModel' => $reviewModel,
         ]);
     }
+
 
 
     public function actionDetailedProfile()

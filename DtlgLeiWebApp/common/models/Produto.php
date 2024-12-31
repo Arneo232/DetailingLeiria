@@ -167,4 +167,14 @@ class Produto extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Linhasvenda::class, ['idProdutoFK' => 'idProduto']);
     }
+
+    /**
+     * Gets query for [[Avaliacoes]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getAvaliacao()
+    {
+        return $this->hasMany(Avaliacao::class, ['idProdutoFK' => 'idProduto']);
+    }
 }
