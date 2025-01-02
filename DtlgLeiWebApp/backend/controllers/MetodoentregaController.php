@@ -9,7 +9,7 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * MetodoentregaController implements the CRUD actions for Metodoentrega model.
+ * MetodoEntregaController implements the CRUD actions for Metodoentrega model.
  */
 class MetodoentregaController extends Controller
 {

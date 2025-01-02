@@ -2,18 +2,27 @@
 
 namespace backend\modules\api\controllers;
 
+use backend\modules\api\components\CustomAuth;
+use common\models\User;
 use yii\filters\ContentNegotiator;
+use yii\web\ForbiddenHttpException;
 use yii\web\Response;
 use yii\rest\ActiveController;
+use common\models\Imagem;
 use yii\web\Controller;
-
+use Yii;
 
 class ProdutoController extends ActiveController
 {
     public $modelClass = 'common\models\Produto';
+    public $user = null;
+
     public function behaviors()
     {
         $behaviors = parent::behaviors();
+        $behaviors['authenticator'] = [
+            'class' => CustomAuth::className(),
+        ];
         $behaviors['contentNegotiator'] = [
             'class' => ContentNegotiator::class,
             'formats' => [
@@ -21,6 +30,25 @@ class ProdutoController extends ActiveController
             ],
         ];
         return $behaviors;
+    }
+
+    public function authCustom($token)
+    {
+        $user_ = User::findIdentityByAccessToken($token);
+        if ($user_) {
+            $this->user = $user_;
+            return $user_;
+        }
+        throw new ForbiddenHttpException('No authentication'); //403
+    }
+
+    public function checkAccess($action, $model = null, $params = [])
+    {
+        if (isset(Yii::$app->params['id']) && Yii::$app->params['id'] == 1) {
+            if ($action === "delete") {
+                throw new \yii\web\ForbiddenHttpException('Proibido');
+            }
+        }
     }
     public function actionContagem()
     {
@@ -31,27 +59,58 @@ class ProdutoController extends ActiveController
     public function actionPrecoAlto()
     {
         $produtosmodel = new $this->modelClass;
-        $produtoMaisCaro = $produtosmodel::find()
-            ->orderBy(['preco' => SORT_DESC])
-            ->all(); // Mostra todos os resultados \ (one(); -> mostra só o 1 resultado)
+        $produtoMaisCaro = $produtosmodel::find()->orderBy(['preco' => SORT_DESC])->all();
 
         if ($produtoMaisCaro) {
             return $produtoMaisCaro;
         }
-
         return ['mensagem' => 'Nenhum produto encontrado.'];
     }
     public function actionPrecoBaixo()
     {
         $produtosmodel = new $this->modelClass;
-        $produtoMaisBarato = $produtosmodel::find()
-            ->orderBy(['preco' => SORT_ASC])
-            ->all(); // Mostra todos os resultados \ (one(); -> mostra só o 1º resultado)
+        $produtoMaisBarato = $produtosmodel::find()->orderBy(['preco' => SORT_ASC])->all();
 
         if ($produtoMaisBarato) {
             return $produtoMaisBarato;
         }
-
         return ['mensagem' => 'Nenhum produto encontrado.'];
+    }
+
+    public function actionProduto($idproduto){
+        $produtosmodel = new $this->modelClass;
+        $produto = $produtosmodel::find()->where(['idproduto' => $idproduto])->one();
+
+        return $produto;
+    }
+
+    public function actionDelpornome($nomeproduto)
+    {
+        $produtosmodel = new $this->modelClass;
+
+        $produto = $produtosmodel::findOne(['nome' => $nomeproduto]);
+
+        Imagem::deleteAll(['produtoId' => $produto->idProduto]);
+
+        $deletedCount = $produto->delete();
+
+        return ['deletedCount' => $deletedCount];
+    }
+
+    public function actionPutprecopornome($nomeproduto)
+    {
+        $novo_preco=\Yii::$app->request->post('preco');
+        $produtosmodel = new $this->modelClass;
+        $ret = $produtosmodel::findOne(['nome' => $nomeproduto]);
+        if($ret)
+        {
+            $ret->preco = $novo_preco;
+            $ret->save();
+            throw new \yii\web\NotFoundHttpException("Preço do produto alterado com sucesso para: " . $novo_preco . "€");
+        }
+        else
+        {
+            throw new \yii\web\NotFoundHttpException("Nome de produto não existe.");
+        }
     }
 }

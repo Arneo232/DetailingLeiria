@@ -5,15 +5,16 @@ namespace backend\modules\api\controllers;
 use backend\modules\api\components\CustomAuth;
 use common\models\User;
 use yii\filters\ContentNegotiator;
-use yii\rest\ActiveController;
 use yii\web\ForbiddenHttpException;
 use yii\web\Response;
+use yii\rest\ActiveController;
+use yii\web\Controller;
 use Yii;
 
-class UserController extends ActiveController
+class MetodoPagamentoController extends ActiveController
 {
+    public $modelClass = 'common\models\Metodopagamento';
 
-    public $modelClass = 'common\models\User';
     public $user = null;
 
     public function behaviors()
@@ -49,12 +50,10 @@ class UserController extends ActiveController
             }
         }
     }
-
     public function actionContagem()
     {
-        $usersmodel = new $this->modelClass;
-        $usercontador = $usersmodel::find()->all();
-        return ['contagem' => count($usercontador)];
+        $metodoPagamentosmodel = new $this->modelClass;
+        $metodoPagamentocontador = $metodoPagamentosmodel::find()->all();
+        return ['contagem' => count($metodoPagamentocontador)];
     }
-
 }

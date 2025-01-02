@@ -14,7 +14,13 @@ use yii\widgets\ActiveForm;
         'method' => 'post',
     ]); ?>
 
-    <?= $form->field($reviewModel, 'rating')->dropDownList([1, 2, 3, 4, 5], ['prompt' => 'Selecione uma avaliação']) ?>
+    <?= $form->field($reviewModel, 'rating')->dropDownList([
+        1 => '1',
+        2 => '2',
+        3 => '3',
+        4 => '4',
+        5 => '5',
+    ], ['prompt' => 'Selecione uma avaliação']) ?>
     <?= $form->field($reviewModel, 'comentario')->textarea(['rows' => 4]) ?>
 
     <div class="form-group">

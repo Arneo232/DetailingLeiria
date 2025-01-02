@@ -10,7 +10,7 @@ use yii\web\NotFoundHttpException;
 use yii;
 
 /**
- * MetodopagamentoController implements the CRUD actions for Metodopagamento model.
+ * MetodoPagamentoController implements the CRUD actions for Metodopagamento model.
  */
 class MetodopagamentoController extends Controller
 {
