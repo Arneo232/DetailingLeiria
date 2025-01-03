@@ -37,6 +37,7 @@
                     ['label' => 'Gestão de Métodos de Pagamento', 'url' => ['/metodopagamento/index'], 'icon' => 'fa fa-credit-card','visible' => Yii::$app->user->can('GestaoMetodosPagamentos')],
                     ['label' => 'Gestão de Métodos de Entrega', 'url' => ['/metodoentrega/index'], 'icon' => 'fa fa-truck','visible' => Yii::$app->user->can('GestaoMetodosEntrega')],
                     ['label' => 'Gestão de Encomendas', 'url' => ['/venda/index'], 'icon' => 'fa fa-truck','visible' => Yii::$app->user->can('GestaoEncomendas')],
+                    ['label' => 'Gestão de Avaliações', 'url' => ['/avaliacao/index'], 'icon' => 'fa fa-comment','visible' => Yii::$app->user->can('GestaoAvaliacoes')],
                 ],
             ]);
             ?>

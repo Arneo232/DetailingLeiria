@@ -66,6 +66,10 @@ class RbacController extends Controller
         $GestaoEncomendas->description = 'Permite visualizar o Gestão encomendas';
         $auth->add($GestaoEncomendas);
 
+        $GestaoAvaliacoes = $auth->createPermission('GestaoAvaliacoes');
+        $GestaoAvaliacoes->description = 'Permite visualizar a Gestão de avaliacoes';
+        $auth->add($GestaoAvaliacoes);
+
         $ProdutoIndexView = $auth->createPermission('ProdutoIndexView');
         $ProdutoIndexView->description = 'Permite visualizar a View dos produtos';
         $auth->add($ProdutoIndexView);
@@ -129,6 +133,7 @@ class RbacController extends Controller
         $auth->addChild($gestor,$ProdutoIndexUpdate);
         $auth->addChild($gestor,$ProdutoIndexDelete);
         $auth->addChild($gestor, $funcionario);
+        $auth->addChild($gestor, $GestaoAvaliacoes);
 
 
         // Papel: admin (herda de gestor, adiciona CRUD de usuários e páginas)
@@ -142,7 +147,7 @@ class RbacController extends Controller
         $auth->addChild($admin,$createUserAccounts);
         $auth->addChild($admin,$updateUserAccounts);
         $auth->addChild($admin,$deleteUserAccounts);
-
+        $auth->addChild($admin, $GestaoAvaliacoes);
 
 
 
