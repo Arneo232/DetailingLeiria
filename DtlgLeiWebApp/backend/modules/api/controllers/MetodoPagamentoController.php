@@ -11,7 +11,7 @@ use yii\rest\ActiveController;
 use yii\web\Controller;
 use Yii;
 
-class MetodoPagamentoController extends ActiveController
+class MetodopagamentoController extends ActiveController
 {
     public $modelClass = 'common\models\Metodopagamento';
 

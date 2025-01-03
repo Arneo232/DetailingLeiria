@@ -52,6 +52,7 @@ return [
                     'class' => 'yii\rest\UrlRule', 'controller' => 'api/user',
                     'extraPatterns' => [
                         'GET contagem' => 'contagem', // actionContagem
+                        'GET comperfil' => 'comperfil', // actionComperfil
                     ],
                 ],
                 [
@@ -61,6 +62,7 @@ return [
                         'GET precoAlto' => 'preco-alto', //actionPrecoAlto
                         'GET precoBaixo' => 'preco-baixo', //actionPrecoBaixo
                         'GET {idproduto}' => 'produto', //actionProduto
+                        'GET todosprodutos' => 'todosprodutos', // actionTodosprodutos
                         'PUT {nomeproduto}' => 'putprecopornome', // actionPutprecopornome
                         'DELETE {nomeproduto}' => 'delpornome', // actionDelpornome
                     ],
@@ -92,6 +94,31 @@ return [
                     'tokens' => [
                         '{idprofile}' => '<idprofile:\\d+>',
                         '{produto_id}' => '<produto_id:\\d+>',
+                    ],
+                ],
+                [
+                    'class' => 'yii\rest\UrlRule', 'controller' => 'api/venda',
+                    'extraPatterns' => [
+                        'POST finalizarcompra' => 'finalizarcompra', // actionFinalizarcompra
+                        'GET vendasporperfil/{idprofilefk}' => 'vendasporperfil', // actionVendasporperfil
+                        'GET linhasvendaporvenda/{idvenda}' => 'linhasvendaporvenda', // actionLinhasvendaporvenda
+                    ],
+                    'tokens' => [
+                        '{idvenda}' => '<idvenda:\\d+>',
+                        '{idprofilefk}' => '<idprofilefk:\\d+>',
+                    ],
+                ],
+                [
+                    'class' => 'yii\rest\UrlRule', 'controller' => 'api/avaliacao',
+                    'extraPatterns' => [
+                        'POST fazeravaliacao/{idprodutofk}' => 'fazeravaliacao', // actionFazeravaliacao
+                        'DELETE delavaliacaoporid/{idavaliacao}' => 'delavaliacaoporid', // actionDelavaliacaoporid
+                        'GET avaliacoesporproduto/{idprodutofk}' => 'avaliacoesporproduto', // actionAvaliacoesporproduto
+                    ],
+                    'tokens' => [
+                        '{idavaliacao}' => '<idavaliacao:\\d+>',
+                        '{idprodutofk}' => '<idprodutofk:\\d+>',
+                        '{idprofilefk}' => '<idprofilefk:\\d+>',
                     ],
                 ],
                 [
@@ -131,7 +158,9 @@ return [
                     'class' => 'yii\rest\UrlRule', 'controller' => 'api/metodoentrega',
                     'extraPatterns' => [
                         'GET contagem' => 'contagem', // actionContagem
-                        'DELETE {nomeentrega}' => 'delpornome' //actionDelpornome
+                        'DELETE delpornome/{nomeentrega}' => 'delpornome', // actionDelpornome
+                        'PUT {nomeentrega}' => 'putpornome', // actionPornome
+                        'POST novaentrega/{nomeentrega}' => 'novaentrega', // actionNovaentrega
                     ],
                     'tokens' => [
                         '{idmetodoentrega}' => '<id:\\d+>',

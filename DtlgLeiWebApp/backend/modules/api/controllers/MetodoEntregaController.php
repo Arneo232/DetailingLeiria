@@ -11,7 +11,7 @@ use yii\rest\ActiveController;
 use yii\web\Controller;
 use Yii;
 
-class MetodoEntregaController extends ActiveController
+class MetodoentregaController extends ActiveController
 {
     public $modelClass = 'common\models\Metodoentrega';
 
@@ -62,5 +62,29 @@ class MetodoEntregaController extends ActiveController
         $climodel = new $this->modelClass;
         $recs = $climodel::deleteAll(['designacao' => $nomeentrega]);
         return $recs;
+    }
+
+    public function actionPutpornome($nomeentrega)
+    {
+        $novo_designacao=\Yii::$app->request->post('designacao');
+        $climodel = new $this->modelClass;
+        $ret = $climodel::findOne(['designacao' => $nomeentrega]);
+        if($ret)
+        {
+            $ret->designacao = $novo_designacao;
+            $ret->save();
+        }
+        else
+        {
+            throw new \yii\web\NotFoundHttpException("Nome do metodo de entrega não existe");
+        }
+    }
+
+    public function actionNovaentrega($nomeentrega)
+    {
+        $entregamodel = new $this->modelClass;
+        $entregamodel->designacao = $nomeentrega;
+        $entregamodel->save();
+        return $entregamodel;
     }
 }

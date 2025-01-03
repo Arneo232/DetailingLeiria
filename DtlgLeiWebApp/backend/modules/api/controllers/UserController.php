@@ -57,4 +57,41 @@ class UserController extends ActiveController
         return ['contagem' => count($usercontador)];
     }
 
+    public function actionComperfil()
+    {
+        $users = User::find()->all();
+
+        if (!$users) {
+            return [
+                'success' => false,
+                'message' => 'Não foram encontrados utilizadores nenhuns.'
+            ];
+        }
+
+        $data = [];
+
+        foreach ($users as $user) {
+            $profile = $user->profile;
+
+            $data[] = [
+                'user' => [
+                    'id' => $user->id,
+                    'username' => $user->username,
+                    'email' => $user->email,
+                    'token' => $user->auth_key,
+                ],
+                'profile' => $profile ? [
+                    'idprofile' => $profile->idprofile,
+                    'morada' => $profile->morada,
+                    'ntelefone' => $profile->ntelefone,
+                ] : null
+            ];
+        }
+
+        return [
+            'success' => true,
+            'message' => 'Todos os users foram encontrados com o respetivo perfil.',
+            'data' => $data
+        ];
+    }
 }

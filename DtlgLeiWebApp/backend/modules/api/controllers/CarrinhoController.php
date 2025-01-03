@@ -85,39 +85,35 @@ class CarrinhoController extends ActiveController
 
     public function actionAddcarrinho($idprofile, $produto_id, $quantidade = 1)
     {
-        // Find the cart associated with the profile
         $carrinho = $this->modelClass::find()->where(['idProfile' => $idprofile])->one();
 
         if (!$carrinho) {
             return [
                 'success' => false,
-                'message' => 'Carrinho not found for the given profile.'
+                'message' => 'Carrinho não encontrado de acordo com o id do perfil.'
             ];
         }
 
-        // Check if the product already exists in the cart
         $linhascarrinho = Linhascarrinho::find()
             ->where(['carrinho_id' => $carrinho->idCarrinho, 'produtos_id' => $produto_id])
             ->one();
 
         if ($linhascarrinho) {
-            // Update the quantity of the existing product
             $linhascarrinho->quantidade += $quantidade;
             if ($linhascarrinho->save()) {
                 return [
                     'success' => true,
-                    'message' => 'Product quantity updated in the cart successfully.',
+                    'message' => 'Quantidade do produto atualizada com sucesso.',
                     'data' => $linhascarrinho
                 ];
             } else {
                 return [
                     'success' => false,
-                    'message' => 'Failed to update product quantity in the cart.',
+                    'message' => 'Falha ao atualizar quantidade do produto.',
                     'errors' => $linhascarrinho->errors
                 ];
             }
         } else {
-            // Create a new line item in the cart for the product
             $linhacarrinho = new Linhascarrinho();
             $linhacarrinho->carrinho_id = $carrinho->idCarrinho;
             $linhacarrinho->produtos_id = $produto_id;
@@ -126,13 +122,13 @@ class CarrinhoController extends ActiveController
             if ($linhacarrinho->save()) {
                 return [
                     'success' => true,
-                    'message' => 'Product added to cart successfully.',
+                    'message' => 'Produto adicionado ao carrinho com sucesso.',
                     'data' => $linhacarrinho
                 ];
             } else {
                 return [
                     'success' => false,
-                    'message' => 'Failed to add product to the cart.',
+                    'message' => 'Falha ao adicionar o produto ao carrinho.',
                     'errors' => $linhacarrinho->errors
                 ];
             }

@@ -50,12 +50,14 @@ class ProdutoController extends ActiveController
             }
         }
     }
+
     public function actionContagem()
     {
         $produtosmodel = new $this->modelClass;
         $produtocontador = $produtosmodel::find()->all();
         return ['contagem' => count($produtocontador)];
     }
+
     public function actionPrecoAlto()
     {
         $produtosmodel = new $this->modelClass;
@@ -66,6 +68,7 @@ class ProdutoController extends ActiveController
         }
         return ['mensagem' => 'Nenhum produto encontrado.'];
     }
+
     public function actionPrecoBaixo()
     {
         $produtosmodel = new $this->modelClass;
@@ -77,11 +80,63 @@ class ProdutoController extends ActiveController
         return ['mensagem' => 'Nenhum produto encontrado.'];
     }
 
-    public function actionProduto($idproduto){
+    public function actionProduto($idproduto)
+    {
         $produtosmodel = new $this->modelClass;
+
+        // Fetch the product by ID
         $produto = $produtosmodel::find()->where(['idproduto' => $idproduto])->one();
 
-        return $produto;
+        if (!$produto) {
+            return [
+                'success' => false,
+                'message' => 'Produto não foi encontrado.'
+            ];
+        }
+
+        $imagem = Imagem::find()->where(['produtoId' => $produto->idProduto])->all();
+
+        $data = [
+            'produto' => $produto,
+            'imagens' => $imagem
+        ];
+
+        return [
+            'success' => true,
+            'message' => 'Produto encontrado com sucesso.',
+            'data' => $data
+        ];
+    }
+
+    public function actionTodosprodutos()
+    {
+        $produtosmodel = new $this->modelClass;
+
+        $produtos = $produtosmodel::find()->all();
+
+        if (!$produtos) {
+            return [
+                'success' => false,
+                'message' => 'Produtos não encontrados.'
+            ];
+        }
+
+        $data = [];
+
+        foreach ($produtos as $produto) {
+            $imagens = Imagem::find()->where(['produtoId' => $produto->idProduto])->all();
+
+            $data[] = [
+                'produto' => $produto,
+                'imagens' => $imagens
+            ];
+        }
+
+        return [
+            'success' => true,
+            'message' => 'Produtos encontrados com sucesso.',
+            'data' => $data
+        ];
     }
 
     public function actionDelpornome($nomeproduto)
@@ -99,17 +154,14 @@ class ProdutoController extends ActiveController
 
     public function actionPutprecopornome($nomeproduto)
     {
-        $novo_preco=\Yii::$app->request->post('preco');
+        $novo_preco = \Yii::$app->request->post('preco');
         $produtosmodel = new $this->modelClass;
         $ret = $produtosmodel::findOne(['nome' => $nomeproduto]);
-        if($ret)
-        {
+        if ($ret) {
             $ret->preco = $novo_preco;
             $ret->save();
             throw new \yii\web\NotFoundHttpException("Preço do produto alterado com sucesso para: " . $novo_preco . "€");
-        }
-        else
-        {
+        } else {
             throw new \yii\web\NotFoundHttpException("Nome de produto não existe.");
         }
     }
