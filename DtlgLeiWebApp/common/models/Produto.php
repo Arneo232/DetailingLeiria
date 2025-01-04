@@ -177,4 +177,46 @@ class Produto extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Avaliacao::class, ['idProdutoFK' => 'idProduto']);
     }
+    public function afterSave($insert, $changedAttributes)
+    {
+        parent::afterSave($insert, $changedAttributes);
+        $idProduto=$this->idProduto;
+        $nome=$this->nome;
+        $preco=$this->preco;
+        $stock=$this->stock;
+        $descricao=$this->descricao;
+        $idCategoria=$this->idCategoria;
+        $idDesconto=$this->idDesconto;
+
+        $mensagem = "Um novo produto {$this->nome} foi adicionado.";
+        $mensagem2 = "O produto {$this->nome} foi atualizado.";
+
+        if($insert)
+            $this->FazPublishNoMosquitto("INSERT",$mensagem);
+        else
+            $this->FazPublishNoMosquitto("UPDATE",$mensagem2);
+    }
+    public function afterDelete()
+    {
+        parent::afterDelete();
+
+        $messagem = "O produto  foi eliminado.";
+
+        $this->FazPublishNoMosquitto('DELETE', $messagem);
+    }
+    public function FazPublishNoMosquitto($canal,$msg)
+    {
+        $server = "127.0.0.1";
+        $port = 1883;
+        $username = ""; // set your username
+        $password = ""; // set your password
+        $client_id = "phpMQTT-publisher"; // unique!
+        $mqtt = new \common\mosquitto\phpMQTT($server, $port, $client_id);
+        if ($mqtt->connect(true, NULL, $username, $password))
+        {
+            $mqtt->publish($canal, $msg, 0);
+            $mqtt->close();
+        }
+        else { file_put_contents('debug.output','Time out!'); }
+    }
 }
