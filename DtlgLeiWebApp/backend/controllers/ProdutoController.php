@@ -177,9 +177,10 @@ class ProdutoController extends Controller
         }
 
         $imagem = new ImagemForm();
-        $model->preco = $this->calcDesconto($model->preco, $model->idDesconto);
+        $precoComDesconto = $this->calcDesconto($model->preco, $model->idDesconto);
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
+            $model->preco = $precoComDesconto;
             $this->uploadImage($model->idProduto, $imagem);
             return $this->redirect(['view', 'idProduto' => $model->idProduto]);
         }
@@ -188,6 +189,7 @@ class ProdutoController extends Controller
             'model' => $model,
             'imagemProduto' => $imagemProduto,
             'imagem' => $imagem,
+            'precoComDesconto' => $precoComDesconto,
         ]);
     }
 
