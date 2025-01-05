@@ -194,9 +194,9 @@ class Produto extends \yii\db\ActiveRecord
         $mensagem2 = "O produto {$this->nome} foi atualizado.";
 
         if($insert)
-            $this->FazPublishNoMosquitto("INSERT",$mensagem);
+            $this->FazPublishNoMosquitto("INSERT_PRODUTO",$mensagem);
         else
-            $this->FazPublishNoMosquitto("UPDATE",$mensagem2);
+            $this->FazPublishNoMosquitto("UPDATE_PRODUTO",$mensagem2);
     }
     public function afterDelete()
     {
@@ -204,7 +204,7 @@ class Produto extends \yii\db\ActiveRecord
 
         $messagem = "O produto  foi eliminado.";
 
-        $this->FazPublishNoMosquitto('DELETE', $messagem);
+        $this->FazPublishNoMosquitto('DELETE_PRODUTO', $messagem);
     }
     public function FazPublishNoMosquitto($canal,$msg)
     {

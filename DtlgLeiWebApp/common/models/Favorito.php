@@ -70,4 +70,43 @@ class Favorito extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Profile::class, ['idprofile' => 'profile_id']);
     }
+
+    public function afterSave($insert, $changedAttributes)
+    {
+        parent::afterSave($insert, $changedAttributes);
+
+        if ($insert) {
+            $produto = Produto::findOne($this->produto_id);
+
+            if ($produto) {
+                $mensagem = "O produto {$produto->nome} foi adicionado aos favoritos por um utilizador.";
+                $this->FazPublishNoMosquitto("INSERT_FAV", $mensagem);
+            }
+        }
+    }
+    public function afterDelete()
+    {
+        parent::afterDelete();
+
+        $produto = Produto::findOne($this->produto_id);
+
+        $messagem = "O produto {$produto->nome} foi removido dos favoritos por um utilizador.";
+
+        $this->FazPublishNoMosquitto('REMOVER_FAV', $messagem);
+    }
+    public function FazPublishNoMosquitto($canal,$msg)
+    {
+        $server = "127.0.0.1";
+        $port = 1883;
+        $username = "";
+        $password = "";
+        $client_id = "phpMQTT-publisher";
+        $mqtt = new \common\mosquitto\phpMQTT($server, $port, $client_id);
+        if ($mqtt->connect(true, NULL, $username, $password))
+        {
+            $mqtt->publish($canal, $msg, 0);
+            $mqtt->close();
+        }
+        else { file_put_contents('debug.output','Time out!'); }
+    }
 }

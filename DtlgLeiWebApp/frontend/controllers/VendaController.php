@@ -146,10 +146,9 @@ class VendaController extends Controller
         $venda = Venda::findOne($id);
 
         if (!$venda) {
-            throw new NotFoundHttpException('Venda not found.');
+            throw new NotFoundHttpException('Não foi encontrada a venda.');
         }
 
-        // Fetch LinhasVenda related to this Venda
         $linhasVenda = LinhasVenda::find()->where(['idVendaFK' => $id])->all();
 
         return $this->render('detailVenda', [

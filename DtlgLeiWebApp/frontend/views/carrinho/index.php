@@ -53,7 +53,7 @@ $linhasCarrinho = $carrinho ? Linhascarrinho::findAll(['carrinho_id' => $carrinh
                         ]) ?>
                     </td>
                     <td>
-                        <?= Html::a('Remover', ['linhas-carrinho/remove', 'produto_id' => $linha->idLinhasCarrinho],
+                        <?= Html::a('Remover', ['linhas-carrinho/remover', 'produto_id' => $linha->idLinhasCarrinho],
                             [
                                 'class' => 'btn btn-danger btn-sm',
                                 'data' => [
