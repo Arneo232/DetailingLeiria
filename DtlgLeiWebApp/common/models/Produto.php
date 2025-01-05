@@ -47,8 +47,8 @@ class Produto extends \yii\db\ActiveRecord
             [['stock', 'idCategoria', 'fornecedores_idfornecedores'], 'integer'],
             [['idCategoria', 'fornecedores_idfornecedores'], 'required'],
             [['nome', 'descricao'], 'string', 'max' => 45],
-            [['idDesconto'], 'default', 'value' => null], // Allow NULL
-            [['idDesconto'], 'integer'], // Ensure idDesconto is an integer when provided
+            [['idDesconto'], 'default', 'value' => null],
+            [['idDesconto'], 'integer'],
             [['idCategoria'], 'exist', 'skipOnError' => true, 'targetClass' => Categoria::class, 'targetAttribute' => ['idCategoria' => 'idCategoria']],
             [['fornecedores_idfornecedores'], 'exist', 'skipOnError' => true, 'targetClass' => Fornecedor::class, 'targetAttribute' => ['fornecedores_idfornecedores' => 'idfornecedor']],
             [['idDesconto'], 'exist', 'skipOnError' => true, 'targetClass' => Desconto::class, 'targetAttribute' => ['idDesconto' => 'iddesconto']],
@@ -177,6 +177,8 @@ class Produto extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Avaliacao::class, ['idProdutoFK' => 'idProduto']);
     }
+
+    // Messaging dos produtos
     public function afterSave($insert, $changedAttributes)
     {
         parent::afterSave($insert, $changedAttributes);

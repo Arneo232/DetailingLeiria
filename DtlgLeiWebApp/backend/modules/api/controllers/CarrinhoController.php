@@ -8,8 +8,8 @@ use backend\modules\api\components\CustomAuth;
 use yii\filters\ContentNegotiator;
 use yii\web\Response;
 use yii\rest\ActiveController;
-use yii\web\Controller;
 use common\models\Carrinho;
+use common\models\Profile;
 use common\models\Linhascarrinho;
 use yii\web\ForbiddenHttpException;
 
@@ -53,20 +53,47 @@ class CarrinhoController extends ActiveController
         }
     }
 
+    public function actionCarrinhoporid($idprofile){
+        $carrinho = Carrinho::find()->where(['idProfile' => $idprofile])->one();
+
+        if (!$carrinho) {
+            return [
+                'success' => false,
+                'message' => 'Não foi encontrado nenhum carrinho com esse id de perfil.',
+            ];
+        }
+
+        return [
+            'success' => true,
+            'message' => 'Carrinho encontrado com sucesso.',
+            'data' => $carrinho,
+        ];
+    }
+
     public function actionCriarcarrinho()
     {
         $carrinho = new $this->modelClass;
 
-        $profileId = Yii::$app->user->identity->idprofile;
+        $request = \Yii::$app->request;
+        $profileId = $request->getBodyParam('idprofile');
 
         if (!$profileId) {
+            return [
+                'success' => false,
+                'message' => 'O ID do perfil é necessário.',
+            ];
+        }
+
+        $profile = Profile::findOne($profileId);
+
+        if (!$profile) {
             return [
                 'success' => false,
                 'message' => 'Perfil de utilizador não encontrado.',
             ];
         }
 
-        $carrinho->profile_id = $profileId;
+        $carrinho->idProfile = $profileId;
 
         if ($carrinho->save()) {
             return [
@@ -82,59 +109,4 @@ class CarrinhoController extends ActiveController
             ];
         }
     }
-
-    public function actionAddcarrinho($idprofile, $produto_id, $quantidade = 1)
-    {
-        $carrinho = $this->modelClass::find()->where(['idProfile' => $idprofile])->one();
-
-        if (!$carrinho) {
-            return [
-                'success' => false,
-                'message' => 'Carrinho não encontrado de acordo com o id do perfil.'
-            ];
-        }
-
-        $linhascarrinho = Linhascarrinho::find()
-            ->where(['carrinho_id' => $carrinho->idCarrinho, 'produtos_id' => $produto_id])
-            ->one();
-
-        if ($linhascarrinho) {
-            $linhascarrinho->quantidade += $quantidade;
-            if ($linhascarrinho->save()) {
-                return [
-                    'success' => true,
-                    'message' => 'Quantidade do produto atualizada com sucesso.',
-                    'data' => $linhascarrinho
-                ];
-            } else {
-                return [
-                    'success' => false,
-                    'message' => 'Falha ao atualizar quantidade do produto.',
-                    'errors' => $linhascarrinho->errors
-                ];
-            }
-        } else {
-            $linhacarrinho = new Linhascarrinho();
-            $linhacarrinho->carrinho_id = $carrinho->idCarrinho;
-            $linhacarrinho->produtos_id = $produto_id;
-            $linhacarrinho->quantidade = $quantidade;
-
-            if ($linhacarrinho->save()) {
-                return [
-                    'success' => true,
-                    'message' => 'Produto adicionado ao carrinho com sucesso.',
-                    'data' => $linhacarrinho
-                ];
-            } else {
-                return [
-                    'success' => false,
-                    'message' => 'Falha ao adicionar o produto ao carrinho.',
-                    'errors' => $linhacarrinho->errors
-                ];
-            }
-        }
-    }
-
-
-
 }

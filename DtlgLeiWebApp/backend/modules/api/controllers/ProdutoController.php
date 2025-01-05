@@ -20,9 +20,6 @@ class ProdutoController extends ActiveController
     public function behaviors()
     {
         $behaviors = parent::behaviors();
-        $behaviors['authenticator'] = [
-            'class' => CustomAuth::className(),
-        ];
         $behaviors['contentNegotiator'] = [
             'class' => ContentNegotiator::class,
             'formats' => [
@@ -30,25 +27,6 @@ class ProdutoController extends ActiveController
             ],
         ];
         return $behaviors;
-    }
-
-    public function authCustom($token)
-    {
-        $user_ = User::findIdentityByAccessToken($token);
-        if ($user_) {
-            $this->user = $user_;
-            return $user_;
-        }
-        throw new ForbiddenHttpException('No authentication'); //403
-    }
-
-    public function checkAccess($action, $model = null, $params = [])
-    {
-        if (isset(Yii::$app->params['id']) && Yii::$app->params['id'] == 1) {
-            if ($action === "delete") {
-                throw new \yii\web\ForbiddenHttpException('Proibido');
-            }
-        }
     }
 
     public function actionContagem()
@@ -82,6 +60,7 @@ class ProdutoController extends ActiveController
 
     public function actionProduto($idproduto)
     {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         $produtosmodel = new $this->modelClass;
 
         // Fetch the product by ID

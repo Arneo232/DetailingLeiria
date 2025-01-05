@@ -56,6 +56,14 @@ return [
                     ],
                 ],
                 [
+                    'class' => 'yii\rest\UrlRule', 'controller' => 'api/auth',
+                    'pluralize' => false,
+                    'extraPatterns' => [
+                        'POST login' => 'login',  // actionLogin
+                        'POST signup' => 'signup'   // actionSignup
+                    ],
+                ],
+                [
                     'class' => 'yii\rest\UrlRule', 'controller' => 'api/produto',
                     'extraPatterns' => [
                         'GET contagem' => 'contagem', // actionContagem
@@ -76,12 +84,9 @@ return [
                     'extraPatterns' => [
                         'GET {idprofile}' => 'carrinhoporid', // actionCarrinhoporid
                         'POST criarcarrinho' => 'criarcarrinho', // actionCriarcarrinho
-                        'POST addcarrinho' => 'addcarrinho', // actionAddcarrinho
                     ],
                     'tokens' => [
                         '{idprofile}' => '<idprofile:\\d+>',
-                        '{produto_id}' => '<produto_id:\\d+>',
-                        '{quantidade}' => '<quantidade:\\d+>',
                     ],
                 ],
                 [
@@ -89,11 +94,15 @@ return [
                     'extraPatterns' => [
                         'POST addlinha' => 'addlinha', // actionAddlinha
                         'DELETE removerlinha' => 'removerlinha', // actionRemovelinha
-                        'GET linhacarrinho' => 'linhacarrinho', // actionLinhacarrinho
+                        'PUT aumentarlinha' => 'aumentarlinha', // actionAumentarlinha
+                        'PUT diminuirlinha' => 'diminuirlinha', // actionDiminuirlinha
+                        'GET linhasporidcarrinho' => 'linhasporidcarrinho', // actionLinhasporidcarrinho
                     ],
                     'tokens' => [
+                        '{idlinha}' => '<idlinha:\\d+>',
                         '{idprofile}' => '<idprofile:\\d+>',
                         '{produto_id}' => '<produto_id:\\d+>',
+                        '{idCarrinho}' => '<idCarrinho:\\d+>',
                     ],
                 ],
                 [

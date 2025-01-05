@@ -12,6 +12,9 @@ use common\models\Carrinho;
 use common\models\Linhascarrinho;
 use common\models\Produto;
 use yii\web\ForbiddenHttpException;
+use yii\web\NotFoundHttpException;
+use yii\web\BadRequestHttpException;
+use yii\web\ServerErrorHttpException;
 
 class LinhasCarrinhoController extends ActiveController
 {
@@ -94,28 +97,63 @@ class LinhasCarrinhoController extends ActiveController
 
         $linhaCarrinho = LinhasCarrinho::find()->where(['carrinho_id' => $carrinho->idCarrinho, 'produtos_id' => $produto_id])->one();
 
-        if (!$linhaCarrinho) {
+        if ($linhaCarrinho) {
+            $linhaCarrinho->quantidade += $quantidade;
+            $produto = Produto::findOne($produto_id);
+            if ($produto) {
+                $linhaCarrinho->subtotal = $linhaCarrinho->quantidade * $produto->preco;
+            }
+
+            if ($linhaCarrinho->save(false)) {
+                // Recalculate the cart total after the update
+                $carrinho->total = LinhasCarrinho::find()->where(['carrinho_id' => $carrinho->idCarrinho])->sum('subtotal');
+                $carrinho->save(false);
+
+                return [
+                    'success' => true,
+                    'message' => 'Quantidade do produto atualizada com sucesso.',
+                    'data' => $linhaCarrinho
+                ];
+            } else {
+                return [
+                    'success' => false,
+                    'message' => 'Falha ao atualizar quantidade do produto.',
+                    'errors' => $linhaCarrinho->errors
+                ];
+            }
+        } else {
+            $produto = Produto::findOne($produto_id);
+            if (!$produto) {
+                return [
+                    'success' => false,
+                    'message' => 'Produto não encontrado.'
+                ];
+            }
+
             $linhaCarrinho = new LinhasCarrinho();
             $linhaCarrinho->carrinho_id = $carrinho->idCarrinho;
             $linhaCarrinho->produtos_id = $produto_id;
             $linhaCarrinho->quantidade = $quantidade;
-            $linhaCarrinho->precounitario = Produto::findOne($produto_id)->preco;
+            $linhaCarrinho->precounitario = $produto->preco;
             $linhaCarrinho->subtotal = $linhaCarrinho->precounitario * $linhaCarrinho->quantidade;
-        } else {
-            $linhaCarrinho->quantidade += $quantidade;
-            $linhaCarrinho->subtotal = $linhaCarrinho->precounitario * $linhaCarrinho->quantidade;
+
+            if ($linhaCarrinho->save(false)) {
+                $carrinho->total = LinhasCarrinho::find()->where(['carrinho_id' => $carrinho->idCarrinho])->sum('subtotal');
+                $carrinho->save(false);
+
+                return [
+                    'success' => true,
+                    'message' => 'Produto adicionado ao carrinho com sucesso.',
+                    'data' => $linhaCarrinho
+                ];
+            } else {
+                return [
+                    'success' => false,
+                    'message' => 'Falha ao adicionar o produto ao carrinho.',
+                    'errors' => $linhaCarrinho->errors
+                ];
+            }
         }
-
-        $linhaCarrinho->save(false);
-
-        $carrinho->total = LinhasCarrinho::find()->where(['carrinho_id' => $carrinho->idCarrinho])->sum('subtotal');
-        $carrinho->save(false);
-
-        return [
-            'success' => true,
-            'message' => 'Produto adicionado ao carrinho com sucesso.',
-            'data' => $linhaCarrinho
-        ];
     }
 
     public function actionRemoverlinha(){
@@ -180,5 +218,128 @@ class LinhasCarrinhoController extends ActiveController
                 'errors' => $linhaCarrinho->errors
             ];
         }
+    }
+
+    public function actionAumentarlinha()
+    {
+        $idlinha = Yii::$app->request->post('idLinhasCarrinho');
+
+        if (!$idlinha) {
+            return [
+                'success' => false,
+                'message' => 'O ID da linha é necessário.',
+            ];
+        }
+
+        $linhaCarrinho = LinhasCarrinho::findOne($idlinha);
+        if (!$linhaCarrinho) {
+            throw new NotFoundHttpException('Produto não encontrado.');
+        }
+
+        $linhaCarrinho->quantidade += 1;
+        $linhaCarrinho->subtotal = $linhaCarrinho->quantidade * $linhaCarrinho->precounitario;
+
+        if (!$linhaCarrinho->save(false)) {
+            throw new ServerErrorHttpException('Erro ao atualizar a linha do carrinho.');
+        }
+
+        $carrinho = $linhaCarrinho->carrinho;
+        $carrinho->total = LinhasCarrinho::find()
+            ->where(['carrinho_id' => $carrinho->idCarrinho])
+            ->sum('subtotal');
+
+        if (!$carrinho->save(false)) {
+            throw new ServerErrorHttpException('Erro ao atualizar o total do carrinho.');
+        }
+
+        return [
+            'success' => true,
+            'message' => 'Quantidade aumentada com sucesso.',
+            'linhaCarrinho' => $linhaCarrinho,
+            'carrinhoTotal' => $carrinho->total,
+        ];
+    }
+
+    public function actionDiminuirlinha()
+    {
+        $idlinha = Yii::$app->request->post('idLinhasCarrinho');
+
+        if (!$idlinha) {
+            return [
+                'success' => false,
+                'message' => 'O ID da linha é necessário.',
+            ];
+        }
+
+        $linhaCarrinho = LinhasCarrinho::findOne($idlinha);
+        if (!$linhaCarrinho) {
+            throw new NotFoundHttpException('Produto não encontrado.');
+        }
+
+        if ($linhaCarrinho->quantidade > 1) {
+            $linhaCarrinho->quantidade -= 1;
+            $linhaCarrinho->subtotal = $linhaCarrinho->quantidade * $linhaCarrinho->precounitario;
+
+            if (!$linhaCarrinho->save(false)) {
+                throw new ServerErrorHttpException('Erro ao atualizar a linha do carrinho.');
+            }
+
+            $carrinho = $linhaCarrinho->carrinho;
+            $carrinho->total = LinhasCarrinho::find()
+                ->where(['carrinho_id' => $carrinho->idCarrinho])
+                ->sum('subtotal');
+
+            if (!$carrinho->save(false)) {
+                throw new ServerErrorHttpException('Erro ao atualizar o total do carrinho.');
+            }
+        } else {
+            throw new BadRequestHttpException('A quantidade não pode ser menor que 1.');
+        }
+
+        return [
+            'success' => true,
+            'message' => 'Quantidade reduzida com sucesso.',
+            'linhaCarrinho' => $linhaCarrinho,
+            'carrinhoTotal' => $carrinho->total,
+        ];
+    }
+
+
+    public function actionLinhasporidcarrinho()
+    {
+        $idCarrinho = Yii::$app->request->post('idCarrinho');
+
+        if (!$idCarrinho) {
+            return [
+                'success' => false,
+                'message' => 'O ID do carrinho é necessário.',
+            ];
+        }
+
+        $carrinho = Carrinho::findOne($idCarrinho);
+
+        if (!$carrinho) {
+            return [
+                'success' => false,
+                'message' => 'Carrinho não encontrado.',
+            ];
+        }
+
+        $linhasCarrinho = LinhasCarrinho::find()
+            ->where(['carrinho_id' => $carrinho->idCarrinho])
+            ->all();
+
+        if (empty($linhasCarrinho)) {
+            return [
+                'success' => false,
+                'message' => 'Não há produtos no carrinho.',
+            ];
+        }
+
+        return [
+            'success' => true,
+            'message' => 'Linhas de carrinho recuperadas com sucesso.',
+            'data' => $linhasCarrinho,
+        ];
     }
 }
