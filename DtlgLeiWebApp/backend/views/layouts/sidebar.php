@@ -28,7 +28,7 @@
             <?php
             echo \hail812\adminlte\widgets\Menu::widget([
                 'items' => [
-                    ['label' => 'Gii',  'icon' => 'file-code', 'url' => ['/gii'], 'target' => '_blank'],
+                    //['label' => 'Gii',  'icon' => 'file-code', 'url' => ['/gii'], 'target' => '_blank'],
                     ['label' => 'Gestão de Utilizadores', 'url' => ['/user/index'], 'icon' => 'fa fa-users', 'visible' => Yii::$app->user->can('UserIndexAccounts')],
                     ['label' => 'Gestão de Categorias', 'url' => ['/categoria/index'], 'icon' => 'fa fa-icons','visible' => Yii::$app->user->can('GestaoIndexCategorias')],
                     ['label' => 'Gestão de Fornecedores', 'url' => ['/fornecedor/index'], 'icon' => 'fa fa-industry','visible' => Yii::$app->user->can('FornecedorIndex')],
