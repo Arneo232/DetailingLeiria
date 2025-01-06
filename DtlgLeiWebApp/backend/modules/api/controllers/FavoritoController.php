@@ -52,30 +52,73 @@ class FavoritoController extends ActiveController
         }
     }
 
-    public function actionVerificafav($produto_id, $profile_id)
+    public function actionVerificafav()
     {
+        $produto_id = Yii::$app->request->get('produto_id');
+        $profile_id = Yii::$app->request->get('profile_id');
+
+        if (!$produto_id || !$profile_id) {
+            return [
+                'success' => false,
+                'message' => 'Os parâmetros produto_id e profile_id são obrigatórios.'
+            ];
+        }
+
         $model = $this->modelClass::find()->where(['produto_id' => $produto_id, 'profile_id' => $profile_id])->one();
+
         if ($model) {
-            return true;
+            return [
+                'success' => true,
+                'message' => 'O produto está nos favoritos.'
+            ];
         } else {
-            return false;
+            return [
+                'success' => false,
+                'message' => 'O produto não está nos favoritos.'
+            ];
         }
     }
 
-    public function actionAddFav($produto_id, $profile_id)
+    public function actionAddfav()
     {
+        $produto_id = Yii::$app->request->post('produto_id');
+        $profile_id = Yii::$app->request->post('profile_id');
+
+        if (!$produto_id || !$profile_id) {
+            return [
+                'success' => false,
+                'message' => 'Os parâmetros produto_id e profile_id são obrigatórios.'
+            ];
+        }
+
         $model = $this->modelClass::find()->where(['produto_id' => $produto_id, 'profile_id' => $profile_id])->one();
 
         if ($model) {
             $model->delete();
-            return false;
+            return [
+                'success' => true,
+                'message' => 'O produto foi removido dos favoritos.'
+            ];
         } else {
             $model = new Favorito();
             $model->profile_id = $profile_id;
             $model->produto_id = $produto_id;
-            $model->save();
 
-            return true;
+            if ($model->save()) {
+                return [
+                    'success' => true,
+                    'message' => 'O produto foi adicionado aos favoritos.',
+                    'data' => [
+                        'idFavorito' => $model->idfavorito
+                    ]
+                ];
+            } else {
+                return [
+                    'success' => false,
+                    'message' => 'Erro ao adicionar o produto aos favoritos.',
+                    'errors' => $model->errors
+                ];
+            }
         }
     }
 

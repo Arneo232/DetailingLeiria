@@ -51,9 +51,9 @@ class FornecedorController extends ActiveController
 
     public function actionContagem()
     {
-        $usersmodel = new $this->modelClass;
-        $usercontador = $usersmodel::find()->all();
-        return ['contagem' => count($usercontador)];
+        $fornecedoresmodel = new $this->modelClass;
+        $fornecedorcontador = $fornecedoresmodel::find()->all();
+        return ['contagem: ' => count($fornecedorcontador)];
     }
 
 }

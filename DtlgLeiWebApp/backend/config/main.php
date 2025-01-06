@@ -60,15 +60,15 @@ return [
                     'pluralize' => false,
                     'extraPatterns' => [
                         'POST login' => 'login',  // actionLogin
-                        'POST signup' => 'signup'   // actionSignup
+                        'POST register' => 'register'   // actionSignup
                     ],
                 ],
                 [
                     'class' => 'yii\rest\UrlRule', 'controller' => 'api/produto',
                     'extraPatterns' => [
                         'GET contagem' => 'contagem', // actionContagem
-                        'GET precoAlto' => 'preco-alto', //actionPrecoAlto
-                        'GET precoBaixo' => 'preco-baixo', //actionPrecoBaixo
+                        'GET precoalto' => 'precoalto', //actionPrecoAlto
+                        'GET precobaixo' => 'precobaixo', //actionPrecoBaixo
                         'GET {idproduto}' => 'produto', //actionProduto
                         'GET todosprodutos' => 'todosprodutos', // actionTodosprodutos
                         'PUT {nomeproduto}' => 'putprecopornome', // actionPutprecopornome

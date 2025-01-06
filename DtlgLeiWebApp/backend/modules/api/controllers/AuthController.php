@@ -58,7 +58,7 @@ class AuthController extends Controller
         }
     }
 
-    public function actionSignup()
+    public function actionRegister()
     {
         if (empty(Yii::$app->request->post())) throw new BadRequestHttpException('O body do request está vazio!');
 

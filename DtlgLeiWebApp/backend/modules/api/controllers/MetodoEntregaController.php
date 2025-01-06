@@ -61,7 +61,7 @@ class MetodoentregaController extends ActiveController
     {
         $climodel = new $this->modelClass;
         $recs = $climodel::deleteAll(['designacao' => $nomeentrega]);
-        return $recs;
+        return "O método de entrega " . $recs . " foi apagado!";
     }
 
     public function actionPutpornome($nomeentrega)
@@ -71,7 +71,7 @@ class MetodoentregaController extends ActiveController
         $ret = $climodel::findOne(['designacao' => $nomeentrega]);
         if($ret)
         {
-            $ret->designacao = $novo_designacao;
+            return "O nome do método de entrega foi alterado para: " . $ret->designacao = $novo_designacao;
             $ret->save();
         }
         else
@@ -83,8 +83,20 @@ class MetodoentregaController extends ActiveController
     public function actionNovaentrega($nomeentrega)
     {
         $entregamodel = new $this->modelClass;
+
         $entregamodel->designacao = $nomeentrega;
-        $entregamodel->save();
-        return $entregamodel;
+
+        if ($entregamodel->save()) {
+            return [
+                'success' => true,
+                'message' => "O método de entrega " . $entregamodel->designacao . " foi adicionado."
+            ];
+        } else {
+            return [
+                'success' => false,
+                'message' => 'Erro ao adicionar o método de entrega.',
+                'errors' => $entregamodel->errors
+            ];
+        }
     }
 }

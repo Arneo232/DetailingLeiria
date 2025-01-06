@@ -338,7 +338,7 @@ class LinhasCarrinhoController extends ActiveController
 
         return [
             'success' => true,
-            'message' => 'Linhas de carrinho recuperadas com sucesso.',
+            'message' => 'Linhas de carrinho encontradas com sucesso.',
             'data' => $linhasCarrinho,
         ];
     }

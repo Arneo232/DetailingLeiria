@@ -36,7 +36,7 @@ class ProdutoController extends ActiveController
         return ['contagem' => count($produtocontador)];
     }
 
-    public function actionPrecoAlto()
+    public function actionPrecoalto()
     {
         $produtosmodel = new $this->modelClass;
         $produtoMaisCaro = $produtosmodel::find()->orderBy(['preco' => SORT_DESC])->all();
@@ -47,7 +47,7 @@ class ProdutoController extends ActiveController
         return ['mensagem' => 'Nenhum produto encontrado.'];
     }
 
-    public function actionPrecoBaixo()
+    public function actionPrecobaixo()
     {
         $produtosmodel = new $this->modelClass;
         $produtoMaisBarato = $produtosmodel::find()->orderBy(['preco' => SORT_ASC])->all();
@@ -126,9 +126,9 @@ class ProdutoController extends ActiveController
 
         Imagem::deleteAll(['produtoId' => $produto->idProduto]);
 
-        $deletedCount = $produto->delete();
+        $delete = $produto->delete();
 
-        return ['deletedCount' => $deletedCount];
+        return ['Produto apagado com sucesso!'];
     }
 
     public function actionPutprecopornome($nomeproduto)
@@ -136,10 +136,16 @@ class ProdutoController extends ActiveController
         $novo_preco = \Yii::$app->request->post('preco');
         $produtosmodel = new $this->modelClass;
         $ret = $produtosmodel::findOne(['nome' => $nomeproduto]);
+
         if ($ret) {
             $ret->preco = $novo_preco;
-            $ret->save();
-            throw new \yii\web\NotFoundHttpException("Preço do produto alterado com sucesso para: " . $novo_preco . "€");
+            if ($ret->save()) {
+                return [
+                    'message' => "Preço do produto alterado com sucesso para: " . $novo_preco . "€"
+                ];
+            } else {
+                throw new \yii\web\ServerErrorHttpException("Erro ao atualizar o preço do produto.");
+            }
         } else {
             throw new \yii\web\NotFoundHttpException("Nome de produto não existe.");
         }

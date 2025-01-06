@@ -97,7 +97,12 @@ class AvaliacaoController extends ActiveController
             if ($reviewModel->save()) {
                 return [
                     'success' => true,
-                    'message' => 'A sua avaliação foi enviada com sucesso.'
+                    'message' => 'A sua avaliação foi enviada com sucesso.',
+                    'data' => [
+                    'idAvaliacao' => $reviewModel->idavaliacao,
+                    'rating:' => $reviewModel->rating,
+                    'comentário:' => $reviewModel->comentario,
+                    ]
                 ];
             } else {
                 return [
