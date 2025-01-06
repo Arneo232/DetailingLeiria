@@ -90,4 +90,35 @@ class Venda extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Profile::class, ['idprofile' => 'idProfileFK']);
     }
+
+    // Messaging das Vendas
+    public function afterSave($insert, $changedAttributes)
+    {
+        parent::afterSave($insert, $changedAttributes);
+
+        $idVenda = $this->idVenda;
+        $total = $this->total;
+        $datavenda = $this->datavenda;
+
+        $mensagemCriacao = "Foi feito uma venda (ID: {$idVenda}) no total de {$total} euros.";
+
+        $this->FazPublishNoMosquitto("INSERT_VENDA", $mensagemCriacao);
+    }
+    public function FazPublishNoMosquitto($canal, $msg)
+    {
+        $server = "127.0.0.1";
+        $port = 1883;
+        $username = ""; // Coloque o username, se necessário
+        $password = ""; // Coloque a password, se necessário
+        $client_id = "phpMQTT-publisher-venda"; // Deve ser único para evitar colisões
+
+        $mqtt = new \common\mosquitto\phpMQTT($server, $port, $client_id);
+
+        if ($mqtt->connect(true, NULL, $username, $password)) {
+            $mqtt->publish($canal, $msg, 0);
+            $mqtt->close();
+        } else {
+            file_put_contents('debug.output', 'MQTT Timeout!');
+        }
+    }
 }
