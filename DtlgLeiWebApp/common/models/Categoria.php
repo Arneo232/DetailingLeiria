@@ -29,6 +29,7 @@ class Categoria extends \yii\db\ActiveRecord
     {
         return [
             [['designacao'], 'string', 'max' => 45],
+            [['designacao'], 'required'],
         ];
     }
 

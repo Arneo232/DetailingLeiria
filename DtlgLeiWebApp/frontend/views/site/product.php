@@ -29,7 +29,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div class="form-group">
                     <label for="product-type">Escolha uma categoria:</label>
                     <select class="form-control" id="product-type" name="categoria" aria-label="Escolha uma categoria">
-                        <option value="" selected>Categorias</option> <!-- Categoria como null -->
+                        <option value="" selected>Categorias</option>
                         <?php if (isset($categorias) && !empty($categorias)): ?>
                             <?php foreach ($categorias as $categoria): ?>
                                 <option value="<?= htmlspecialchars($categoria->idCategoria, ENT_QUOTES, 'UTF-8') ?>">
