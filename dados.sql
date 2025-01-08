@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Tempo de geração: 31-Dez-2024 às 16:09
+-- Tempo de geração: 08-Jan-2025 às 22:41
 -- Versão do servidor: 8.3.0
 -- versão do PHP: 8.3.6
 
@@ -41,10 +41,10 @@ CREATE TABLE IF NOT EXISTS `auth_assignment` (
 --
 
 INSERT INTO `auth_assignment` (`item_name`, `user_id`, `created_at`) VALUES
-('admin', '1', 1735262648),
-('client', '3', 1735262648),
-('funcionario', '7', 1735262648),
-('gestor', '8', 1735262648);
+('admin', '1', 1736373465),
+('client', '2', 1736373570),
+('funcionario', '4', 1736373608),
+('gestor', '3', 1736373585);
 
 -- --------------------------------------------------------
 
@@ -71,27 +71,29 @@ CREATE TABLE IF NOT EXISTS `auth_item` (
 --
 
 INSERT INTO `auth_item` (`name`, `type`, `description`, `rule_name`, `data`, `created_at`, `updated_at`) VALUES
-('accessBackend', 2, 'Permite acesso ao backend do sistema', NULL, NULL, 1735262647, 1735262647),
-('admin', 1, NULL, NULL, NULL, 1735262648, 1735262648),
-('client', 1, NULL, NULL, NULL, 1735262648, 1735262648),
-('createUserAccounts', 2, 'Permite criar contas de utilizadores e funcionários', NULL, NULL, 1735262648, 1735262648),
-('deleteUserAccounts', 2, 'Permite deletar contas de utilizadores e funcionários', NULL, NULL, 1735262648, 1735262648),
-('DescontosIndex', 2, 'Permite visualizar os descontos e gerir', NULL, NULL, 1735262647, 1735262647),
-('FornecedorIndex', 2, 'Permite visualizar a lista de fornecedores', NULL, NULL, 1735262647, 1735262647),
-('funcionario', 1, NULL, NULL, NULL, 1735262648, 1735262648),
-('GestaoIndexCategorias', 2, 'Permite visualizar o Gestão de Categorias', NULL, NULL, 1735262647, 1735262647),
-('GestaoIndexProdutos', 2, 'Permite visualizar o Gestão de Produtos', NULL, NULL, 1735262648, 1735262648),
-('GestaoMetodosEntrega', 2, 'Permite visualizar o Gestão Métodos de Entrega', NULL, NULL, 1735262648, 1735262648),
-('GestaoMetodosPagamentos', 2, 'Permite visualizar o Gestão de metodos de pagamentos', NULL, NULL, 1735262648, 1735262648),
-('gestor', 1, NULL, NULL, NULL, 1735262648, 1735262648),
-('ProdutoIndexCreate', 2, 'Permite criar produtos', NULL, NULL, 1735262648, 1735262648),
-('ProdutoIndexDelete', 2, 'Permite deletar os produtos', NULL, NULL, 1735262648, 1735262648),
-('ProdutoIndexUpdate', 2, 'Permite visualizar o Update dos produtos', NULL, NULL, 1735262648, 1735262648),
-('ProdutoIndexView', 2, 'Permite visualizar a View dos produtos', NULL, NULL, 1735262648, 1735262648),
-('updateUserAccounts', 2, 'Permite editar contas de utilizadores e funcionários', NULL, NULL, 1735262648, 1735262648),
-('UserIndexAccounts', 2, 'Permite visualizar o index dos utilizadores', NULL, NULL, 1735262647, 1735262647),
-('viewUser', 2, 'Permite ao usuário visualizar seu próprio perfil', NULL, NULL, 1735262647, 1735262647),
-('viewUserAccounts', 2, 'Permite visualizar contas de utilizadores e funcionários', NULL, NULL, 1735262648, 1735262648);
+('accessBackend', 2, 'Permite acesso ao backend do sistema', NULL, NULL, 1735955871, 1735955871),
+('admin', 1, NULL, NULL, NULL, 1735955872, 1735955872),
+('client', 1, NULL, NULL, NULL, 1735955871, 1735955871),
+('createUserAccounts', 2, 'Permite criar contas de utilizadores e funcionários', NULL, NULL, 1735955871, 1735955871),
+('deleteUserAccounts', 2, 'Permite deletar contas de utilizadores e funcionários', NULL, NULL, 1735955871, 1735955871),
+('DescontosIndex', 2, 'Permite visualizar os descontos e gerir', NULL, NULL, 1735955871, 1735955871),
+('FornecedorIndex', 2, 'Permite visualizar a lista de fornecedores', NULL, NULL, 1735955871, 1735955871),
+('funcionario', 1, NULL, NULL, NULL, 1735955872, 1735955872),
+('GestaoAvaliacoes', 2, 'Permite visualizar a Gestão de avaliacoes', NULL, NULL, 1735955871, 1735955871),
+('GestaoEncomendas', 2, 'Permite visualizar o Gestão encomendas', NULL, NULL, 1735955871, 1735955871),
+('GestaoIndexCategorias', 2, 'Permite visualizar o Gestão de Categorias', NULL, NULL, 1735955871, 1735955871),
+('GestaoIndexProdutos', 2, 'Permite visualizar o Gestão de Produtos', NULL, NULL, 1735955871, 1735955871),
+('GestaoMetodosEntrega', 2, 'Permite visualizar o Gestão Métodos de Entrega', NULL, NULL, 1735955871, 1735955871),
+('GestaoMetodosPagamentos', 2, 'Permite visualizar o Gestão de metodos de pagamentos', NULL, NULL, 1735955871, 1735955871),
+('gestor', 1, NULL, NULL, NULL, 1735955872, 1735955872),
+('ProdutoIndexCreate', 2, 'Permite criar produtos', NULL, NULL, 1735955871, 1735955871),
+('ProdutoIndexDelete', 2, 'Permite deletar os produtos', NULL, NULL, 1735955871, 1735955871),
+('ProdutoIndexUpdate', 2, 'Permite visualizar o Update dos produtos', NULL, NULL, 1735955871, 1735955871),
+('ProdutoIndexView', 2, 'Permite visualizar a View dos produtos', NULL, NULL, 1735955871, 1735955871),
+('updateUserAccounts', 2, 'Permite editar contas de utilizadores e funcionários', NULL, NULL, 1735955871, 1735955871),
+('UserIndexAccounts', 2, 'Permite visualizar o index dos utilizadores', NULL, NULL, 1735955871, 1735955871),
+('viewUser', 2, 'Permite ao usuário visualizar seu próprio perfil', NULL, NULL, 1735955871, 1735955871),
+('viewUserAccounts', 2, 'Permite visualizar contas de utilizadores e funcionários', NULL, NULL, 1735955871, 1735955871);
 
 -- --------------------------------------------------------
 
@@ -120,6 +122,9 @@ INSERT INTO `auth_item_child` (`parent`, `child`) VALUES
 ('gestor', 'DescontosIndex'),
 ('gestor', 'FornecedorIndex'),
 ('gestor', 'funcionario'),
+('admin', 'GestaoAvaliacoes'),
+('gestor', 'GestaoAvaliacoes'),
+('funcionario', 'GestaoEncomendas'),
 ('gestor', 'GestaoIndexCategorias'),
 ('funcionario', 'GestaoIndexProdutos'),
 ('funcionario', 'GestaoMetodosEntrega'),
@@ -168,7 +173,14 @@ CREATE TABLE IF NOT EXISTS `avaliacao` (
   PRIMARY KEY (`idavaliacao`),
   KEY `idProfileFK` (`idProfileFK`,`idProdutoFK`),
   KEY `idProdutoFK` (`idProdutoFK`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=46 DEFAULT CHARSET=utf8mb3;
+
+--
+-- Extraindo dados da tabela `avaliacao`
+--
+
+INSERT INTO `avaliacao` (`idavaliacao`, `comentario`, `rating`, `idProfileFK`, `idProdutoFK`) VALUES
+(44, 'Avaliação de teste.', 5, 34, 25);
 
 -- --------------------------------------------------------
 
@@ -188,14 +200,14 @@ CREATE TABLE IF NOT EXISTS `carrinho` (
   KEY `idProfile` (`idProfile`),
   KEY `idMetodoEntrega` (`idMetodoEntrega`,`idMetodoPagamento`),
   KEY `idMetodoPagamento` (`idMetodoPagamento`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb3;
 
 --
 -- Extraindo dados da tabela `carrinho`
 --
 
 INSERT INTO `carrinho` (`idCarrinho`, `total`, `datavenda`, `idProfile`, `idMetodoEntrega`, `idMetodoPagamento`) VALUES
-(18, 90, NULL, 9, 1, 2);
+(31, 9, NULL, 34, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -206,9 +218,9 @@ INSERT INTO `carrinho` (`idCarrinho`, `total`, `datavenda`, `idProfile`, `idMeto
 DROP TABLE IF EXISTS `categoria`;
 CREATE TABLE IF NOT EXISTS `categoria` (
   `idCategoria` int NOT NULL AUTO_INCREMENT,
-  `designacao` varchar(45) DEFAULT NULL,
+  `designacao` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
   PRIMARY KEY (`idCategoria`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb3;
 
 --
 -- Extraindo dados da tabela `categoria`
@@ -252,7 +264,14 @@ CREATE TABLE IF NOT EXISTS `favorito` (
   PRIMARY KEY (`idfavorito`),
   KEY `fk_favorito_produto1_idx` (`produto_id`),
   KEY `fk_favorito_profile1_idx` (`profile_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8mb3;
+
+--
+-- Extraindo dados da tabela `favorito`
+--
+
+INSERT INTO `favorito` (`produto_id`, `profile_id`, `idfavorito`) VALUES
+(25, 34, 33);
 
 -- --------------------------------------------------------
 
@@ -287,16 +306,17 @@ CREATE TABLE IF NOT EXISTS `imagem` (
   `produtoId` int NOT NULL,
   PRIMARY KEY (`idimagem`),
   KEY `produtoId` (`produtoId`)
-) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=50 DEFAULT CHARSET=utf8mb3;
 
 --
 -- Extraindo dados da tabela `imagem`
 --
 
 INSERT INTO `imagem` (`idimagem`, `fileName`, `produtoId`) VALUES
-(26, 'VkLzOt2JkJ7NKDe_OPzLNAnGUYLnvLO5.png', 24),
 (27, 'k5l4wyw_a66PCqwDruyxORW9YGn1RlNW.jpg', 25),
-(28, '2YJyM2fnHLPG04fqD0CP0k1JXDJ90h63.png', 24);
+(45, '-9uXn5RkEg7j0MBAn12c9biaUVtoZqhs.png', 52),
+(46, 'CR34AgLyrDjPhm8NbihZLcNHKUka7fL9.jpg', 25),
+(49, 'I21Wb5Gjjeua3rDV_qadq0tLaPAhTB3T.png', 65);
 
 -- --------------------------------------------------------
 
@@ -315,7 +335,14 @@ CREATE TABLE IF NOT EXISTS `linhascarrinho` (
   PRIMARY KEY (`idLinhasCarrinho`),
   KEY `fk_linhasCarrinho_carrinho1_idx` (`carrinho_id`),
   KEY `fk_linhasCarrinho_produtos1_idx` (`produtos_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=65 DEFAULT CHARSET=utf8mb3;
+
+--
+-- Extraindo dados da tabela `linhascarrinho`
+--
+
+INSERT INTO `linhascarrinho` (`idLinhasCarrinho`, `quantidade`, `precounitario`, `subtotal`, `carrinho_id`, `produtos_id`) VALUES
+(64, 1, 9, 9, 31, 25);
 
 -- --------------------------------------------------------
 
@@ -334,14 +361,14 @@ CREATE TABLE IF NOT EXISTS `linhasvenda` (
   PRIMARY KEY (`idLinhasVenda`),
   KEY `fk_linhasvenda_vendas1_idx` (`idVendaFK`),
   KEY `fk_linhasvenda_produtos1_idx` (`idProdutoFK`)
-) ENGINE=InnoDB AUTO_INCREMENT=45 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=75 DEFAULT CHARSET=utf8mb3;
 
 --
 -- Extraindo dados da tabela `linhasvenda`
 --
 
 INSERT INTO `linhasvenda` (`idLinhasVenda`, `quantidade`, `precounitario`, `subtotal`, `idVendaFK`, `idProdutoFK`) VALUES
-(44, 1, 90, 90, 48, 24);
+(71, 1, 9, 9, 75, 25);
 
 -- --------------------------------------------------------
 
@@ -354,7 +381,7 @@ CREATE TABLE IF NOT EXISTS `metodoentrega` (
   `idmetodoEntrega` int NOT NULL AUTO_INCREMENT,
   `designacao` varchar(75) DEFAULT NULL,
   PRIMARY KEY (`idmetodoEntrega`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb3;
 
 --
 -- Extraindo dados da tabela `metodoentrega`
@@ -362,7 +389,8 @@ CREATE TABLE IF NOT EXISTS `metodoentrega` (
 
 INSERT INTO `metodoentrega` (`idmetodoEntrega`, `designacao`) VALUES
 (1, 'CTT'),
-(2, 'FedEx');
+(7, 'UPS'),
+(8, 'FedEx');
 
 -- --------------------------------------------------------
 
@@ -431,15 +459,16 @@ CREATE TABLE IF NOT EXISTS `produto` (
   KEY `fk_produtos_Categorias_idx` (`idCategoria`),
   KEY `fk_produtos_furnecedores1_idx` (`fornecedores_idfornecedores`),
   KEY `idDesconto` (`idDesconto`)
-) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=73 DEFAULT CHARSET=utf8mb3;
 
 --
 -- Extraindo dados da tabela `produto`
 --
 
 INSERT INTO `produto` (`idProduto`, `nome`, `descricao`, `preco`, `stock`, `idCategoria`, `fornecedores_idfornecedores`, `idDesconto`) VALUES
-(24, 'Produto', 'produto teste ijasodijaosijd', 90, 5, 1, 1, 1),
-(25, 'Spray limpa-vidros', 'aoskdpaokspdokas', 10, 2, 2, 1, NULL);
+(25, 'Spray limpa-vidros', 'spray 300ml para limpar vidros', 9, 2, 2, 1, 1),
+(52, 'Produto', 'Produto exemplo descrição', 90, 50, 1, 1, 1),
+(65, 'Produto teste', 'Descrição do produto teste', 90, 50, 1, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -455,15 +484,17 @@ CREATE TABLE IF NOT EXISTS `profile` (
   `userId` int NOT NULL,
   PRIMARY KEY (`idprofile`),
   KEY `userId` (`userId`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8mb3;
 
 --
 -- Extraindo dados da tabela `profile`
 --
 
 INSERT INTO `profile` (`idprofile`, `morada`, `ntelefone`, `userId`) VALUES
-(9, 'rua lisboa 1', 123456789, 24),
-(11, 'rua coimbra 1', 912123123, 26);
+(33, 'Rua de Lisboa 1', 912123123, 1),
+(34, 'Rua de Leiria 1', 912123123, 2),
+(35, 'Rua de Leiria 2', 911123123, 3),
+(36, 'Rua de Coimbra 2', 912123123, 4);
 
 -- --------------------------------------------------------
 
@@ -487,16 +518,17 @@ CREATE TABLE IF NOT EXISTS `user` (
   UNIQUE KEY `username` (`username`),
   UNIQUE KEY `email` (`email`),
   UNIQUE KEY `password_reset_token` (`password_reset_token`)
-) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 
 --
 -- Extraindo dados da tabela `user`
 --
 
 INSERT INTO `user` (`id`, `username`, `auth_key`, `password_hash`, `password_reset_token`, `email`, `status`, `created_at`, `updated_at`, `verification_token`) VALUES
-(1, 'admin', 'VhOSZK2O0x5plc0APurpqZrAFuij7-Jy', '$2y$13$I/0racfHKHiOj2Yn130NQelGjdS0bNk.YyFrGnsS1GTGkJoB3xhx.', NULL, 'admin@detailingleiria.com', 10, 1730204421, 1733359698, '_Rs4Jpt8PCpprMdb4bpWVNMhOiL_QGxc_1733359698'),
-(24, 'cliente2', 'yK0-qBCddtrAaT03jfnI6BLaJBzcYvuZ', '$2y$13$mpIEIROKqW1AmGqefrYuQO0FWIH1RR30lfJHGA/w8IpaHIcNFbpdu', NULL, 'cliente2@detailingleiria.pt', 10, 1733874704, 1734832136, 'Dwpjwiec7-QpQvsYhzreZpUPv18h7EWF_1734832136'),
-(26, 'gestor', 'h_3VhnxVuXI5fjXbzFfWbV8D_wWFuZj5', '$2y$13$Xqg8QPqJSxOtqOF.QbZ1AOLuXoRAKQ7UT.t0w4t10RfSzbc4tU3Im', NULL, 'gestor@detailing.leiria.pt', 10, 1734657301, 1734806132, 'oIDLKQ7XtMNQI4NJxsqz0Tyc86d1R3Sv_1734806132');
+(1, 'admin', 'YbPM7oGSaj0EJWjt2Yu_CAR8vMHUZjD_', '$2y$13$lw/C1VtZ2ebz0yDXp9EPXObzhOMIjQemSJgLOf7NK.ZE430ju8D82', NULL, 'admin@detailingleiria.pt', 10, 1736373465, 1736373465, '1ipDNpTXcrWiGCkZ_KF8ics5xbh9Zhgd_1736373465'),
+(2, 'cliente', 'Wr-TBtZkCuegYIMSz0VCsf_qtbS4LxHt', '$2y$13$yVn55MPHdeEepjOzkwDzROBBe97UXSBiXMumph79FztPGJJmgNv5i', NULL, 'cliente@detailingleiria.pt', 10, 1736373570, 1736373570, 'STUosHAhGP2Jb6DJMEGG-jyWznyvvg29_1736373570'),
+(3, 'gestor', 'Em5X7QOMjL1yAFjU_Z_7b_74sRN4IIFK', '$2y$13$M1lqBVYRrVVCReHQXZgOHeCb0aFgOH3gISn.EA2Sx8qV.vFQZ.Xxu', NULL, 'gestor@detailingleiria.pt', 10, 1736373585, 1736373585, 'iGZGIJU4_HeYmze2EyvCYjdBtq4WYRr2_1736373585'),
+(4, 'funcionario', 'zDyjgJZ3A6yCouijxnPTgPUG1NEMNIaW', '$2y$13$HwwWC79ZDKscEh/8crGWH.jn3/44ZesAx.kv5GJQIv5BgVD9Sv.Si', NULL, 'funcionario@detailingleiria.pt', 10, 1736373608, 1736373608, 'ngD2GQcX5xCcw6CPQfpot0u_f76JLOm6_1736373608');
 
 -- --------------------------------------------------------
 
@@ -518,14 +550,14 @@ CREATE TABLE IF NOT EXISTS `venda` (
   KEY `fk_vendas_metodoEntrega1_idx` (`metodoEntrega_id`),
   KEY `idCarrinhoFK` (`idCarrinhoFK`),
   KEY `idProfileFK` (`idProfileFK`)
-) ENGINE=InnoDB AUTO_INCREMENT=49 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=79 DEFAULT CHARSET=utf8mb3;
 
 --
 -- Extraindo dados da tabela `venda`
 --
 
 INSERT INTO `venda` (`idVenda`, `total`, `datavenda`, `metodoPagamento_id`, `metodoEntrega_id`, `idCarrinhoFK`, `idProfileFK`) VALUES
-(48, 90, '2024-12-31 16:01:22', 2, 1, 18, 9);
+(75, 9, '2025-01-08 22:05:50', 1, 1, 31, 34);
 
 --
 -- Restrições para despejos de tabelas

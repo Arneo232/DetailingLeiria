@@ -153,8 +153,8 @@ class RbacController extends Controller
 
         // Atribuir papéis aos usuários
         $auth->assign($admin, 1); // ID do admin
-        $auth->assign($client, 3); // ID do cliente
-        $auth->assign($funcionario, 7); // ID do funcionário
-        $auth->assign($gestor, 8); // ID do gestor
+        $auth->assign($client, 2); // ID do cliente
+        $auth->assign($funcionario, 4); // ID do funcionário
+        $auth->assign($gestor, 3); // ID do gestor
     }
 }
