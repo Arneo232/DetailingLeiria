@@ -12,11 +12,25 @@ class FavoritoCest
         $I->amLoggedInAs(User::findOne(['username' => 'pedroagostinho']));
     }
 
-    // tests
-    public function tentarAdicionarAoFavorito(FunctionalTester $I)
+    public function AdicionarAoFavorito(FunctionalTester $I)
     {
+        $I->amOnPage('/frontend/web');
+        $I->click('Products');
+        $I->click('.fa.fa-star', 'a.btn.dl-btn-primary');
 
-        $I->amOnPage('/site/product');
-        $I->click('.fa.fa-star', '.dl-btn-primary');
     }
+
+    public function verificarNosFavoritos(FunctionalTester $I)
+    {
+        $I->amOnPage('/favorito/index');
+        $I->seeElement('.card.h-100.shadow-sm');
+    }
+
+        public function removerDosFavoritos(FunctionalTester $I)
+        {
+            $I->amOnPage('/favorito/index');
+            $I->seeElement('.btn.btn-sm.btn-danger');
+            $I->click('.btn.btn-sm.btn-danger');
+        }
+
 }

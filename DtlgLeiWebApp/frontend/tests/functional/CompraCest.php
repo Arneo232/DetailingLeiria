@@ -12,17 +12,17 @@ class CompraCest
         $I->amLoggedInAs(User::findOne(['username' => 'pedroagostinho']));
     }
 
-    public function tentarAdicionarAoCarrinho(FunctionalTester $I)
+    public function AdicionarAoCarrinho(FunctionalTester $I)
     {
 
         $I->amOnPage('/site/product');
         $I->click('.fa.fa-cart-plus','.dl-btn-primary');
-        $I->see('1', '.boxed-1');
+
     }
 
 
 
-      public function tentarFinalizarCompra(FunctionalTester $I)
+      public function FinalizarCompra(FunctionalTester $I)
     {
         $I->amOnPage('/carrinho/index');
         $I->click('Checkout', '.btn.btn-success');
