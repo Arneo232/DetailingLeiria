@@ -26,6 +26,6 @@ class ProdutoCest
         $I->selectOption('Fornecedor', '3M');
         $I->selectOption('Desconto', '10');
         $I->attachFile('Imagens', 'produto.png');
-        $I->click('Save');
+        $I->click('form button[type=submit]');
     }
 }

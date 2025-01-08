@@ -1,6 +1,4 @@
 <?php
-
-
 namespace backend\tests\Acceptance;
 
 use backend\tests\AcceptanceTester;
@@ -31,5 +29,15 @@ class ProdutoCest
         $I->wait(3);
         $I->click('Save');
         $I->wait(5);
+    }
+
+    public function tryToDeleteProduto(AcceptanceTester $I)
+    {
+        $I->see('Delete');
+        $I->wait('3');
+        $I->click('Delete');
+        $I->wait('3');
+        $I->acceptPopup();
+        $I->wait('3');
     }
 }

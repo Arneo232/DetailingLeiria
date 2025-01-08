@@ -8,8 +8,8 @@ class CompraCest
 {
     public function _before(FunctionalTester $I)
     {
-        $I->seeRecord(User::className(), ['username' => 'pedroagostinho']);
-        $I->amLoggedInAs(User::findOne(['username' => 'pedroagostinho']));
+        $I->seeRecord(User::className(), ['username' => 'cliente']);
+        $I->amLoggedInAs(User::findOne(['username' => 'cliente']));
     }
 
     public function AdicionarAoCarrinho(FunctionalTester $I)

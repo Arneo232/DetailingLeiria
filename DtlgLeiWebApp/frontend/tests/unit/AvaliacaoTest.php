@@ -1,7 +1,7 @@
 <?php
 
 
-namespace frontend\tests\Unit;
+namespace frontend\tests\unit;
 
 use frontend\tests\UnitTester;
 use common\models\Avaliacao;
@@ -27,10 +27,10 @@ class AvaliacaoTest extends \Codeception\Test\Unit
         $avaliacao->rating = 4;
         $this->assertTrue($avaliacao->validate(['rating']));
 
-        $avaliacao->idProfileFK = 12;
+        $avaliacao->idProfileFK = 34;
         $this->assertTrue($avaliacao->validate(['idProfileFK']));
 
-        $avaliacao->idProdutoFK = 24;
+        $avaliacao->idProdutoFK = 25;
         $this->assertTrue($avaliacao->validate(['idProdutoFK']));
 
         $this->assertTrue($avaliacao->save());

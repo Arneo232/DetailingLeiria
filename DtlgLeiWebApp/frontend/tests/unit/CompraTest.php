@@ -1,6 +1,6 @@
 <?php
 
-namespace frontend\tests\Unit;
+namespace frontend\tests\unit;
 
 use frontend\tests\UnitTester;
 use common\models\Carrinho;
@@ -25,10 +25,10 @@ class CompraTest extends \Codeception\Test\Unit
         $compra->datavenda = null;
         $this->assertTrue($compra->validate(['datavenda']));
 
-        $compra->idProfile = 12;
+        $compra->idProfile = 34;
         $this->assertTrue($compra->validate(['idProfile']));
 
-        $compra->idMetodoEntrega = 2;
+        $compra->idMetodoEntrega = 1;
         $this->assertTrue($compra->validate(['idMetodoEntrega']));
 
         $compra->idMetodoPagamento = 1;

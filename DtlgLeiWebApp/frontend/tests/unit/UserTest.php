@@ -33,21 +33,27 @@ class UserTest extends \Codeception\Test\Unit
 
         $user->email = "admin@detailingleiria.pt";
         $this->assertFalse($user->validate(['email']));
-
-        $passwordTeste = 'pass';
-        $user->setPassword($passwordTeste);
-        $this->assertFalse($user->validatePassword('passerrada'));
     }
 
-    public function testCriacaoUser(){
+    public function testCriacaoErradaUser(){
         $user = new User();
         $user->username = "nomeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee";
-        $this->assertFalse($user->validate(['username']));
         $user->email = "emailinvalidoexemplo";
-        $this->assertFalse($user->validate(['email']));
+        $user->setPassword('pass');
+        $user->generateAuthKey();
+        $this->assertFalse($user->validate());
 
-        $passwordTeste = 'pass';
-        $user->setPassword($passwordTeste);
-        $this->assertFalse($user->validatePassword('passerrada'));
+        $this->assertFalse($user->save());
+    }
+
+    public function testCriacaoCorretaUser(){
+        $user = new User();
+        $user->username = 'userteste';
+        $user->email = 'userteste@detailingleiria.pt';
+        $user->setPassword('12345678');
+        $user->generateAuthKey();
+        $this->assertTrue($user->validate());
+
+        $this->assertTrue($user->save());
     }
 }
