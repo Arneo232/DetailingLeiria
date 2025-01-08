@@ -55,10 +55,15 @@ class User extends ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
-            [['username', 'email'], 'required', 'on' => ['create', 'update']],
-            [['password'], 'required', 'on' => 'create'],
+            [['username', 'email'], 'required', 'message' => 'Este campo não pode estár vazio.'],
+            ['username', 'string', 'max' => 100, 'message' => 'O username não pode conter mais de 255 caracteres.'],
+            ['email', 'email', 'message' => 'Formato do e-mail inválido.'],
+            ['password', 'required', 'on' => 'create', 'message' => 'É necessário uma password para criar uma conta.'],
+            ['password', 'string', 'min' => 8, 'max' => 20, 'message' => 'A password tem de ter entre 8 a 20 caracteres.'],
             ['status', 'default', 'value' => $this::STATUS_INACTIVE],
             ['status', 'in', 'range' => [$this::STATUS_ACTIVE, $this::STATUS_INACTIVE, $this::STATUS_DELETED]],
+            ['username', 'unique', 'message' => 'Este username já está a ser utilizado.'],
+            ['email', 'unique', 'message' => 'Este e-mail já está a ser utilizado.'],
         ];
     }
 
