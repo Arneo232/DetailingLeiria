@@ -22,31 +22,20 @@ $this->params['breadcrumbs'][] = $this->title;
         </h3>
 
         <div id="dl-filters-collapse" class="collapse dl-filters-container">
-            <form method="get" action="" class="dl-filter-form">
+            <form method="get" action="">
                 <div class="form-group">
-                    <input type="text" class="form-control" name="keyword" placeholder="Pesquisar por nome" />
-                </div>
-                <div class="form-group">
-                    <label for="product-type">Escolha uma categoria:</label>
-                    <select class="form-control" id="product-type" name="categoria" aria-label="Escolha uma categoria">
-                        <option value="" selected>Categorias</option>
-                        <?php if (isset($categorias) && !empty($categorias)): ?>
-                            <?php foreach ($categorias as $categoria): ?>
-                                <option value="<?= htmlspecialchars($categoria->idCategoria, ENT_QUOTES, 'UTF-8') ?>">
-                                    <?= htmlspecialchars($categoria->designacao, ENT_QUOTES, 'UTF-8') ?>
-                                </option>
-                            <?php endforeach; ?>
-                        <?php else: ?>
-                            <option value="" disabled>Nenhuma categoria disponível</option>
-                        <?php endif; ?>
+                    <label for="categoriaId">Escolha uma categoria:</label>
+                    <select id="categoriaId" name="categoriaId" class="form-control">
+                        <option value="">Todas as Categorias</option>
+                        <?php foreach ($categorias as $categoria): ?>
+                            <option value="<?= htmlspecialchars($categoria->idCategoria, ENT_QUOTES, 'UTF-8') ?>"
+                                <?= $categoria->idCategoria == $selectedCategoriaId ? 'selected' : '' ?>>
+                                <?= htmlspecialchars($categoria->designacao, ENT_QUOTES, 'UTF-8') ?>
+                            </option>
+                        <?php endforeach; ?>
                     </select>
                 </div>
-                <div class="form-group">
-                    <label for="dl-amount">Preço</label>
-                    <input type="text" id="dl-amount" class="form-control" readonly="readonly" />
-                    <div id="dl-slider-range"></div>
-                </div>
-                <button type="submit" class="btn dl-btn-primary">Aplicar Filtros</button>
+                <button type="submit" class="btn btn-primary">Filtrar</button>
             </form>
         </div>
     </div>
@@ -56,7 +45,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <!-- Produtos -->
     <div class="row">
-        <?php foreach ($dataProvider->models as $product): ?>
+        <?php foreach ($products as $product): ?>
             <div class="col-md-4 mb-4">
                 <div class="card shadow-sm" style="height: 95%;">
                     <div class="card-img-top">

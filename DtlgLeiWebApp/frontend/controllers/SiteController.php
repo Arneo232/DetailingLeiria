@@ -156,27 +156,24 @@ class SiteController extends Controller
         return $this->render('about');
     }
 
-    public function actionProduct()
+    public function actionProduct($categoriaId = null)
     {
-        // Buscar os produtos
-        $products = \common\models\Produto::find()->all();
-        $searchModel = new ProdutoSearch();
-        // Buscar as categorias
+        $procura = Produto::find();
+
+        if ($categoriaId) {
+            $procura->andWhere(['idCategoria' => $categoriaId]);
+        }
+
+        $products = $procura->all();
         $categorias = Categoria::find()->all();
 
-        // Obtém os parâmetros da URL (keyword e categoria)
-        $params = Yii::$app->request->queryParams;
-
-        $dataProvider = $searchModel->searchWithFilters($params);
-
-        // Passar as variáveis para a view
         return $this->render('product', [
             'products' => $products,
             'categorias' => $categorias,
-            'searchModel' => $searchModel,  // Passando o modelo de busca para a view
-            'dataProvider' => $dataProvider,  // Passando o dataProvider para a view
+            'selectedCategoriaId' => $categoriaId,
         ]);
     }
+
     /**
      * Signs user up.
      *
