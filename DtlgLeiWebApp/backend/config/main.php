@@ -42,6 +42,155 @@ return [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+<<<<<<< Updated upstream
+=======
+                [
+                    'class' => 'yii\rest\UrlRule', 'controller' => 'api/user',
+                    'extraPatterns' => [
+                        'GET contagem' => 'contagem', // actionContagem
+                        'GET comperfil' => 'comperfil', // actionComperfil
+                    ],
+                ],
+                [
+                    'class' => 'yii\rest\UrlRule', 'controller' => 'api/auth',
+                    'pluralize' => false,
+                    'extraPatterns' => [
+                        'POST login' => 'login',  // actionLogin
+                        'POST register' => 'register'   // actionSignup
+                    ],
+                ],
+                [
+                    'class' => 'yii\rest\UrlRule', 'controller' => 'api/produto',
+                    'extraPatterns' => [
+                        'GET contagem' => 'contagem', // actionContagem
+                        'GET precoalto' => 'precoalto', //actionPrecoAlto
+                        'GET precobaixo' => 'precobaixo', //actionPrecoBaixo
+                        'GET {idproduto}' => 'produto', //actionProduto
+                        'GET todosprodutos' => 'todosprodutos', // actionTodosprodutos
+                        'PUT {nomeproduto}' => 'putprecopornome', // actionPutprecopornome
+                        'DELETE {nomeproduto}' => 'delpornome', // actionDelpornome
+                    ],
+                    'tokens' => [
+                        '{idproduto}' => '<idproduto:\\d+>',
+                        '{nomeproduto}' => '<nomeproduto:\\w+>', //[a-zA-Z0-9_] 1 ou + vezes (char)
+                    ],
+                ],
+                [
+                    'class' => 'yii\rest\UrlRule', 'controller' => 'api/carrinho',
+                    'extraPatterns' => [
+                        'GET {idprofile}' => 'carrinhoporid', // actionCarrinhoporid
+                        'POST criarcarrinho' => 'criarcarrinho', // actionCriarcarrinho
+                    ],
+                    'tokens' => [
+                        '{idprofile}' => '<idprofile:\\d+>',
+                    ],
+                ],
+                [
+                    'class' => 'yii\rest\UrlRule', 'controller' => 'api/linhascarrinho',
+                    'extraPatterns' => [
+                        'POST addlinha' => 'addlinha', // actionAddlinha
+                        'DELETE removerlinha' => 'removerlinha', // actionRemovelinha
+                        'PUT aumentarlinha' => 'aumentarlinha', // actionAumentarlinha
+                        'PUT diminuirlinha' => 'diminuirlinha', // actionDiminuirlinha
+                        'GET linhasporidcarrinho' => 'linhasporidcarrinho', // actionLinhasporidcarrinho
+                    ],
+                    'tokens' => [
+                        '{idlinha}' => '<idlinha:\\d+>',
+                        '{idprofile}' => '<idprofile:\\d+>',
+                        '{produto_id}' => '<produto_id:\\d+>',
+                        '{idCarrinho}' => '<idCarrinho:\\d+>',
+                    ],
+                ],
+                [
+                    'class' => 'yii\rest\UrlRule', 'controller' => 'api/venda',
+                    'extraPatterns' => [
+                        'POST finalizarcompra' => 'finalizarcompra', // actionFinalizarcompra
+                        'GET vendasporperfil/{idprofilefk}' => 'vendasporperfil', // actionVendasporperfil
+                        'GET linhasvendaporvenda/{idvenda}' => 'linhasvendaporvenda', // actionLinhasvendaporvenda
+                    ],
+                    'tokens' => [
+                        '{idvenda}' => '<idvenda:\\d+>',
+                        '{idprofilefk}' => '<idprofilefk:\\d+>',
+                    ],
+                ],
+                [
+                    'class' => 'yii\rest\UrlRule', 'controller' => 'api/avaliacao',
+                    'extraPatterns' => [
+                        'POST fazeravaliacao/{idprodutofk}' => 'fazeravaliacao', // actionFazeravaliacao
+                        'DELETE delavaliacaoporid/{idavaliacao}' => 'delavaliacaoporid', // actionDelavaliacaoporid
+                        'GET avaliacoesporproduto/{idprodutofk}' => 'avaliacoesporproduto', // actionAvaliacoesporproduto
+                    ],
+                    'tokens' => [
+                        '{idavaliacao}' => '<idavaliacao:\\d+>',
+                        '{idprodutofk}' => '<idprodutofk:\\d+>',
+                        '{idprofilefk}' => '<idprofilefk:\\d+>',
+                    ],
+                ],
+                [
+                    'class' => 'yii\rest\UrlRule', 'controller' => 'api/favorito',
+                    'extraPatterns' => [
+                        'GET verificafav' => 'verificafav', // actionVerificafav
+                        'POST addfav' =>'addfav', // actionAddfav
+                        'DELETE {idfavorito}' => 'removefav', //actionRemovefav
+                        'GET {profile_id}' => 'profilefav', //actionProfilefav
+                    ],
+                    'tokens' => [
+                        '{produto_id}' => '<produto_id:\\d+>',
+                        '{profile_id}' => '<profile_id:\\d+>',
+                        '{idfavorito}' => '<idfavorito:\\d+>',
+                    ],
+                ],
+                [
+                    'class' => 'yii\rest\UrlRule', 'controller' => 'api/fornecedor',
+                    'extraPatterns' => [
+                        'GET contagem' => 'contagem', // actionContagem
+                    ],
+                ],
+                [
+                    'class' => 'yii\rest\UrlRule', 'controller' => 'api/categoria',
+                    'extraPatterns' => [
+                        'GET contagem' => 'contagem', // actionContagem
+                        'GET designacoes' => 'designacoes', // actionDesignacao
+                    ]
+                ],
+                [
+                    'class' => 'yii\rest\UrlRule', 'controller' => 'api/tarefa',
+                    'extraPatterns' => [
+                        'GET contagem' => 'contagem', // actionContagem
+                        'GET descricao' => 'descricao', // actiondescricao
+                        'GET feito' => 'feito', // actiondescricao
+                    ],
+                    'tokens' => [
+                        '{userid}' => '<userid:\\d+>',
+                        '{idprofilefk}' => '<idprofilefk:\\d+>',
+                    ],
+                    ],
+                [
+                    'class' => 'yii\rest\UrlRule', 'controller' => 'api/desconto',
+                    'extraPatterns' => [
+                        'GET contagem' => 'contagem', // actionContagem
+                    ],
+                ],
+                [
+                    'class' => 'yii\rest\UrlRule', 'controller' => 'api/metodoentrega',
+                    'extraPatterns' => [
+                        'GET contagem' => 'contagem', // actionContagem
+                        'DELETE delpornome/{nomeentrega}' => 'delpornome', // actionDelpornome
+                        'PUT {nomeentrega}' => 'putpornome', // actionPornome
+                        'POST novaentrega/{nomeentrega}' => 'novaentrega', // actionNovaentrega
+                    ],
+                    'tokens' => [
+                        '{idmetodoentrega}' => '<id:\\d+>',
+                        '{nomeentrega}' => '<nomeentrega:\\w+>', //[a-zA-Z0-9_] 1 ou + vezes (char)
+                    ],
+                ],
+                [
+                    'class' => 'yii\rest\UrlRule', 'controller' => 'api/metodoeagamento',
+                    'extraPatterns' => [
+                        'GET contagem' => 'contagem', // actionContagem
+                    ],
+                ]
+>>>>>>> Stashed changes
             ],
         ],
         */
