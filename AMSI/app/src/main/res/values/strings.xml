@@ -23,4 +23,20 @@
     <string name="ndOpen">Open Navigation Drawer</string>
     <string name="ndClose">Close Navigation Drawer</string>
     <string name="txt_login">Login</string>
+
+    <!-- Detalhes da Fatura -->
+    <string name="details_invoice">Detalhes da Fatura #</string>
+    <string name="product_name">Spray limpa vidros</string>
+    <string name="unit_price">Preço unitário:</string>
+    <string name="quantity">Unidades:</string>
+    <string name="total_price">Total:</string>
+    <string name="email_label">E-mail:</string>
+    <string name="phone_label">Telefone:</string>
+    <string name="address_label">Morada:</string>
+    <string name="delivery_method">Método de Entrega:</string>
+    <string name="payment_method">Método de Pagamento:</string>
+    <string name="subtotal">Subtotal:</string>
+    <string name="tax">Imposto:</string>
+    <string name="final_price">Preço final:</string>
+    <string name="date_label">Data:</string>
 </resources>
