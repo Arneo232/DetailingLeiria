@@ -1,4 +1,7 @@
 package com.example.amsi.listeners;
 
-public class LoginListener {
+import com.example.amsi.modelo.Utilizador;
+
+public interface LoginListener {
+    void onUpdateLogin(Utilizador utilizador);
 }

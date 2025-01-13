@@ -4,9 +4,12 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-public class UtilizadorBDHelper {
+import androidx.annotation.Nullable;
+
+public class UtilizadorBDHelper extends SQLiteOpenHelper {
     private static final String DB_NAME = "BDUsers";
     public static final String TABLE_NAME = "UsersTable";
     private static final int DB_VERSION = 18;

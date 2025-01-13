@@ -26,7 +26,7 @@
             android:name=".FaturaActivity"
             android:exported="false" />
         <activity
-            android:name=".ListaProdutosFragment"
+            android:name=".LojaActivity"
             android:exported="false" />
         <activity
             android:name=".BackupPassActivity"

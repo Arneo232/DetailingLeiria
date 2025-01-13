@@ -20,49 +20,61 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-public class LoginActivity extends AppCompatActivity {
+import com.example.amsi.listeners.LoginListener;
+import com.example.amsi.modelo.SingletonGestorProdutos;
+import com.example.amsi.modelo.Utilizador;
+
+public class LoginActivity extends AppCompatActivity implements LoginListener {
 
     public static final int MIN_PASS=4;
-    public static final String EMAIL= "Email";
+    public static final String USERNAME = "username";
+    public static final String PASSWORD = "password";
+    public static final String TOKEN = "token";
 
-    public EditText etEmail, etPassword;
+    public EditText etUsername, etPassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        setTitle("Login");
 
-        etEmail = findViewById(R.id.etEmail);
+        etUsername = findViewById(R.id.etUsername);
         etPassword = findViewById(R.id.etPassword);
+
+        SingletonGestorProdutos.getInstance(this).setLoginListener(this);
     }
 
-    public void onClickLogin(View view) {
-        String email = etEmail.getText().toString();
-        String pass= etPassword.getText().toString();
-
-        if(!isEmailValido(email)){
-            etEmail.setError("Formato de email inválido");
-            return;
-        }
-        if(!isPasswordValida(pass)){
-            etPassword.setError("Sem car. necessários");
-            return;
-        }
-        Intent intent = new Intent(this, MenuMainActivity.class);
-        intent.putExtra(EMAIL, email);
-        startActivity(intent);
-        finish();
-    }
-
-    public boolean isEmailValido(String email){
-        if(email==null)
+    private boolean isUsernameValido(String username) {
+        if (username == null) {
             return false;
-        return Patterns.EMAIL_ADDRESS.matcher(email).matches();
+        }
+
+        // Define your username validation pattern
+        String usernamePattern = "^[a-zA-Z0-9_]{3,20}$";
+
+        return username.matches(usernamePattern);
     }
 
-    public boolean isPasswordValida(String pass){
-        if(pass==null)
+    private boolean isPasswordValida(String password){
+        if(password==null)
             return false;
-        return pass.length()>=MIN_PASS;
+
+        return password.length()>=MIN_PASS;
+    }
+
+    @Override
+    public void onUpdateLogin(Utilizador utilizador) {
+        if(utilizador.getAuth_key() != null) {
+            Intent intent = new Intent(this, MenuMainActivity.class);
+            intent.putExtra(TOKEN, utilizador.getAuth_key());
+            intent.putExtra(USERNAME, utilizador.getUsername());
+
+            startActivity(intent);
+            //finish();
+        }
+        else {
+            Toast.makeText(this, "Token incorreto", Toast.LENGTH_SHORT).show();
+        }
     }
 }
