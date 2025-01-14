@@ -11,14 +11,19 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.amsi.listeners.LoginListener;
 import com.example.amsi.listeners.UtilizadorListener;
 import com.example.amsi.utils.LoginJsonParser;
+import com.example.amsi.utils.ProdutoJsonParser;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class SingletonGestorProdutos {
     public Utilizador utilizador, utilizadorData;
@@ -27,12 +32,13 @@ public class SingletonGestorProdutos {
     private LoginListener loginListener;
     private static volatile SingletonGestorProdutos instance = null;
     private UtilizadorListener utilizadorListener;
+    private Utilizador login;
 
     public static synchronized SingletonGestorProdutos getInstance(Context context) {
         if (instance == null) {
             synchronized (SingletonGestorProdutos.class) {
                 if (instance == null) {
-                    instance = new SingletonGestorProdutos(context);
+                    instance = new SingletonGestorProdutos();
                     volleyQueue = Volley.newRequestQueue(context);
                 }
             }
@@ -65,52 +71,39 @@ public class SingletonGestorProdutos {
 
     public void loginAPI(final String username, final String password, final Context context) {
         if (!ProdutoJsonParser.isConnectionInternet(context))
-            Toast.makeText(context, "Não tem ligação à internet", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Sem ligação à internet", Toast.LENGTH_SHORT).show();
         else {
-            JSONObject jsonParams = new JSONObject();
-            try {
-                jsonParams.put("username", username);
-                jsonParams.put("password", password);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST, mUrlAPILogin(context), jsonParams, new Response.Listener<JSONObject>() {
+            StringRequest request = new StringRequest(Request.Method.POST, mUrlAPILogin(context), new Response.Listener<String>() {
                 @Override
-                public void onResponse(JSONObject response) {
-                    utilizador = LoginJsonParser.parserJsonLogin(response);
+                public void onResponse(String response) {
+                    try{
+                        JSONObject loginJSON = new JSONObject(response);
+                        String token = loginJSON.getString("token");
+                        int id = loginJSON.getInt("id");
 
-                    // Save the user's ID, token, and username to SharedPreferences
-                    saveUserId(context, utilizador.getId());
-                    saveUserToken(context, utilizador.getAuth_key(), utilizador.getUsername());
-
-                    // Add the user to the local database only if it doesn't already exist
-                    if (utilizador.getId() != 0 || utilizador.getAuth_key() != null) {
-                        getUserDataAPI(context);
+                        login = LoginJsonParser.parserJsonLogin(loginJSON);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Toast.makeText(context, "loginAPI erro", Toast.LENGTH_SHORT).show();
                     }
 
-                    if (loginListener != null) {
-                        loginListener.onUpdateLogin(utilizador);
-                    }
                 }
-            }, new Response.ErrorListener() {
+            },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Toast.makeText(context, "loginAPI erro response", Toast.LENGTH_SHORT).show();
+                        }
+                    }) {
                 @Override
-                public void onErrorResponse(VolleyError error) {
-                    Toast.makeText(context, "Credenciais incorretas", Toast.LENGTH_SHORT).show();
-
-                    if (utilizador != null) {
-                        Log.e("LoginAPI", "Utilizador not null: " + utilizador.getUsername());
-                        // Check if other conditions or actions need to be taken
-                    } else {
-                        Log.e("LoginAPI", "Utilizador is null");
-                    }
-
-                    // Check if loginListener is not null before using it
-                    if (loginListener != null) {
-                        loginListener.onUpdateLogin(utilizador);
-                    }
+                protected Map<String, String> getParams() {
+                    Map<String, String> params = new HashMap<>();
+                    params.put("username", username);
+                    params.put("password", password);
+                    return params;
                 }
-            });
-            volleyQueue.add(req);
+            };
+            volleyQueue.add(request); // Adicione a requisição à fila do Volley para ser executada
         }
     }
 
@@ -163,11 +156,11 @@ public class SingletonGestorProdutos {
 
 
     private String mUrlAPIUserData(Context context) {
-        return "http://" + getApiIP(context) + "/dtlgleiwebapp/detailingleiria/backend/web/api/users/" + getUserId(context) + "?access-token=" + getUserToken(context);
+        return "http://detailingleiria-back.test/api/users/" + getUserId(context) + "?access-token=" + getUserToken(context);
     }
 
     private String mUrlAPILogin(Context context) {
 
-        return "http://" + getApiIP(context) + "/dtlgleiwebapp/detailingleiria/backend/web/api/auth/login";
+        return "http://detailingleiria-back/api/auth/login";
     }
 }

@@ -49,8 +49,6 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
         if (username == null) {
             return false;
         }
-
-        // Define your username validation pattern
         String usernamePattern = "^[a-zA-Z0-9_]{3,20}$";
 
         return username.matches(usernamePattern);
@@ -61,6 +59,25 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
             return false;
 
         return password.length()>=MIN_PASS;
+    }
+
+    public void onClickLogin(View view) {
+        String user = etUsername.getText().toString();
+        String pass = etPassword.getText().toString();
+
+       /* if(!isUsernameValido(user)) {
+            etUsername.setError("Username inválido");
+            return;
+        }*/
+        if(!isPasswordValida(pass)) {
+            etPassword.setError("Password inválida");
+            return;
+        }
+
+        SingletonGestorProdutos singletonGestorProdutos = SingletonGestorProdutos.getInstance(this);
+        singletonGestorProdutos.setLoginListener(this);
+
+        singletonGestorProdutos.loginAPI(user, pass, getApplicationContext());
     }
 
     @Override

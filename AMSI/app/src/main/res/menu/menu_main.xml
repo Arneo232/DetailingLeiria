@@ -6,5 +6,11 @@
         <item android:id="@+id/navPerfil"
             android:icon="@drawable/ic_action_profile"
             android:title="@string/txt_perfil" />
+        <item android:id="@+id/navLoja"
+            android:icon="@drawable/ic_action_loja"
+            android:title="@string/txt_loja" />
+        <item android:id="@+id/navSettings"
+            android:icon="@drawable/ic_action_settings"
+            android:title="Defenições" />
     </group>
 </menu>
