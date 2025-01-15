@@ -6,29 +6,19 @@ public class Utilizador {
     private String email;
     private String ntelefone;
     private String morada;
-    private String auth_key;
-    private String password_hash;
-    private String password_reset_token;
-    private String status;
-    private String created_at;
-    private String updated_at;
-    private String verification_token;
+    private String token;
 
-    public Utilizador(int id, String username, String email, String ntelefone, String morada,
-                      String auth_key, String password_hash, String password_reset_token,
-                      String status, String created_at, String updated_at, String verification_token) {
+    public Utilizador(){
+
+    }
+
+    public Utilizador(int id, String username, String email, String ntelefone, String morada, String token) {
         this.id = id;
         this.username = username;
         this.email = email;
         this.ntelefone = ntelefone;
         this.morada = morada;
-        this.auth_key = auth_key;
-        this.password_hash = password_hash;
-        this.password_reset_token = password_reset_token;
-        this.status = status;
-        this.created_at = created_at;
-        this.updated_at = updated_at;
-        this.verification_token = verification_token;
+        this.token = token;
     }
 
     public void setId(int id) {
@@ -51,19 +41,7 @@ public class Utilizador {
         this.morada = morada;
     }
 
-    public void setAuth_key(String auth_key) { this.auth_key = auth_key; }
-
-    public void setPassword_hash(String password_hash) { this.password_hash = password_hash; }
-
-    public void setPassword_reset_token(String password_reset_token) { this.password_reset_token = password_reset_token; }
-
-    public void setStatus(String status) { this.status = status; }
-
-    public void setCreated_at(String created_at) { this.created_at = created_at; }
-
-    public void setUpdated_at(String updated_at) { this.updated_at = updated_at; }
-
-    public void setVerification_token(String verification_token) { this.verification_token = verification_token; }
+    public void setToken(String token) { this.token = token; }
 
     public int getId() {
         return id;
@@ -85,18 +63,6 @@ public class Utilizador {
         return morada;
     }
 
+    public String getToken() { return token; }
 
-    public String getAuth_key() { return auth_key; }
-
-    public String getPassword_hash() { return password_hash; }
-
-    public String getPassword_reset_token() { return password_reset_token; }
-
-    public String getStatus() { return status; }
-
-    public String getCreated_at() { return created_at; }
-
-    public String getUpdated_at() { return updated_at; }
-
-    public String getVerification_token() { return verification_token; }
 }

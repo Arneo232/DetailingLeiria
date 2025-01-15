@@ -50,13 +50,7 @@ public class UtilizadorBDHelper extends SQLiteOpenHelper {
         values.put(EMAIL, utilizador.getEmail());
         values.put(NTELEFONE, utilizador.getNtelefone());
         values.put(MORADA, utilizador.getMorada());
-        values.put(AUTH_KEY, utilizador.getAuth_key());
-        values.put(PASSWORD_HASH, utilizador.getPassword_hash());
-        values.put(PASSWORD_RESET_TOKEN, utilizador.getPassword_reset_token());
-        values.put(STATUS, utilizador.getStatus());
-        values.put(CREATED_AT, utilizador.getCreated_at());
-        values.put(UPDATED_AT, utilizador.getUpdated_at());
-        values.put(VERIFICATION_TOKEN, utilizador.getVerification_token());
+        values.put(AUTH_KEY, utilizador.getToken());
 
         db.insert(TABLE_NAME, null, values);
 
@@ -68,13 +62,7 @@ public class UtilizadorBDHelper extends SQLiteOpenHelper {
         values.put(EMAIL, utilizador.getEmail());
         values.put(NTELEFONE, utilizador.getNtelefone());
         values.put(MORADA, utilizador.getMorada());
-        values.put(AUTH_KEY, utilizador.getAuth_key());
-        values.put(PASSWORD_HASH, utilizador.getPassword_hash());
-        values.put(PASSWORD_RESET_TOKEN, utilizador.getPassword_reset_token());
-        values.put(STATUS, utilizador.getStatus());
-        values.put(CREATED_AT, utilizador.getCreated_at());
-        values.put(UPDATED_AT, utilizador.getUpdated_at());
-        values.put(VERIFICATION_TOKEN, utilizador.getVerification_token());
+        values.put(AUTH_KEY, utilizador.getToken());
 
         int nLinhasEdit = (int) db.update(TABLE_NAME,values, ID + " = ?", new String[] {utilizador.getId()+""});
         return nLinhasEdit>0;

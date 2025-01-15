@@ -9,14 +9,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class LoginJsonParser {
-    public static Map<String, String> parserJsonLogin(String response) {
-        Map<String, String> utilizadorData = new HashMap<>();
+    public static Utilizador parserJsonLogin(String response) {
+        Utilizador utilizadorData = new Utilizador();
         try{
             JSONObject loginJson = new JSONObject(response);
-            utilizadorData.put("auth_key", loginJson.getString("auth_key"));
-            utilizadorData.put("username", loginJson.getString("username"));
-            utilizadorData.put("email", loginJson.getString("email"));
-            utilizadorData.put("profile_id", String.valueOf(loginJson.getInt("profile_id")));
+            utilizadorData.setToken(loginJson.getString("token"));
+            utilizadorData.setUsername(loginJson.getString("username"));
+            utilizadorData.setEmail(loginJson.getString("email"));
+            utilizadorData.setNtelefone(loginJson.getString("ntelefone"));
+            utilizadorData.setMorada(loginJson.getString("morada"));
+            utilizadorData.setId(loginJson.getInt("id"));
         }catch(JSONException e){
             throw new RuntimeException(e);
         }

@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.example.amsi.listeners.LoginListener;
 import com.example.amsi.modelo.SingletonGestorProdutos;
+import com.example.amsi.modelo.Utilizador;
 
 public class LoginActivity extends AppCompatActivity implements LoginListener {
 
@@ -32,10 +33,10 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
     }
 
     public void onClickLogin(View view) {
-        String user = etUsername.getText().toString();
-        String pass = etPassword.getText().toString();
+        String username = etUsername.getText().toString();
+        String password = etPassword.getText().toString();
 
-        if (!isPasswordValida(pass)) {
+        if (!isPasswordValida(password)) {
             etPassword.setError("Password inválida");
             return;
         }
@@ -43,7 +44,7 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
         SingletonGestorProdutos singletonGestorProdutos = SingletonGestorProdutos.getInstance(this);
         singletonGestorProdutos.setLoginListener(this);
 
-        singletonGestorProdutos.loginAPI(user, pass, getApplicationContext());
+        singletonGestorProdutos.loginAPI(username, password, getApplicationContext());
     }
 
     private boolean isPasswordValida(String password) {
@@ -51,17 +52,7 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
     }
 
     @Override
-    public void onValidateLogin(final Context context, final String auth_key, final String username, final String email, final int profileId) {
-        // Handle successful login
-        Toast.makeText(context, "Login efetuado com sucesso! Bem-vindo, " + username, Toast.LENGTH_SHORT).show();
-
-        Intent intent = new Intent(LoginActivity.this, AboutUsActivity.class);
-        intent.putExtra("AUTH_KEY", auth_key);
-        intent.putExtra("USERNAME", username);
-        intent.putExtra("EMAIL", email);
-        intent.putExtra("PROFILE_ID", profileId);
-        startActivity(intent);
-
-        finish();
+    public void onValidateLogin(final Context context, final Utilizador utilizador) {
+        Toast.makeText(context, "Login efetuado com sucesso! Bem-vindo, " + utilizador.getUsername(), Toast.LENGTH_SHORT).show();
     }
 }

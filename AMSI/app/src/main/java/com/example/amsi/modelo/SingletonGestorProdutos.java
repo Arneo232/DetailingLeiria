@@ -36,12 +36,8 @@ public class SingletonGestorProdutos {
 
     public static synchronized SingletonGestorProdutos getInstance(Context context) {
         if (instance == null) {
-            synchronized (SingletonGestorProdutos.class) {
-                if (instance == null) {
-                    instance = new SingletonGestorProdutos();
-                    volleyQueue = Volley.newRequestQueue(context);
-                }
-            }
+            instance = new SingletonGestorProdutos();
+            volleyQueue = Volley.newRequestQueue(context);
         }
         return instance;
     }
@@ -70,42 +66,43 @@ public class SingletonGestorProdutos {
     }
 
     public void loginAPI(final String username, final String password, final Context context) {
-        final String mUrlAPILogin = "http://172.22.21.201/detailingleiria/dtlgleiwebapp/backend/web/api/auth/login";
+        final String mUrlAPILogin = "http://172.22.21.201/DetailingLeiria/DtlgLeiWebApp/backend/web/api/auth/login";
         if (!ProdutoJsonParser.isConnectionInternet(context)) {
             Toast.makeText(context, "Não tem ligação à internet", Toast.LENGTH_SHORT).show();
         }else{
-            StringRequest request = new StringRequest(Request.Method.POST, mUrlAPILogin, new Response.Listener<String>(){
+            StringRequest request = new StringRequest(Request.Method.POST, mUrlAPILogin, new Response.Listener<String>() {
                 @Override
-                public void onResponse(String response){
-                    Map<String, String> utilizadorData = LoginJsonParser.parserJsonLogin(response);
-                    if(loginListener != null){
-                        loginListener.onValidateLogin(context, utilizadorData.get("auth_key"), utilizadorData.get("username"), utilizadorData.get("email"), Integer.parseInt(utilizadorData.get("profile_id")));
+                public void onResponse(String response) {
+                    try {
+                        login = LoginJsonParser.parserJsonLogin(response);
+
+                        if(loginListener != null) {
+                            loginListener.onValidateLogin(context, login);
+                        }
+                    } catch (Exception e) {
+                        Toast.makeText(context, "Erro: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 }
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    String errorMessage = "an error occured";
-                    if (error.networkResponse != null && error.networkResponse.data != null) {
-                        try {
-                            String responseBody = new String(error.networkResponse.data, "utf-8");
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, "Erro: " + error.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }) {
                 @Override
-                public String getBodyContentType(){
-                    return "application/x-www-form-urlencoded; charset=UTF-8";
+                protected Map<String, String> getParams() {
+                    Map<String, String> params = new HashMap<>();
+                    //params.put("username", username);
+                    //params.put("password", password);
+                    return params;
                 }
                 @Override
-                protected Map<String, String> getParams(){
-                    Map<String, String> params = new HashMap<>();
-                    params.put("username", username);
-                    params.put("password", password);
-                    return params;
+                public Map<String, String> getHeaders() {
+                    Map<String, String> headers = new HashMap<>();
+                    String credentials = username + ":" + password;
+                    String auth = "Basic " + android.util.Base64.encodeToString(credentials.getBytes(), android.util.Base64.NO_WRAP);
+                    headers.put("Authorization", auth);
+                    return headers;
                 }
             };
             volleyQueue.add(request);
