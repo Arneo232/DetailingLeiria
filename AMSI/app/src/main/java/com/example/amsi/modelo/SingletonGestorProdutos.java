@@ -26,7 +26,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SingletonGestorProdutos {
-    public Utilizador utilizador, utilizadorData;
+    public Utilizador utilizador;
 
     private static RequestQueue volleyQueue = null;
     private LoginListener loginListener;
@@ -70,72 +70,45 @@ public class SingletonGestorProdutos {
     }
 
     public void loginAPI(final String username, final String password, final Context context) {
-        if (!ProdutoJsonParser.isConnectionInternet(context))
-            Toast.makeText(context, "Sem ligação à internet", Toast.LENGTH_SHORT).show();
-        else {
-            StringRequest request = new StringRequest(Request.Method.POST, mUrlAPILogin(context), new Response.Listener<String>() {
+        final String mUrlAPILogin = "http://172.22.21.201/detailingleiria/dtlgleiwebapp/backend/web/api/auth/login";
+        if (!ProdutoJsonParser.isConnectionInternet(context)) {
+            Toast.makeText(context, "Não tem ligação à internet", Toast.LENGTH_SHORT).show();
+        }else{
+            StringRequest request = new StringRequest(Request.Method.POST, mUrlAPILogin, new Response.Listener<String>(){
                 @Override
-                public void onResponse(String response) {
-                    try{
-                        JSONObject loginJSON = new JSONObject(response);
-                        String token = loginJSON.getString("token");
-                        int id = loginJSON.getInt("id");
-
-                        login = LoginJsonParser.parserJsonLogin(loginJSON);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        Toast.makeText(context, "loginAPI erro", Toast.LENGTH_SHORT).show();
+                public void onResponse(String response){
+                    Map<String, String> utilizadorData = LoginJsonParser.parserJsonLogin(response);
+                    if(loginListener != null){
+                        loginListener.onValidateLogin(context, utilizadorData.get("auth_key"), utilizadorData.get("username"), utilizadorData.get("email"), Integer.parseInt(utilizadorData.get("profile_id")));
                     }
-
                 }
-            },
-                    new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            Toast.makeText(context, "loginAPI erro response", Toast.LENGTH_SHORT).show();
-                        }
-                    }) {
+            }, new Response.ErrorListener() {
                 @Override
-                protected Map<String, String> getParams() {
+                public void onErrorResponse(VolleyError error) {
+                    String errorMessage = "an error occured";
+                    if (error.networkResponse != null && error.networkResponse.data != null) {
+                        try {
+                            String responseBody = new String(error.networkResponse.data, "utf-8");
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show();
+                }
+            }) {
+                @Override
+                public String getBodyContentType(){
+                    return "application/x-www-form-urlencoded; charset=UTF-8";
+                }
+                @Override
+                protected Map<String, String> getParams(){
                     Map<String, String> params = new HashMap<>();
                     params.put("username", username);
                     params.put("password", password);
                     return params;
                 }
             };
-            volleyQueue.add(request); // Adicione a requisição à fila do Volley para ser executada
-        }
-    }
-
-    public void getUserDataAPI(Context context) {
-        if (!ProdutoJsonParser.isConnectionInternet(context)) {
-            Toast.makeText(context, "Não tem ligação à internet", Toast.LENGTH_SHORT).show();
-        } else {
-            int utilizadorID = getUserId(context); // Fetch user ID from SharedPreferences
-            JsonArrayRequest req = new JsonArrayRequest(Request.Method.GET, mUrlAPIUserData(context), null, new Response.Listener<JSONArray>() {
-                @Override
-                public void onResponse(JSONArray response) {
-                    for (int i = 0; i < response.length(); i++) {
-                        try {
-                            JSONObject item = response.getJSONObject(i);
-                            utilizadorData = LoginJsonParser.parserJsonGetUtilizadorData(item);
-
-                            if (utilizadorListener != null) {
-                                utilizadorListener.onGetUtilizadorData(utilizadorData);
-                            }
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            });
-            volleyQueue.add(req);
+            volleyQueue.add(request);
         }
     }
 
@@ -157,10 +130,5 @@ public class SingletonGestorProdutos {
 
     private String mUrlAPIUserData(Context context) {
         return "http://detailingleiria-back.test/api/users/" + getUserId(context) + "?access-token=" + getUserToken(context);
-    }
-
-    private String mUrlAPILogin(Context context) {
-
-        return "http://detailingleiria-back/api/auth/login";
     }
 }

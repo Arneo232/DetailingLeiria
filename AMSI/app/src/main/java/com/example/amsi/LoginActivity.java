@@ -1,32 +1,21 @@
 package com.example.amsi;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
 
-import android.os.Bundle;
-import android.util.Patterns;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-
 import com.example.amsi.listeners.LoginListener;
 import com.example.amsi.modelo.SingletonGestorProdutos;
-import com.example.amsi.modelo.Utilizador;
 
 public class LoginActivity extends AppCompatActivity implements LoginListener {
 
-    public static final int MIN_PASS=4;
+    public static final int MIN_PASS = 4;
     public static final String USERNAME = "username";
     public static final String PASSWORD = "password";
     public static final String TOKEN = "token";
@@ -38,38 +27,15 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         setTitle("Login");
-
         etUsername = findViewById(R.id.etUsername);
         etPassword = findViewById(R.id.etPassword);
-
-        SingletonGestorProdutos.getInstance(this).setLoginListener(this);
-    }
-
-    private boolean isUsernameValido(String username) {
-        if (username == null) {
-            return false;
-        }
-        String usernamePattern = "^[a-zA-Z0-9_]{3,20}$";
-
-        return username.matches(usernamePattern);
-    }
-
-    private boolean isPasswordValida(String password){
-        if(password==null)
-            return false;
-
-        return password.length()>=MIN_PASS;
     }
 
     public void onClickLogin(View view) {
         String user = etUsername.getText().toString();
         String pass = etPassword.getText().toString();
 
-       /* if(!isUsernameValido(user)) {
-            etUsername.setError("Username inválido");
-            return;
-        }*/
-        if(!isPasswordValida(pass)) {
+        if (!isPasswordValida(pass)) {
             etPassword.setError("Password inválida");
             return;
         }
@@ -80,18 +46,22 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
         singletonGestorProdutos.loginAPI(user, pass, getApplicationContext());
     }
 
-    @Override
-    public void onUpdateLogin(Utilizador utilizador) {
-        if(utilizador.getAuth_key() != null) {
-            Intent intent = new Intent(this, MenuMainActivity.class);
-            intent.putExtra(TOKEN, utilizador.getAuth_key());
-            intent.putExtra(USERNAME, utilizador.getUsername());
+    private boolean isPasswordValida(String password) {
+        return password != null && password.length() >= MIN_PASS;
+    }
 
-            startActivity(intent);
-            //finish();
-        }
-        else {
-            Toast.makeText(this, "Token incorreto", Toast.LENGTH_SHORT).show();
-        }
+    @Override
+    public void onValidateLogin(final Context context, final String auth_key, final String username, final String email, final int profileId) {
+        // Handle successful login
+        Toast.makeText(context, "Login efetuado com sucesso! Bem-vindo, " + username, Toast.LENGTH_SHORT).show();
+
+        Intent intent = new Intent(LoginActivity.this, AboutUsActivity.class);
+        intent.putExtra("AUTH_KEY", auth_key);
+        intent.putExtra("USERNAME", username);
+        intent.putExtra("EMAIL", email);
+        intent.putExtra("PROFILE_ID", profileId);
+        startActivity(intent);
+
+        finish();
     }
 }

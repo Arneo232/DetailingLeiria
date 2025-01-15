@@ -3,6 +3,7 @@
 namespace backend\modules\api\controllers;
 
 use common\models\User;
+use common\models\Profile;
 use frontend\models\SignupForm;
 use Yii;
 use yii\filters\auth\HttpBasicAuth;
@@ -16,46 +17,19 @@ use yii\web\UnprocessableEntityHttpException;
 class AuthController extends Controller
 {
     public $user;
-
-    public function behaviors()
-    {
-
-        $behaviors = parent::behaviors();
-
-        $behaviors['authenticator'] = [
-            'class' => HttpBasicAuth::className(),
-            'auth' => [$this, 'auth'],
-            'only' => ['login'],
-        ];
-
-        return $behaviors;
-    }
-
-    public function auth($username, $password)
-    {
-        $user = User::findByUsername($username);
-        if ($user && $user->validatePassword($password)) {
-            $this->user = $user;
-            return $user;
-        }
-        throw new ForbiddenHttpException('No authentication'); //403
-    }
-
-
+    public $modelClass = 'common\models\User';
     public function actionLogin()
     {
-        if ($this->user->profile) {
-            return [
-                'token' => $this->user->auth_key,
-                'id' => $this->user->id,
-                'username' => $this->user->username,
-                'email' => $this->user->email,
-                'ntelefone' => $this->user->profile->ntelefone,
-                'morada' => $this->user->profile->morada,
-            ];
-        } else {
-            throw new BadRequestHttpException('Perfil não foi encontrado.');
-        }
+        $userModel = new $this->modelClass;
+        $request = Yii::$app->request;
+        $username = $request->getBodyParam('username');
+        $password = $request->getBodyParam('password');
+
+        $user = $userModel::find()->where(['username' => $username])->one();
+        $profile = Profile::find()->where(['userId' => $user->id])->one();
+
+        $auth_key = $user->getAuthKey();
+        return['auth_key' => $auth_key, 'username' => $username, 'email' => $user->email, 'profile_id' => $profile->idprofile];
     }
 
     public function actionRegister()
