@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@android:color/white">
+
+    <!-- Toolbar com título -->
+    <LinearLayout
+        android:id="@+id/topBar"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:orientation="horizontal"
+        android:background="#F2F2F2"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:id="@+id/menuIcon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="16dp"
+            android:src="@drawable/ic_menu"
+            android:contentDescription="@string/menu_icon" />
+
+        <ImageView
+            android:id="@+id/logo"
+            android:layout_width="70dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="14dp"
+            android:src="@drawable/dl_logosolo"
+            android:contentDescription="@string/logo_description" />
+
+        <TextView
+            android:id="@+id/toolbarTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/detalhe_produto"
+            android:textSize="18sp"
+            android:textColor="#000000"
+            android:textStyle="bold"
+            android:layout_marginStart="8dp" />
+    </LinearLayout>
+
+
+    <!-- Imagem do produto -->
+    <ImageView
+        android:id="@+id/imgProduto"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_gravity="center_horizontal"
+        android:contentDescription="@string/produto_img"
+        android:src="@drawable/ic_product_placeholder"
+        android:layout_marginTop="16dp" />
+
+    <!-- Nome e preço do produto -->
+    <TextView
+        android:id="@+id/tvNomeProduto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/nome_produto"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_marginTop="8dp" />
+
+    <TextView
+        android:id="@+id/tvPrecoProduto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/preco_produto"
+        android:textSize="16sp"
+        android:textColor="@android:color/holo_green_dark"
+        android:gravity="center"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Botões de ação -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/btnAdicionarCarrinho"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:text="@string/adicionar_carrinho" />
+
+        <ImageButton
+            android:id="@+id/btnFavorito"
+            android:layout_width="26dp"
+            android:layout_height="26dp"
+            android:contentDescription="@string/favorito"
+            android:src="@drawable/favorito"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:scaleType="centerInside" />
+    </LinearLayout>
+
+    <!-- Detalhes do produto -->
+    <TextView
+        android:id="@+id/tvDetalhesTitulo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/detalhes_titulo"
+        android:textStyle="bold"
+        android:layout_marginTop="16dp" />
+
+    <TextView
+        android:id="@+id/tvDetalhes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/detalhes_produto"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Avaliação média -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/tvAvaliacaoMedia"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/avaliacao_media"
+            android:layout_marginEnd="8dp" />
+
+        <ImageView
+            android:id="@+id/imgEstrela"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/favorito_full" />
+
+        <Button
+            android:id="@+id/btnAvaliar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/avaliar"
+            android:layout_marginStart="16dp" />
+    </LinearLayout>
+
+    <!-- Comentários -->
+    <TextView
+        android:id="@+id/tvComentariosTitulo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/comentarios_titulo"
+        android:textStyle="bold"
+        android:layout_marginTop="16dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvComentario1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/comentario1"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:id="@+id/tvComentario2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/comentario2"
+            android:layout_marginBottom="8dp" />
+    </LinearLayout>
+</LinearLayout>

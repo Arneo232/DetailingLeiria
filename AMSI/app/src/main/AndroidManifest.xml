@@ -17,11 +17,14 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".DetalheProdutoActivity"
+            android:exported="false" />
+        <activity
             android:name=".ListaProdutosFragment"
             android:exported="false" />
         <activity
             android:name=".SettingsActivity"
-            android:exported="false"></activity>
+            android:exported="false" />
         <activity
             android:name=".DetalheFaturaActivity"
             android:exported="false" />
