@@ -53,6 +53,15 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
 
     @Override
     public void onValidateLogin(final Context context, final Utilizador utilizador) {
-        Toast.makeText(context, "Login efetuado com sucesso! Bem-vindo, " + utilizador.getUsername(), Toast.LENGTH_SHORT).show();
+        if(utilizador.token != null) {
+            Toast.makeText(context, "Login efetuado com sucesso! Bem-vindo, " + utilizador.getUsername(), Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(this, MenuMainActivity.class);
+            intent.putExtra(USERNAME, utilizador.getUsername());
+            startActivity(intent);
+            finish();
+        }
+        else {
+            Toast.makeText(this, "Token incorreto", Toast.LENGTH_SHORT).show();
+        }
     }
 }

@@ -10,7 +10,7 @@ import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 
-public class ProdutoBDHelper extends SQLiteOpenHelper {
+/*public class ProdutoBDHelper extends SQLiteOpenHelper {
 
     private static final String DB_NAME = "detailing_leiria";
     private static final String TABLE_NAME = "produtos";
@@ -154,4 +154,4 @@ public class ProdutoBDHelper extends SQLiteOpenHelper {
         db.insert(TABLE_MY_PRODUTOS, null, values);
         return produto;
     }
-}
+}*/

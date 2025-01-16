@@ -32,7 +32,7 @@ public class ProdutoJsonParser {
                 int idCategoria = produtoJSON.getInt("idCategoria");  // Verifica o nome exato da chave
                 int fornecedoresId = produtoJSON.getInt("fornecedoresId");  // Verifica o nome exato da chave
                 int idDesconto = produtoJSON.getInt("idDesconto");  // Verifica o nome exato da chave
-                String imagem = "http://" + ip + "/DetailingLeiria/backend/web/uploads/" + produtoJSON.getString("file_id");
+                //String imagem = "http://localhost/DetailingLeiria/dtlgleiwebapp/frontend/web/uploads/" + produtoJSON.getString("file_id");
 
                 Produto produto = new Produto(idProduto, nome, descricao, preco, stock, idCategoria, fornecedoresId, idDesconto);
                 produtos.add(produto);

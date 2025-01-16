@@ -4,6 +4,7 @@ public class Produto {
     private int idProduto;
     private String nome;
     private String descricao;
+    private String imagem;
     private double preco;
     private int stock;
     private int idCategoria;
@@ -14,6 +15,7 @@ public class Produto {
         this.idProduto = idProduto;
         this.nome = nome;
         this.descricao = descricao;
+        this.imagem = imagem;
         this.preco = preco;
         this.stock = stock;
         this.idCategoria = idCategoria;
@@ -37,4 +39,10 @@ public class Produto {
     public String getDescricao() {
         return descricao;
     }
+
+    public int getCategoria() {
+        return idCategoria;
+    }
+
+    public String getImgProduto() { return imagem; }
 }

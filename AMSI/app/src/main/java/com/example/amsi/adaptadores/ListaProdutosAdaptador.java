@@ -62,26 +62,26 @@ public class ListaProdutosAdaptador extends BaseAdapter {
     }
 
     private class ViewHolderLista {
-        private TextView tvNome, tvDescricao, tvPreco;
+        private TextView tvNome, tvPreco, tvCategoria;
         private ImageView imgProduto;
 
         public ViewHolderLista(View view) {
             tvNome = view.findViewById(R.id.tvNome);
-            tvDescricao = view.findViewById(R.id.tvDescricao);
             tvPreco = view.findViewById(R.id.tvPreco);
+            tvCategoria = view.findViewById(R.id.tvCategoria);
             imgProduto = view.findViewById(R.id.imgProduto);
         }
 
         // Atualiza os dados da linha
         public void update(Produto produto) {
             tvNome.setText(produto.getNome());
-            tvDescricao.setText(produto.getDescricao());
             tvPreco.setText(String.format("€ %.2f", produto.getPreco()));
+            tvCategoria.setText(produto.getCategoria());
 
             // Carregar imagem com Glide (se aplicável)
             Glide.with(context)
-                    .load("URL_DA_IMAGEM_AQUI") // Substituir com o URL real
-                    .placeholder(R.drawable.placeholder) // Imagem de placeholder
+                    .load(produto.getImgProduto()) // Substituir com o URL real
+                    .placeholder(R.drawable.dl_logo) // Imagem de placeholder
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(imgProduto);
         }

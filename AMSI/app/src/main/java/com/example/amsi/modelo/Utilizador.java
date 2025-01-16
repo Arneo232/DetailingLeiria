@@ -1,12 +1,12 @@
 package com.example.amsi.modelo;
 
 public class Utilizador {
-    private int id;
-    private String username;
-    private String email;
-    private String ntelefone;
-    private String morada;
-    private String token;
+    public int id;
+    public String username;
+    public String email;
+    public String ntelefone;
+    public String morada;
+    public String token;
 
     public Utilizador(){
 

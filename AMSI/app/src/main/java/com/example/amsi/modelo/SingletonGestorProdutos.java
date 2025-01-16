@@ -14,6 +14,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.amsi.listeners.LoginListener;
+import com.example.amsi.listeners.ProdutosListener;
 import com.example.amsi.listeners.UtilizadorListener;
 import com.example.amsi.utils.LoginJsonParser;
 import com.example.amsi.utils.ProdutoJsonParser;
@@ -22,6 +23,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,15 +41,21 @@ public class SingletonGestorProdutos {
     private static RequestQueue volleyQueue = null;
     private LoginListener loginListener;
     private static volatile SingletonGestorProdutos instance = null;
-    private UtilizadorListener utilizadorListener;
     private Utilizador login;
+    private ProdutosListener produtosListener;
+    private ArrayList<Produto> listaProdutos;
 
     public static synchronized SingletonGestorProdutos getInstance(Context context) {
         if (instance == null) {
-            instance = new SingletonGestorProdutos();
+            instance = new SingletonGestorProdutos(context);
             volleyQueue = Volley.newRequestQueue(context);
         }
         return instance;
+    }
+
+    private SingletonGestorProdutos(Context context) {
+        volleyQueue = Volley.newRequestQueue(context);
+        listaProdutos = new ArrayList<>();
     }
 
     public String getApiIP(Context context) {
@@ -57,6 +65,10 @@ public class SingletonGestorProdutos {
 
     public Utilizador getUtilizador() {
         return utilizador;
+    }
+
+    public void setProdutosListener(ProdutosListener produtosListener) {
+        this.produtosListener = produtosListener;
     }
 
     public void setLoginListener(LoginListener loginListener) {
@@ -137,30 +149,27 @@ public class SingletonGestorProdutos {
         return "http://detailingleiria-back.test/api/users/" + getUserId(context) + "?access-token=" + getUserToken(context);
     }
 
-
-    private ProdutoListener produtoListener;
-    private List<Produto> produtos;
-
-    private static final String BASE_URL = "http://detailingleiria-back.test/api";
-
-    public void setProdutoListener(ProdutoListener listener) {
-        this.produtoListener = listener;
-    }
-
     // Obter a lista de produtos
-    public void getProdutosAPI(final Context context) {
+    public void getAllProdutosAPI(final Context context) {
+        final String mUrlAPIProdutos = "http://172.22.21.201/DetailingLeiria/DtlgLeiWebApp/backend/web/api/produtos";
         if (!ProdutoJsonParser.isConnectionInternet(context)) {
             Toast.makeText(context, "Sem ligação à internet", Toast.LENGTH_SHORT).show();
             return;
         }
-
-        String url = BASE_URL + "/produtos";
-        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, mUrlAPIProdutos, null, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
-                produtos = ProdutoJsonParser.parserJsonProdutos(response);
-                if (produtoListener != null) {
-                    produtoListener.onRefreshListaProdutos(produtos);
+                try {
+                    JSONArray jsonArray = new JSONArray(response);
+
+                    ArrayList<Produto> produto = ProdutoJsonParser.parserJsonProdutos(jsonArray, context);
+
+                    if (produtosListener != null) {
+                        produtosListener.onRefreshListaProdutos(produto);
+                    }
+
+                } catch (Exception e) {
+                    Toast.makeText(context, "Erro ao carregar produtos: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
         }, new Response.ErrorListener() {
@@ -173,7 +182,7 @@ public class SingletonGestorProdutos {
     }
 
     // Adicionar produto
-    public void adicionarProdutoAPI(final Produto produto, final Context context) {
+    /*public void adicionarProdutoAPI(final Produto produto, final Context context) {
         if (!ProdutoJsonParser.isConnectionInternet(context)) {
             Toast.makeText(context, "Sem ligação à internet", Toast.LENGTH_SHORT).show();
             return;
@@ -257,6 +266,6 @@ public class SingletonGestorProdutos {
             }
         });
         volleyQueue.add(request);
-    }
+    }*/
 
 }
