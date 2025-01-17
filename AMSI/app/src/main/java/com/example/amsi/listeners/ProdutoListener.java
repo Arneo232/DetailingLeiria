@@ -1,6 +1,8 @@
 package com.example.amsi.listeners;
 
+import com.example.amsi.modelo.Produto;
+
 public interface ProdutoListener {
 
-    void onRefreshDetalhes(int op);
+    void onRefreshDetalhes(Produto produto);
 }

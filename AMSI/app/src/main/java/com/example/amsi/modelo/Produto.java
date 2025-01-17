@@ -44,5 +44,7 @@ public class Produto {
         return idCategoria;
     }
 
+    public int getFornecedoresId() { return fornecedoresId; }
+
     public String getImgProduto() { return imagem; }
 }

@@ -75,6 +75,10 @@ public class SingletonGestorProdutos {
         this.loginListener = loginListener;
     }
 
+    public ArrayList<Produto> getProdutosBD() {
+        return listaProdutos;
+    }
+
     public int getUserId(Context context) {
         SharedPreferences preferences = context.getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
         return preferences.getInt("user_id", 0); // 0 is the default value if the user ID is not found
@@ -129,6 +133,36 @@ public class SingletonGestorProdutos {
         }
     }
 
+    public void getAllProdutosAPI(final Context context) {
+        final String mUrlAPIProdutos = "http://172.22.21.201/DetailingLeiria/DtlgLeiWebApp/backend/web/api/produtos";
+        if (!ProdutoJsonParser.isConnectionInternet(context)) {
+            Toast.makeText(context, "Sem ligação à internet", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, mUrlAPIProdutos, null, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                try {
+                    ArrayList<Produto> produto = ProdutoJsonParser.parserJsonProdutos(response, context);
+
+                    if (produtosListener != null) {
+                        produtosListener.onRefreshListaProdutos(produto);
+                    }
+
+                } catch (Exception e) {
+                    Toast.makeText(context, "Erro ao carregar produtos: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
+                Log.e("VolleyError", error.getMessage());
+            }
+        });
+        volleyQueue.add(request);
+    }
+
     public void saveUserToken(Context context, String token, String username) {
         SharedPreferences preferences = context.getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
@@ -143,129 +177,4 @@ public class SingletonGestorProdutos {
         editor.putInt("user_id", userId);
         editor.apply();
     }
-
-
-    private String mUrlAPIUserData(Context context) {
-        return "http://detailingleiria-back.test/api/users/" + getUserId(context) + "?access-token=" + getUserToken(context);
-    }
-
-    // Obter a lista de produtos
-    public void getAllProdutosAPI(final Context context) {
-        final String mUrlAPIProdutos = "http://172.22.21.201/DetailingLeiria/DtlgLeiWebApp/backend/web/api/produtos";
-        if (!ProdutoJsonParser.isConnectionInternet(context)) {
-            Toast.makeText(context, "Sem ligação à internet", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, mUrlAPIProdutos, null, new Response.Listener<JSONArray>() {
-            @Override
-            public void onResponse(JSONArray response) {
-                try {
-                    JSONArray jsonArray = new JSONArray(response);
-
-                    ArrayList<Produto> produto = ProdutoJsonParser.parserJsonProdutos(jsonArray, context);
-
-                    if (produtosListener != null) {
-                        produtosListener.onRefreshListaProdutos(produto);
-                    }
-
-                } catch (Exception e) {
-                    Toast.makeText(context, "Erro ao carregar produtos: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(context, "Erro ao obter produtos: " + error.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-        volleyQueue.add(request);
-    }
-
-    // Adicionar produto
-    /*public void adicionarProdutoAPI(final Produto produto, final Context context) {
-        if (!ProdutoJsonParser.isConnectionInternet(context)) {
-            Toast.makeText(context, "Sem ligação à internet", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        String url = BASE_URL + "/produtos";
-        JSONObject produtoJson = new JSONObject();
-        try {
-            produtoJson.put("nome", produto.getNome());
-            produtoJson.put("preco", produto.getPreco());
-            produtoJson.put("descricao", produto.getDescricao());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, produtoJson, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                Toast.makeText(context, "Produto adicionado com sucesso!", Toast.LENGTH_SHORT).show();
-                getProdutosAPI(context); // Atualizar lista
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(context, "Erro ao adicionar produto: " + error.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-        volleyQueue.add(request);
-    }
-
-    // Atualizar produto
-    public void atualizarProdutoAPI(final Produto produto, final Context context) {
-        if (!ProdutoJsonParser.isConnectionInternet(context)) {
-            Toast.makeText(context, "Sem ligação à internet", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        String url = BASE_URL + "/produtos/" + produto.getId();
-        JSONObject produtoJson = new JSONObject();
-        try {
-            produtoJson.put("nome", produto.getNome());
-            produtoJson.put("preco", produto.getPreco());
-            produtoJson.put("descricao", produto.getDescricao());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.PUT, url, produtoJson, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                Toast.makeText(context, "Produto atualizado com sucesso!", Toast.LENGTH_SHORT).show();
-                getProdutosAPI(context); // Atualizar lista
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(context, "Erro ao atualizar produto: " + error.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-        volleyQueue.add(request);
-    }
-
-    // Remover produto
-    public void removerProdutoAPI(final int produtoId, final Context context) {
-        if (!ProdutoJsonParser.isConnectionInternet(context)) {
-            Toast.makeText(context, "Sem ligação à internet", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        String url = BASE_URL + "/produtos/" + produtoId;
-        StringRequest request = new StringRequest(Request.Method.DELETE, url, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                Toast.makeText(context, "Produto removido com sucesso!", Toast.LENGTH_SHORT).show();
-                getProdutosAPI(context); // Atualizar lista
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(context, "Erro ao remover produto: " + error.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-        volleyQueue.add(request);
-    }*/
-
 }

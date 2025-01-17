@@ -44,6 +44,7 @@ public class MenuMainActivity extends AppCompatActivity  implements NavigationVi
         drawer.addDrawerListener(toggle);
 
         fragmentManager = getSupportFragmentManager();
+        navigationView.setNavigationItemSelectedListener(this);
         carregarCabecalho();
     }
 
@@ -55,8 +56,6 @@ public class MenuMainActivity extends AppCompatActivity  implements NavigationVi
             fragment = new ListaProdutosFragment();
             setTitle(item.getTitle());
         } else if (item.getItemId() == R.id.navPerfil) {
-            setTitle(item.getTitle());
-        }else if (item.getItemId() == R.id.navLoja) {
             setTitle(item.getTitle());
         }else if (item.getItemId() == R.id.navSettings) {
             setTitle(item.getTitle());
