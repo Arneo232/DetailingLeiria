@@ -32,31 +32,40 @@ public class ListaProdutosFragment extends Fragment implements ProdutosListener 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_lista_produtos , container , false);
+        // Inflate o layout para este fragmento
+        View view = inflater.inflate(R.layout.fragment_lista_produtos, container, false);
         setHasOptionsMenu(true);
 
+        // Inicializar o ListView e configurar o listener
         lvProdutos = view.findViewById(R.id.lvProdutos);
+
+        // Configurar o listener para quando os produtos forem carregados
         SingletonGestorProdutos.getInstance(getContext()).setProdutosListener(this);
         SingletonGestorProdutos.getInstance(getContext()).getAllProdutosAPI(getContext());
 
-        /*lvProdutos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        // Configurar o clique nos itens da lista
+        lvProdutos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                Intent intent = new Intent(getContext() , DetalhesProdutoActivity.class);
-                intent.putExtra(DetalhesProdutoActivity.ID_CURSO,(int) id);
-                startActivityForResult(intent , MainActivity.EDIT);
+                // Obter o produto correspondente ao clique
+                Produto produtoSelecionado = (Produto) adapterView.getItemAtPosition(position);
+
+                // Criar uma Intent para abrir a DetalheProdutoActivity
+                Intent intent = new Intent(getContext(), DetalheProdutoActivity.class);
+                intent.putExtra("produto_id", produtoSelecionado.getIdProduto()); // Enviar o ID do produto
+                startActivity(intent);
             }
-        });*/
+        });
 
         return view;
     }
 
     @Override
     public void onRefreshListaProdutos(ArrayList<Produto> listaProdutos) {
-
-        if(listaProdutos!=null){
-            lvProdutos.setAdapter(new ListaProdutosAdaptador(getContext(),listaProdutos));
+        if (listaProdutos != null) {
+            // Atualizar o adaptador do ListView com a lista de produtos
+            lvProdutos.setAdapter(new ListaProdutosAdaptador(getContext(), listaProdutos));
         }
     }
+
 }
