@@ -17,29 +17,29 @@ import java.util.ArrayList;
 
 public class ProdutoJsonParser {
 
-    public static ArrayList<Produto> parserJsonProdutos(JSONArray response, Context context) {
+    public static ArrayList<Produto> parserJsonProdutos(JSONArray produtosArray, Context context) {
         ArrayList<Produto> produtos = new ArrayList<>();
-        SharedPreferences sharedIP = context.getSharedPreferences("IP", MODE_PRIVATE);
-        String ip = sharedIP.getString("ip", "");
         try {
-            for (int i = 0; i < response.length(); i++) {
-                JSONObject produtoJSON = (JSONObject) response.get(i);
+            for (int i = 0; i < produtosArray.length(); i++) {
+                JSONObject produtoJSON = produtosArray.getJSONObject(i);
 
-                int idProduto = produtoJSON.getInt("idProduto");  // Verifica o nome exato da chave
+                // Extract product details
+                int id = produtoJSON.getInt("id");
                 String nome = produtoJSON.getString("nome");
                 String descricao = produtoJSON.getString("descricao");
                 double preco = produtoJSON.getDouble("preco");
-                int stock = produtoJSON.getInt("stock");  // Verifica o nome exato da chave
-                int idCategoria = produtoJSON.getInt("idCategoria");  // Verifica o nome exato da chave
-                int fornecedoresId = produtoJSON.getInt("fornecedores_idfornecedores");  // Verifica o nome exato da chave
-                int idDesconto = produtoJSON.getInt("idDesconto");  // Verifica o nome exato da chave
-                //String imagem = "http://localhost/DetailingLeiria/dtlgleiwebapp/frontend/web/uploads/" + produtoJSON.getString("file_id");
+                int stock = produtoJSON.getInt("stock");
+                String categoria = produtoJSON.getString("categoria");
+                String fornecedor = produtoJSON.getString("Fornecedor");
+                String desconto = produtoJSON.getString("desconto");
+                String imagem = produtoJSON.getString("imagem");
 
-                Produto produto = new Produto(idProduto, nome, descricao, preco, stock, idCategoria, fornecedoresId, idDesconto);
+                // Create a Produto object and add it to the list
+                Produto produto = new Produto(id, nome, descricao, preco, stock, categoria, fornecedor, desconto, imagem);
                 produtos.add(produto);
             }
         } catch (JSONException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Erro ao analisar JSON: " + e.getMessage(), e);
         }
         return produtos;
     }
@@ -49,17 +49,17 @@ public class ProdutoJsonParser {
         try {
             JSONObject produtoJSON = new JSONObject(response);
 
-            int idProduto = produtoJSON.getInt("idProduto");  // Verifica o nome exato da chave
+            int idProduto = produtoJSON.getInt("id");  // Verifica o nome exato da chave
             String nome = produtoJSON.getString("nome");
             String descricao = produtoJSON.getString("descricao");
             double preco = produtoJSON.getDouble("preco");
             int stock = produtoJSON.getInt("stock");  // Verifica o nome exato da chave
-            int idCategoria = produtoJSON.getInt("idCategoria");  // Verifica o nome exato da chave
-            int fornecedoresId = produtoJSON.getInt("fornecedores_idfornecedores");  // Verifica o nome exato da chave
-            int idDesconto = produtoJSON.getInt("idDesconto");  // Verifica o nome exato da chave
-            //String imagem = produtoJSON.getString("file_id");
+            String idCategoria = produtoJSON.getString("categoria");  // Verifica o nome exato da chave
+            String fornecedoresId = produtoJSON.getString("Fornecedor");  // Verifica o nome exato da chave
+            String idDesconto = produtoJSON.getString("desconto");  // Verifica o nome exato da chave
+            String imagem = produtoJSON.getString("imagem");
 
-            produto = new Produto(idProduto, nome, descricao, preco, stock, idCategoria, fornecedoresId, idDesconto);
+            produto = new Produto(idProduto, nome, descricao, preco, stock, idCategoria, fornecedoresId, idDesconto, imagem);
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }

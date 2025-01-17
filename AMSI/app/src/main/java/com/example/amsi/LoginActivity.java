@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -47,6 +48,12 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
         singletonGestorProdutos.loginAPI(username, password, getApplicationContext());
     }
 
+    public void onClickGoReg(View view){
+        Intent intent = new Intent(this, RegisterActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
     private boolean isPasswordValida(String password) {
         return password != null && password.length() >= MIN_PASS;
     }
@@ -57,6 +64,8 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
             Toast.makeText(context, "Login efetuado com sucesso! Bem-vindo, " + utilizador.getUsername(), Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(this, MenuMainActivity.class);
             intent.putExtra(USERNAME, utilizador.getUsername());
+            intent.putExtra(TOKEN, utilizador.getToken());
+            //Log.e(TOKEN, "Token do user: " + utilizador.getToken());
             startActivity(intent);
             finish();
         }

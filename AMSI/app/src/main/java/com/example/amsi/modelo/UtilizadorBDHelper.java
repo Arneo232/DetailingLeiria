@@ -15,9 +15,8 @@ public class UtilizadorBDHelper extends SQLiteOpenHelper {
     private static final int DB_VERSION = 18;
     private SQLiteDatabase db;
 
-    public static final String USERNAME = "username", EMAIL = "email", ID = "id", MORADA = "morada", NTELEFONE = "ntelefone", AUTH_KEY = "auth_key",
-            PASSWORD_HASH = "password_hash", PASSWORD_RESET_TOKEN = "password_reset_token", STATUS = "status", CREATED_AT = "created_at",
-            UPDATED_AT = "updated_at", VERIFICATION_TOKEN = "verification_token";
+    public static final String USERNAME = "username", EMAIL = "email", ID = "id", MORADA = "morada",
+            NTELEFONE = "ntelefone", TOKEN = "token";
 
     public UtilizadorBDHelper(@Nullable Context context) {
         super(context, DB_NAME, null, DB_VERSION);
@@ -32,13 +31,7 @@ public class UtilizadorBDHelper extends SQLiteOpenHelper {
                 EMAIL + " TEXT NOT NULL," +
                 NTELEFONE + " TEXT," +
                 MORADA + " TEXT," +
-                AUTH_KEY + " TEXT NOT NULL," +
-                PASSWORD_HASH + " TEXT NOT NULL," +
-                PASSWORD_RESET_TOKEN + " TEXT," +
-                STATUS + " TEXT NOT NULL," +
-                CREATED_AT + " TEXT NOT NULL," +
-                UPDATED_AT + " TEXT NOT NULL," +
-                VERIFICATION_TOKEN + " TEXT);";
+                TOKEN + " TEXT NOT NULL);";
 
         db.execSQL(sqlTableUtilizadores);
     }
@@ -50,7 +43,7 @@ public class UtilizadorBDHelper extends SQLiteOpenHelper {
         values.put(EMAIL, utilizador.getEmail());
         values.put(NTELEFONE, utilizador.getNtelefone());
         values.put(MORADA, utilizador.getMorada());
-        values.put(AUTH_KEY, utilizador.getToken());
+        values.put(TOKEN, utilizador.getToken());
 
         db.insert(TABLE_NAME, null, values);
 
@@ -62,7 +55,7 @@ public class UtilizadorBDHelper extends SQLiteOpenHelper {
         values.put(EMAIL, utilizador.getEmail());
         values.put(NTELEFONE, utilizador.getNtelefone());
         values.put(MORADA, utilizador.getMorada());
-        values.put(AUTH_KEY, utilizador.getToken());
+        values.put(TOKEN, utilizador.getToken());
 
         int nLinhasEdit = (int) db.update(TABLE_NAME,values, ID + " = ?", new String[] {utilizador.getId()+""});
         return nLinhasEdit>0;

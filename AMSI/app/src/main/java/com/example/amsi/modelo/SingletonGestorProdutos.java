@@ -74,10 +74,9 @@ public class SingletonGestorProdutos {
 
         mUrlAPIProdutos = "http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/produtos/todosprodutos";
         mUrlAPILogin = "http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/auth/login";
-        mUrlAPILicoes ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/lessons";
-        mUrlAPICarrinho ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/carts";
-        mUrlAPIFatura ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/orders";
-        mUrlAPIFavorito ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/favorites";
+        mUrlAPICarrinho ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/";
+        mUrlAPIFatura ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/";
+        mUrlAPIFavorito ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/";
 
     }
 
@@ -156,34 +155,41 @@ public class SingletonGestorProdutos {
     }
 
     public void getAllProdutosAPI(final Context context) {
-        final String mUrlAPIProdutos = "http://172.22.21.201/DetailingLeiria/DtlgLeiWebApp/backend/web/api/produtos";
         if (!ProdutoJsonParser.isConnectionInternet(context)) {
             Toast.makeText(context, "Sem ligação à internet", Toast.LENGTH_SHORT).show();
             return;
         }
+
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, mUrlAPIProdutos, null, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
                 try {
-                    ArrayList<Produto> produto = ProdutoJsonParser.parserJsonProdutos(response, context);
+                    // Extract the nested JSONArray from the response
+                    JSONArray produtosArray = response.getJSONArray(0);
+
+                    // Parse the array using your parser method
+                    ArrayList<Produto> produtos = ProdutoJsonParser.parserJsonProdutos(produtosArray, context);
 
                     if (produtosListener != null) {
-                        produtosListener.onRefreshListaProdutos(produto);
+                        produtosListener.onRefreshListaProdutos(produtos);
                     }
 
-                } catch (Exception e) {
+                } catch (JSONException e) {
                     Toast.makeText(context, "Erro ao carregar produtos: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Log.e("Erro:", e.getMessage());
                 }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Erro ao obter produtos: " + error.getMessage(), Toast.LENGTH_SHORT).show();
                 Log.e("VolleyError", error.getMessage());
             }
         });
+
         volleyQueue.add(request);
     }
+
 
     public void saveUserToken(Context context, String token, String username) {
         SharedPreferences preferences = context.getSharedPreferences("user_prefs", Context.MODE_PRIVATE);

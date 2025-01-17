@@ -7,11 +7,11 @@ public class Produto {
     private String imagem;
     private double preco;
     private int stock;
-    private int idCategoria;
-    private int fornecedoresId;
-    private int idDesconto;
+    private String idCategoria;
+    private String fornecedoresId;
+    private String idDesconto;
 
-    public Produto(int idProduto, String nome, String descricao, double preco, int stock, int idCategoria, int fornecedoresId, int idDesconto) {
+    public Produto(int idProduto, String nome, String descricao, double preco, int stock, String idCategoria, String fornecedoresId, String idDesconto, String imagem) {
         this.idProduto = idProduto;
         this.nome = nome;
         this.descricao = descricao;
@@ -40,11 +40,11 @@ public class Produto {
         return descricao;
     }
 
-    public int getCategoria() {
+    public String getCategoria() {
         return idCategoria;
     }
 
-    public int getFornecedoresId() { return fornecedoresId; }
+    public String getFornecedoresId() { return fornecedoresId; }
 
     public String getImgProduto() { return imagem; }
 }
