@@ -64,7 +64,7 @@ class ProdutoController extends ActiveController
         $produtosmodel = new $this->modelClass;
 
         // Fetch the product by ID
-        $produto = $produtosmodel::find()->where(['idproduto' => $idproduto])->one();
+        $produto = $produtosmodel::find()->where(['idProduto' => $idproduto])->one();
 
         if (!$produto) {
             return [
@@ -73,19 +73,30 @@ class ProdutoController extends ActiveController
             ];
         }
 
-        $imagem = Imagem::find()->where(['produtoId' => $produto->idProduto])->all();
+        $baseUrl = "http://172.22.21.201/detailingleiria/dtlgleiwebapp/frontend/web/uploads/";
 
         $data = [
-            'produto' => $produto,
-            'imagens' => $imagem
+            'id' => $produto->idProduto,
+            'nome' => $produto->nome,
+            'descricao' => $produto->descricao,
+            'preco' => $produto->preco,
+            'stock' => $produto->stock,
+            'categoria' => $produto->categoria->designacao,
+            'Fornecedor' => $produto->fornecedor->nome,
+            'desconto' => $produto->desconto->desconto,
+            'imagem' => null,
         ];
 
+        if (!empty($produto->imagem)) {
+            $primeiraImagem = $produto->imagem[0];
+            $data['imagem'] = $baseUrl . $primeiraImagem->fileName;
+        }
+
         return [
-            'success' => true,
-            'message' => 'Produto encontrado com sucesso.',
-            'data' => $data
+          $data
         ];
     }
+
 
     public function actionTodosprodutos()
     {
