@@ -45,6 +45,18 @@ public class SingletonGestorProdutos {
     private ProdutosListener produtosListener;
     private ArrayList<Produto> listaProdutos;
 
+    private static String mUrlAPIProdutos = "" ;
+
+    private static String mUrlAPILogin = "";
+
+    private static String mUrlAPILicoes ="";
+
+    private static String mUrlAPICarrinho ="";
+
+    private static String mUrlAPIFatura ="";
+
+    private static String mUrlAPIFavorito="";
+
     public static synchronized SingletonGestorProdutos getInstance(Context context) {
         if (instance == null) {
             instance = new SingletonGestorProdutos(context);
@@ -56,6 +68,17 @@ public class SingletonGestorProdutos {
     private SingletonGestorProdutos(Context context) {
         volleyQueue = Volley.newRequestQueue(context);
         listaProdutos = new ArrayList<>();
+    }
+
+    public void setIpAddress(String ipAddress, Context context) {
+
+        mUrlAPIProdutos = "http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/produtos/todosprodutos";
+        mUrlAPILogin = "http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/auth/login";
+        mUrlAPILicoes ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/lessons";
+        mUrlAPICarrinho ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/carts";
+        mUrlAPIFatura ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/orders";
+        mUrlAPIFavorito ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/favorites";
+
     }
 
     public String getApiIP(Context context) {
@@ -90,7 +113,6 @@ public class SingletonGestorProdutos {
     }
 
     public void loginAPI(final String username, final String password, final Context context) {
-        final String mUrlAPILogin = "http://172.22.21.201/DetailingLeiria/DtlgLeiWebApp/backend/web/api/auth/login";
         if (!ProdutoJsonParser.isConnectionInternet(context)) {
             Toast.makeText(context, "Não tem ligação à internet", Toast.LENGTH_SHORT).show();
         }else{

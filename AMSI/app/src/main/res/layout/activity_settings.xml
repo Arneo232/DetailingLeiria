@@ -33,6 +33,7 @@
         android:id="@+id/confirmarBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:onClick="onClickAccept"
         android:text="Confirmar"
         app:layout_constraintEnd_toEndOf="@+id/etApiIp"
         app:layout_constraintStart_toStartOf="@+id/etApiIp"
