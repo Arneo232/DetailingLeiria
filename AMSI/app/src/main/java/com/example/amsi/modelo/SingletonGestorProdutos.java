@@ -43,13 +43,14 @@ public class SingletonGestorProdutos {
     private static volatile SingletonGestorProdutos instance = null;
     private Utilizador login;
     private ProdutosListener produtosListener;
+    private ProdutoListener produtoListener;
     private ArrayList<Produto> listaProdutos;
 
     private static String mUrlAPIProdutos = "" ;
 
-    private static String mUrlAPILogin = "";
+    private static String mUrlAPIProduto = "" ;
 
-    private static String mUrlAPILicoes ="";
+    private static String mUrlAPILogin = "";
 
     private static String mUrlAPICarrinho ="";
 
@@ -73,6 +74,7 @@ public class SingletonGestorProdutos {
     public void setIpAddress(String ipAddress, Context context) {
 
         mUrlAPIProdutos = "http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/produtos/todosprodutos";
+        mUrlAPIProduto = "http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/produtos";
         mUrlAPILogin = "http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/auth/login";
         mUrlAPICarrinho ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/";
         mUrlAPIFatura ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/";
@@ -95,6 +97,10 @@ public class SingletonGestorProdutos {
 
     public void setLoginListener(LoginListener loginListener) {
         this.loginListener = loginListener;
+    }
+
+    public void setProdutoListener(ProdutoListener produtoListener) {
+        this.produtoListener = produtoListener;
     }
 
     public ArrayList<Produto> getProdutosBD() {
@@ -188,6 +194,46 @@ public class SingletonGestorProdutos {
         });
 
         volleyQueue.add(request);
+    }
+
+    public Produto getProdutoAPI(final Context context, int idProduto) {
+        Produto produto = null;
+        if (!ProdutoJsonParser.isConnectionInternet(context)) {
+            Toast.makeText(context, "Sem ligação à internet", Toast.LENGTH_SHORT).show();
+            return produto;
+        }
+
+        StringRequest request = new StringRequest(Request.Method.GET, mUrlAPIProduto + "/" + idProduto, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONArray jsonArray = new JSONArray(response);
+
+                    JSONObject jsonObject = jsonArray.getJSONObject(0);
+
+                    Produto produto = ProdutoJsonParser.parserJsonProduto(jsonObject);
+
+
+                    if (produtoListener != null) {
+                        produtoListener.onRefreshDetalhes(produto);
+                    }
+
+                } catch (Exception e) {
+                    Toast.makeText(context, "Erro ao carregar produtos: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Log.e("Erro:", e.getMessage());
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(context, "Erro ao obter produtos: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                Log.e("VolleyError", error.getMessage());
+            }
+        });
+
+        volleyQueue.add(request);
+
+        return produto;
     }
 
 

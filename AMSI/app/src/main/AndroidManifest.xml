@@ -30,6 +30,9 @@
             android:name=".DetalheFaturaActivity"
             android:exported="false" />
         <activity
+            android:name=".DetalheProdutoActivity"
+            android:exported="false" />
+        <activity
             android:name=".MenuMainActivity"
             android:exported="false"
             android:launchMode="singleTop"

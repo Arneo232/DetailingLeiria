@@ -23,6 +23,7 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:hint="Insira aqui o IP"
+        android:text="172.22.21.201"
         android:inputType="text"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

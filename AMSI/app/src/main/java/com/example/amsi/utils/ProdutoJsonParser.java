@@ -44,19 +44,17 @@ public class ProdutoJsonParser {
         return produtos;
     }
 
-    public static Produto parserJsonProduto(String response) {
+    public static Produto parserJsonProduto(JSONObject produtoJSON) {
         Produto produto = null;
         try {
-            JSONObject produtoJSON = new JSONObject(response);
-
-            int idProduto = produtoJSON.getInt("id");  // Verifica o nome exato da chave
+            int idProduto = produtoJSON.getInt("id");
             String nome = produtoJSON.getString("nome");
             String descricao = produtoJSON.getString("descricao");
             double preco = produtoJSON.getDouble("preco");
-            int stock = produtoJSON.getInt("stock");  // Verifica o nome exato da chave
-            String idCategoria = produtoJSON.getString("categoria");  // Verifica o nome exato da chave
-            String fornecedoresId = produtoJSON.getString("Fornecedor");  // Verifica o nome exato da chave
-            String idDesconto = produtoJSON.getString("desconto");  // Verifica o nome exato da chave
+            int stock = produtoJSON.getInt("stock");
+            String idCategoria = produtoJSON.getString("categoria");
+            String fornecedoresId = produtoJSON.getString("Fornecedor");
+            String idDesconto = produtoJSON.getString("desconto");
             String imagem = produtoJSON.getString("imagem");
 
             produto = new Produto(idProduto, nome, descricao, preco, stock, idCategoria, fornecedoresId, idDesconto, imagem);
