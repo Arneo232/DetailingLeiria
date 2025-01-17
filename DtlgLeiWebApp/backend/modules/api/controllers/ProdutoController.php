@@ -100,15 +100,24 @@ class ProdutoController extends ActiveController
             ];
         }
 
-        $data = [];
+        $baseUrl = "http://172.22.21.201/detailingleiria/dtlgleiwebapp/frontend/web/uploads/";
 
         foreach ($produtos as $produto) {
-            $imagens = Imagem::find()->where(['produtoId' => $produto->idProduto])->all();
-
-            $data[] = [
-                'produto' => $produto,
-                'imagens' => $imagens
+            $data = [
+                'id' => $produto->idProduto,
+                'nome' => $produto->nome,
+                'descricao' => $produto->descricao,
+                'preco' => $produto->preco,
+                'stock' => $produto->stock,
+                'categoria' => $produto->categoria->designacao,
+                'Fornecedor' => $produto->fornecedor->nome,
+                'desconto' => $produto->desconto->desconto,
+                'imagem' => null,
             ];
+            if(!empty($produto->imagem)){
+                $primeiraImagem = $produto->imagem[0];
+                $data['imagem'] = $baseUrl . $primeiraImagem->fileName;
+            }
         }
 
         return [

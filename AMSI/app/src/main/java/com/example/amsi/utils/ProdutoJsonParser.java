@@ -55,7 +55,7 @@ public class ProdutoJsonParser {
             double preco = produtoJSON.getDouble("preco");
             int stock = produtoJSON.getInt("stock");  // Verifica o nome exato da chave
             int idCategoria = produtoJSON.getInt("idCategoria");  // Verifica o nome exato da chave
-            int fornecedoresId = produtoJSON.getInt("fornecedoresId");  // Verifica o nome exato da chave
+            int fornecedoresId = produtoJSON.getInt("fornecedores_idfornecedores");  // Verifica o nome exato da chave
             int idDesconto = produtoJSON.getInt("idDesconto");  // Verifica o nome exato da chave
             //String imagem = produtoJSON.getString("file_id");
 
