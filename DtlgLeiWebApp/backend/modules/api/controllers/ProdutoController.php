@@ -101,7 +101,7 @@ class ProdutoController extends ActiveController
         }
 
         $baseUrl = "http://172.22.21.201/detailingleiria/dtlgleiwebapp/frontend/web/uploads/";
-
+        $result = [];
         foreach ($produtos as $produto) {
             $data = [
                 'id' => $produto->idProduto,
@@ -118,12 +118,11 @@ class ProdutoController extends ActiveController
                 $primeiraImagem = $produto->imagem[0];
                 $data['imagem'] = $baseUrl . $primeiraImagem->fileName;
             }
+            $result[] = $data;
         }
 
         return [
-            'success' => true,
-            'message' => 'Produtos encontrados com sucesso.',
-            'data' => $data
+            $result
         ];
     }
 
