@@ -56,6 +56,15 @@ return [
                     ],
                 ],
                 [
+                    'class' => 'yii\rest\UrlRule', 'controller' => 'api/profile',
+                    'extraPatterns' => [
+                        'GET perfil/{idprofile}' => 'perfil', // actionComperfil
+                    ],
+                    'tokens' => [
+                        '{idprofile}' => '<idprofile:\\d+>'
+                    ],
+                ],
+                [
                     'class' => 'yii\rest\UrlRule', 'controller' => 'api/auth',
                     'pluralize' => false,
                     'extraPatterns' => [

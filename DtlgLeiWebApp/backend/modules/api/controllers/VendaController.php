@@ -172,19 +172,31 @@ class VendaController extends ActiveController
         }
 
         $vendas = Venda::find()->where(['idProfileFK' => $idprofilefk])->all();
+        $dados = [];
 
         foreach ($vendas as $venda) {
-            $data[] = [
+            $vendaData = [
+                'idProfile' => $venda->idProfileFK,
                 'idvendas' => $venda->idVenda,
                 'total' => $venda->total,
                 'datavenda' => $venda->datavenda,
-                'metodoentrega' => $venda ->metodoEntrega->designacao,
-                'metodopagamento' => $venda-> metodoPagamento->designacao,
-                'idlinhasvenda' => $venda -> linhasVenda -> idLinhasVenda,
-
-
-
+                'metodoentrega' => $venda->metodoEntrega->designacao,
+                'metodopagamento' => $venda->metodoPagamento->designacao,
+                'linhasVenda' => []
             ];
+            $linhasvenda = LinhasVenda::find()->where(['idVendaFK' => $venda->idVenda])->all();
+
+            foreach ($linhasvenda as $linha) {
+                $vendaData['linhasVenda'][] = [
+                    'idLinhaVenda' => $linha->idLinhasVenda,
+                    'quantidade' => $linha->quantidade,
+                    'precounitario' => $linha->precounitario,
+                    'subtotal' => $linha->subtotal,
+                    'nomeProduto' => $linha->produto->nome
+                ];
+            }
+
+            $dados[] = $vendaData;
         }
         if (empty($vendas)) {
             return [
@@ -194,9 +206,7 @@ class VendaController extends ActiveController
         }
 
         return [
-            'success' => true,
-            'message' => 'Vendas encontradas com sucesso.',
-            'dados' => $data
+            $dados
         ];
     }
 

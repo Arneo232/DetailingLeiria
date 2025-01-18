@@ -166,6 +166,5 @@ class FavoritoController extends ActiveController
              return $baseUrl . $primeiraImagem->fileName;
          }
      }
-
 }
 

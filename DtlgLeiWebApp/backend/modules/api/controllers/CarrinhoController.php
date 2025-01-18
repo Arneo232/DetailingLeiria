@@ -63,11 +63,42 @@ class CarrinhoController extends ActiveController
             ];
         }
 
-        return [
-            'success' => true,
-            'message' => 'Carrinho encontrado com sucesso.',
-            'data' => $carrinho,
+        $linhas = Linhascarrinho::find()->where(['carrinho_id' => $carrinho->idCarrinho])->all();
+        $baseUrl = "http://172.22.21.201/detailingleiria/dtlgleiwebapp/frontend/web/uploads/";
+        $dados[] = [
+            'idCarrinho' => $carrinho->idCarrinho,
+            'idProfile' => $carrinho->idProfile,
+            'metodoEntrega' => $carrinho->metodoEntrega->designacao,
+            'metodoPagamento' => $carrinho->metodoPagamento->designacao,
+            'linhasCarrinho' => [],
+            'total' => $carrinho->total
         ];
+
+        foreach ($linhas as $linha) {
+            $dados[0]['linhasCarrinho'][] = [
+                'idLinhaCarrinho' => $linha->idLinhasCarrinho,
+                'idProduto' => $linha->produtos_id,
+                'nomeProduto' => $linha->produto->nome,
+                'quantidade' => $linha->quantidade,
+                'precounitario' => $linha->precounitario,
+                'subtotal' => $linha->subtotal,
+                'imagem' => $this->getImagem($linha),
+            ];
+        }
+
+        return [
+            $dados
+        ];
+    }
+
+    public static function getImagem($linha)
+    {
+        $baseUrl = "http://172.22.21.201/detailingleiria/dtlgleiwebapp/frontend/web/uploads/";
+
+        if (!empty($linha->produto->imagem)) {
+            $primeiraImagem = $linha->produto->imagem[0];
+            return $baseUrl . $primeiraImagem->fileName;
+        }
     }
 
     public function actionCriarcarrinho()
