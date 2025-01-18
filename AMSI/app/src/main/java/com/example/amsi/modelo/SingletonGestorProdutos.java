@@ -20,6 +20,7 @@ import com.example.amsi.listeners.ProdutosListener;
 import com.example.amsi.listeners.ProdutoListener;
 import com.example.amsi.listeners.RegisterListener;
 import com.example.amsi.listeners.UtilizadorListener;
+import com.example.amsi.utils.FavoritoJsonParser;
 import com.example.amsi.utils.LoginJsonParser;
 import com.example.amsi.utils.ProdutoJsonParser;
 import com.example.amsi.utils.RegisterJsonParser;
@@ -130,7 +131,15 @@ public class SingletonGestorProdutos {
                 @Override
                 public void onResponse(String response) {
                     try {
+                        JSONObject jsonObject = new JSONObject(response);
+
                         login = LoginJsonParser.parserJsonLogin(response);
+
+                        SharedPreferences.Editor editor = context.getSharedPreferences("DADOS_USER", Context.MODE_PRIVATE).edit();
+                        editor.putString("token", jsonObject.getString("token"));
+                        editor.putString("idprofile", jsonObject.getString("idprofile"));
+                        editor.putInt("id", jsonObject.getInt("id"));
+                        editor.apply();
 
                         if(loginListener != null) {
                             loginListener.onValidateLogin(context, login);
@@ -292,19 +301,19 @@ public class SingletonGestorProdutos {
     public void getAllFavoritosAPI(final Context context) {
         SharedPreferences sp = context.getSharedPreferences("DADOSUSER", Context.MODE_PRIVATE);
         int idp = sp.getInt("idprofile", login.getIdprofile());
-        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, mUrlAPIFavorito + '/' + idp + "?token=" + login.token, null, new Response.Listener<JSONArray>() {
+        StringRequest request = new StringRequest(Request.Method.GET, mUrlAPIFavorito + '/' + idp + "?token=" + login.token, new Response.Listener<String>() {
             @Override
-            public void onResponse(JSONArray response) {
+            public void onResponse(String response) {
                 try {
-                    JSONArray produtosArray = response.getJSONArray(0);
+                    JSONArray produtosArray = new JSONArray(response);
 
-                    ArrayList<Produto> produtos = ProdutoJsonParser.parserJsonProdutos(produtosArray, context);
+                    ArrayList<Favorito> favorito = FavoritoJsonParser.parserJsonFavoritos(produtosArray);
 
-                    if (produtosListener != null) {
-                        produtosListener.onRefreshListaProdutos(produtos);
+                    if (favoritosListener != null) {
+                        favoritosListener.onRefreshFavoritos(favorito);
                     }
 
-                } catch (JSONException e) {
+                } catch (Exception e) {
                     Toast.makeText(context, "Erro ao carregar produtos: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     Log.e("Erro:", e.getMessage());
                 }
@@ -321,7 +330,7 @@ public class SingletonGestorProdutos {
     }
 
     public void getUtilizadorAPI(final Context context) {
-        StringRequest request = new StringRequest(Request.Method.GET, mUrlAPIProfile + "?id=" + login.idprofile + "?token=" + login.token, new Response.Listener<String>() {
+        StringRequest request = new StringRequest(Request.Method.GET, mUrlAPIProfile + "/" + login.idprofile + "?token=" + login.token, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {

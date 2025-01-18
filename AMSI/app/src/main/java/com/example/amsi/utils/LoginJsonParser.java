@@ -19,6 +19,7 @@ public class LoginJsonParser {
             utilizadorData.setNtelefone(loginJson.getString("ntelefone"));
             utilizadorData.setMorada(loginJson.getString("morada"));
             utilizadorData.setId(loginJson.getInt("id"));
+            utilizadorData.setIdprofile(loginJson.getInt("idprofile"));
         }catch(JSONException e){
             throw new RuntimeException(e);
         }

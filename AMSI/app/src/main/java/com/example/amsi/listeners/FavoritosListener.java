@@ -5,5 +5,5 @@ import com.example.amsi.modelo.Favorito;
 import java.util.ArrayList;
 
 public interface FavoritosListener {
-    void onRefreshFavoritos(ArrayList<Favorito> favoritos);
+    void onRefreshFavoritos(ArrayList<Favorito> favorito);
 }

@@ -18,7 +18,6 @@ public class UtilizadorJsonParser {
             utilizador.setEmail(utilizadorJSON.getString("email"));
             utilizador.setToken(utilizadorJSON.getString("token"));
             utilizador.setMorada(utilizadorJSON.getString("morada"));
-
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }

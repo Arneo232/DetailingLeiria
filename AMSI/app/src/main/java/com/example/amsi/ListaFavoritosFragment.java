@@ -26,7 +26,6 @@ import java.util.ArrayList;
 public class ListaFavoritosFragment extends Fragment implements FavoritosListener {
 
     private ListView lvFavoritos;
-    private Button remover;
     private ArrayList<Favorito> favorito;
 
     private FloatingActionButton fablista;
@@ -37,8 +36,7 @@ public class ListaFavoritosFragment extends Fragment implements FavoritosListene
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.lista_favoritos_fragment, container, false);
         setHasOptionsMenu(true);

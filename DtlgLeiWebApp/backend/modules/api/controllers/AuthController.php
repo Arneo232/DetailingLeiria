@@ -47,6 +47,7 @@ class AuthController extends Controller
             return [
                 'token' => $this->user->auth_key,
                 'id' => $this->user->id,
+                'idprofile' => $this->user->profile->idprofile,
                 'username' => $this->user->username,
                 'email' => $this->user->email,
                 'ntelefone' => $this->user->profile->ntelefone,
