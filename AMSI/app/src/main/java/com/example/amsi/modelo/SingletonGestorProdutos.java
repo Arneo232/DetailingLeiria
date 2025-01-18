@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.Toast;
-
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -14,7 +13,10 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.amsi.listeners.LoginListener;
+import com.example.amsi.listeners.MetodoEntregaListener;
+import com.example.amsi.listeners.MetodoPagamentoListener;
 import com.example.amsi.listeners.ProdutosListener;
+import com.example.amsi.listeners.ProdutoListener;
 import com.example.amsi.listeners.UtilizadorListener;
 import com.example.amsi.utils.LoginJsonParser;
 import com.example.amsi.utils.ProdutoJsonParser;
@@ -22,17 +24,9 @@ import com.example.amsi.utils.ProdutoJsonParser;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
-import com.example.amsi.listeners.ProdutoListener;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.List;
 
 public class SingletonGestorProdutos {
@@ -45,14 +39,18 @@ public class SingletonGestorProdutos {
     private ProdutosListener produtosListener;
     private ProdutoListener produtoListener;
     private ArrayList<Produto> listaProdutos;
+    private MetodoEntregaListener metodoEntregaListener;
+    private MetodoPagamentoListener metodoPagamentoListener;
 
     private static String mUrlAPIProdutos = "" ;
 
     private static String mUrlAPIProduto = "" ;
 
     private static String mUrlAPILogin = "";
-
     private static String mUrlAPICarrinho ="";
+    private static String mUrlAPIPagamento ="";
+
+    private static String mUrlAPIEntrega ="";
 
     private static String mUrlAPIFatura ="";
 
@@ -79,6 +77,8 @@ public class SingletonGestorProdutos {
         mUrlAPICarrinho ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/";
         mUrlAPIFatura ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/";
         mUrlAPIFavorito ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/";
+        mUrlAPIPagamento ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/metodopagamento";
+        mUrlAPIEntrega ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/metodoentrega";
 
     }
 
@@ -250,5 +250,96 @@ public class SingletonGestorProdutos {
         SharedPreferences.Editor editor = preferences.edit();
         editor.putInt("user_id", userId);
         editor.apply();
+    }
+
+    // Método para obter os métodos de entrega
+    public void getMetodosEntregaAPI(final Context context) {
+        if (!ProdutoJsonParser.isConnectionInternet(context)) {
+            Toast.makeText(context, "Sem ligação à internet", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, mUrlAPIEntrega, null, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                try {
+                    // Parse dos métodos de entrega
+                    List<MetodoEntrega> metodosEntrega = new ArrayList<>();
+                    for (int i = 0; i < response.length(); i++) {
+                        JSONObject metodoEntregaJson = response.getJSONObject(i);
+                        int id = metodoEntregaJson.getInt("idmetodoEntrega");
+                        String designacao = metodoEntregaJson.getString("designacao");
+
+                        MetodoEntrega metodo = new MetodoEntrega(id, designacao);
+                        metodosEntrega.add(metodo);
+                    }
+
+                    // Chama o listener, se definido
+                    if (metodoEntregaListener != null) {
+                        metodoEntregaListener.onMetodosEntregaObtidos(metodosEntrega);  // Passar lista de MetodoEntrega
+                    }
+
+                } catch (JSONException e) {
+                    Toast.makeText(context, "Erro ao carregar métodos de entrega: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(context, "Erro ao obter métodos de entrega: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        volleyQueue.add(request);
+    }
+
+    // Método para obter os métodos de pagamento
+    public void getMetodosPagamentoAPI(final Context context) {
+        if (!ProdutoJsonParser.isConnectionInternet(context)) {
+            Toast.makeText(context, "Sem ligação à internet", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, mUrlAPIPagamento, null, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                try {
+                    // Parse dos métodos de pagamento
+                    List<MetodoPagamento> metodosPagamento = new ArrayList<>();
+                    for (int i = 0; i < response.length(); i++) {
+                        JSONObject metodoPagamentoJson = response.getJSONObject(i);
+                        int id = metodoPagamentoJson.getInt("idMetodoPagamento");
+                        String designacao = metodoPagamentoJson.getString("designacao");
+
+                        MetodoPagamento metodo = new MetodoPagamento(id, designacao);
+                        metodosPagamento.add(metodo);
+                    }
+
+                    // Chama o listener, se definido
+                    if (metodoPagamentoListener != null) {
+                        metodoPagamentoListener.onMetodosPagamentoObtidos(metodosPagamento);  // Passar lista de MetodoPagamento
+                    }
+
+                } catch (JSONException e) {
+                    Toast.makeText(context, "Erro ao carregar métodos de pagamento: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(context, "Erro ao obter métodos de pagamento: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        volleyQueue.add(request);
+    }
+
+    // Métodos para definir os listeners
+    public void setMetodoEntregaListener(MetodoEntregaListener listener) {
+        this.metodoEntregaListener = listener;
+    }
+
+    public void setMetodoPagamentoListener(MetodoPagamentoListener listener) {
+        this.metodoPagamentoListener = listener;
     }
 }

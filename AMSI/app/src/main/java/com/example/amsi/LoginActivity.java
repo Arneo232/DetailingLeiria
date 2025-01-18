@@ -15,6 +15,8 @@ import com.example.amsi.listeners.LoginListener;
 import com.example.amsi.modelo.SingletonGestorProdutos;
 import com.example.amsi.modelo.Utilizador;
 
+import android.content.SharedPreferences;
+
 public class LoginActivity extends AppCompatActivity implements LoginListener {
 
     public static final int MIN_PASS = 4;
@@ -60,16 +62,24 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
 
     @Override
     public void onValidateLogin(final Context context, final Utilizador utilizador) {
-        if(utilizador.token != null) {
+        if (utilizador.token != null) {
+            // Armazenar os dados do utilizador nas SharedPreferences
+            SharedPreferences sharedPreferences = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString("email", utilizador.getEmail());
+            editor.putString("nome", utilizador.getUsername());
+            editor.putString("telefone", utilizador.getNtelefone());
+            editor.putString("morada", utilizador.getMorada());
+            editor.apply();
+
             Toast.makeText(context, "Login efetuado com sucesso! Bem-vindo, " + utilizador.getUsername(), Toast.LENGTH_SHORT).show();
+
             Intent intent = new Intent(this, MenuMainActivity.class);
             intent.putExtra(USERNAME, utilizador.getUsername());
             intent.putExtra(TOKEN, utilizador.getToken());
-            //Log.e(TOKEN, "Token do user: " + utilizador.getToken());
             startActivity(intent);
             finish();
-        }
-        else {
+        } else {
             Toast.makeText(this, "Token incorreto", Toast.LENGTH_SHORT).show();
         }
     }
