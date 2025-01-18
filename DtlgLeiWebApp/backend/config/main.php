@@ -144,7 +144,7 @@ return [
                     'extraPatterns' => [
                         'GET verificafav' => 'verificafav', // actionVerificafav
                         'POST addfav' =>'addfav', // actionAddfav
-                        'DELETE {idfavorito}' => 'removefav', //actionRemovefav
+                        'DELETE removefav' => 'removefav', //actionRemovefav
                         'GET {profile_id}' => 'profilefav', //actionProfilefav
                     ],
                     'tokens' => [

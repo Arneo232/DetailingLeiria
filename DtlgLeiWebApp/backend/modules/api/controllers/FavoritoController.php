@@ -79,30 +79,31 @@ class FavoritoController extends ActiveController
         }
     }
 
-    public function actionAddfav()
+    public function actionAddfav($idProduto, $idProfile)
     {
-        $produto_id = Yii::$app->request->post('produto_id');
-        $profile_id = Yii::$app->request->post('profile_id');
-
-        if (!$produto_id || !$profile_id) {
+        // No need to use request->post() since the parameters will be passed via URL
+        if (!$idProduto || !$idProfile) {
             return [
                 'success' => false,
-                'message' => 'Os parâmetros produto_id e profile_id são obrigatórios.'
+                'message' => 'Os parâmetros idProduto e idProfile são obrigatórios.'
             ];
         }
 
-        $model = $this->modelClass::find()->where(['produto_id' => $produto_id, 'profile_id' => $profile_id])->one();
+        // Check if the favorite already exists
+        $model = $this->modelClass::find()->where(['produto_id' => $idProduto, 'profile_id' => $idProfile])->one();
 
         if ($model) {
+            // If the favorite already exists, remove it
             $model->delete();
             return [
                 'success' => true,
                 'message' => 'O produto foi removido dos favoritos.'
             ];
         } else {
+            // Otherwise, add the new product to favorites
             $model = new Favorito();
-            $model->profile_id = $profile_id;
-            $model->produto_id = $produto_id;
+            $model->profile_id = $idProfile;
+            $model->produto_id = $idProduto;
 
             if ($model->save()) {
                 return [
@@ -122,9 +123,12 @@ class FavoritoController extends ActiveController
         }
     }
 
-    public function actionRemovefav($idfavorito)
+    public function actionRemovefav($idfavorito, $idprofile)
     {
-        $model = $this->modelClass::findOne($idfavorito);
+        $model = $this->modelClass::findOne([
+            'idfavorito' => $idfavorito,
+            'profile_id' => $idprofile
+        ]);
 
         if ($model) {
             $model->delete();

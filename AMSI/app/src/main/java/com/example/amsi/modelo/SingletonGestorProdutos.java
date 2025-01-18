@@ -40,7 +40,8 @@ public class SingletonGestorProdutos {
     private static RequestQueue volleyQueue = null;
     private static volatile SingletonGestorProdutos instance = null;
     private Utilizador login;
-    private ArrayList<Produto> listaProdutos;
+    private ArrayList<Favorito> favoritos;
+    private FavoritoBDHelper favoritosBD;
 
     private LoginListener loginListener;
     private RegisterListener registerListener;
@@ -60,6 +61,7 @@ public class SingletonGestorProdutos {
     private static String mUrlAPIEntrega ="";
     private static String mUrlAPIFatura ="";
     private static String mUrlAPIFavorito="";
+    private static String mUrlAPIFavoritoRemover="";
     private static String mUrlAPIProfile="";
 
     public static synchronized SingletonGestorProdutos getInstance(Context context) {
@@ -71,8 +73,8 @@ public class SingletonGestorProdutos {
     }
 
     private SingletonGestorProdutos(Context context) {
-        volleyQueue = Volley.newRequestQueue(context);
-        listaProdutos = new ArrayList<>();
+        favoritos = new ArrayList<>();
+        favoritosBD = new FavoritoBDHelper(context);
     }
 
     public void setIpAddress(String ipAddress, Context context) {
@@ -84,19 +86,11 @@ public class SingletonGestorProdutos {
         mUrlAPICarrinho ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/";
         mUrlAPIFatura ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/";
         mUrlAPIFavorito ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/favoritos";
+        mUrlAPIFavoritoRemover ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/favoritos/";
         mUrlAPIPagamento ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/metodopagamento";
         mUrlAPIEntrega ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/metodoentrega";
         mUrlAPIProfile ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/profile/perfil";
 
-    }
-
-    public String getApiIP(Context context) {
-        SharedPreferences preferences = context.getSharedPreferences("api_url", Context.MODE_PRIVATE);
-        return preferences.getString("API", null);
-    }
-
-    public Utilizador getUtilizador() {
-        return utilizador;
     }
 
     public void setProdutosListener(ProdutosListener produtosListener) {
@@ -119,9 +113,29 @@ public class SingletonGestorProdutos {
         this.favoritosListener = favoritosListener;
     }
 
-    public ArrayList<Produto> getProdutosBD() {
-        return listaProdutos;
+    public Favorito getFavorito(int idfavorito){
+        for(Favorito favorito : favoritos)
+            if (favorito.getIdfavorito() == idfavorito)
+                return favorito;
+        return null;
     }
+
+    public ArrayList<Favorito> getAllFavoritosBD() {
+        favoritos = favoritosBD.getAllFavoritosBD();
+        return new ArrayList<>(favoritos);
+    }
+
+    public void adicionarFavoritoBD(Favorito favorito){
+        favoritosBD.adicionarFavoritoBD(favorito);
+    }
+
+    public void removerFavoritoBD(int idfavorito){
+        Favorito f = getFavorito(idfavorito);
+        if(f !=null) {
+            favoritosBD.removerFavoritoBD(idfavorito);
+        }
+    }
+
 
     public void loginAPI(final String username, final String password, final Context context) {
         if (!ProdutoJsonParser.isConnectionInternet(context)) {
@@ -307,15 +321,11 @@ public class SingletonGestorProdutos {
                     @Override
                     public void onResponse(String response) {
                         try {
-                            // Directly pass the response string to the parser
                             ArrayList<Favorito> favoritos = FavoritoJsonParser.parserJsonFavoritos(response);
-
-                            // Notify listener
                             if (favoritosListener != null) {
                                 favoritosListener.onRefreshFavoritos(favoritos);
                             }
                         } catch (Exception e) {
-                            // Handle errors gracefully
                             Toast.makeText(context, "Erro ao carregar favoritos: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                             Log.e("Erro", "Erro ao carregar favoritos", e);
                         }
@@ -332,6 +342,19 @@ public class SingletonGestorProdutos {
         volleyQueue.add(request);
     }
 
+    public void deleteFavoritoAPI(final Context context) {
+        SharedPreferences sp = context.getSharedPreferences("DADOSUSER", Context.MODE_PRIVATE);
+        int idp = sp.getInt("idprofile", login.getIdprofile());
+        StringRequest request = new StringRequest(Request.Method.GET, mUrlAPIFavorito + '/' + idp + "?token=" + login.token,
+                new Response.Listener<String>() {
+
+                },
+                new Response.ErrorListener() {
+
+                });
+
+        volleyQueue.add(request);
+    }
 
     public void getUtilizadorAPI(final Context context) {
         StringRequest request = new StringRequest(Request.Method.GET, mUrlAPIProfile + "/" + login.idprofile + "?token=" + login.token, new Response.Listener<String>() {

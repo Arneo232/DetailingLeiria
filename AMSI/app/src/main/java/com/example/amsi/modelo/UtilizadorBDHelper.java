@@ -15,7 +15,7 @@ public class UtilizadorBDHelper extends SQLiteOpenHelper {
     private static final int DB_VERSION = 18;
     private SQLiteDatabase db;
 
-    public static final String USERNAME = "username", EMAIL = "email", ID = "id", MORADA = "morada",
+    public static final String USERNAME = "username", EMAIL = "email", ID = "id", IDPROFILE = "idprofile", MORADA = "morada",
             NTELEFONE = "ntelefone", TOKEN = "token";
 
     public UtilizadorBDHelper(@Nullable Context context) {
@@ -27,6 +27,7 @@ public class UtilizadorBDHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String sqlTableUtilizadores = "CREATE TABLE " + TABLE_NAME + "(" +
                 ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                IDPROFILE + " INTEGER," +
                 USERNAME + " TEXT NOT NULL," +
                 EMAIL + " TEXT NOT NULL," +
                 NTELEFONE + " TEXT," +
