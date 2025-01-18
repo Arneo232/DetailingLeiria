@@ -57,6 +57,8 @@ public class MenuMainActivity extends AppCompatActivity  implements NavigationVi
             fragment = new ListaProdutosFragment();
             setTitle(item.getTitle());
         } else if (item.getItemId() == R.id.navPerfil) {
+            Intent intent = new Intent(this, PerfilActivity.class);
+            startActivity(intent);
             setTitle(item.getTitle());
         } else if (item.getItemId() == R.id.navFavoritos) {
             fragment = new ListaFavoritosFragment();
