@@ -24,6 +24,23 @@
     <string name="ndClose">Close Navigation Drawer</string>
     <string name="txt_login">Login</string>
 
+    <!-- Perfil -->
+    <string name="title_perfil">Perfil</string>
+    <string name="nome_label">Nome:</string>
+    <string name="telefone_label">Telefone:</string>
+    <string name="morada_label">Morada:</string>
+    <string name="alterar_dados_button">Alterar dados</string>
+
+    <!-- Perfil - Editar Dados -->
+    <string name="editar_dados_title">Editar Dados</string>
+    <string name="label_email">Email:</string>
+    <string name="label_nome">Nome:</string>
+    <string name="label_telefone">Telefone:</string>
+    <string name="label_morada">Morada:</string>
+    <string name="buttonSave">Guardar</string>
+    <string name="btnCancel">Cancelar</string>
+
+
     <!-- Detalhes da Fatura -->
     <string name="details_invoice">Detalhes da Fatura #</string>
     <string name="product_name">Spray limpa vidros</string>
