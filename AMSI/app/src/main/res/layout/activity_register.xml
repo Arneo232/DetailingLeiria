@@ -19,25 +19,25 @@
         app:srcCompat="@drawable/dl_logo" />
 
     <EditText
-        android:id="@+id/editTextEmail"
+        android:id="@+id/etEmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:hint="@string/txt_email"
         android:ems="10"
-        android:inputType="textEmailAddress"
+        android:inputType="text"
         android:layout_marginBottom="10dp" />
 
     <EditText
-        android:id="@+id/editTextUsername"
+        android:id="@+id/etUsername"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:hint="@string/txt_username"
         android:ems="10"
-        android:inputType="textPersonName"
+        android:inputType="text"
         android:layout_marginBottom="10dp" />
 
     <EditText
-        android:id="@+id/editTextPassword"
+        android:id="@+id/etPassword"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:hint="@string/txt_password"
@@ -46,12 +46,21 @@
         android:layout_marginBottom="10dp" />
 
     <EditText
-        android:id="@+id/editTextConfirmPassword"
+        android:id="@+id/etMorada"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:hint="@string/txt_confirm_password"
+        android:hint="Insira a morada"
         android:ems="10"
-        android:inputType="textPassword"
+        android:inputType="text"
+        android:layout_marginBottom="20dp" />
+
+    <EditText
+        android:id="@+id/etTelefone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="Insira o n.º de telefone"
+        android:ems="10"
+        android:inputType="text"
         android:layout_marginBottom="20dp" />
 
     <!-- Espaço entre campos e botão -->
@@ -61,11 +70,12 @@
         android:layout_weight="0.1" />
 
     <Button
-        android:id="@+id/buttonRegister"
+        android:id="@+id/btnRegister"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/txt_register"
         android:backgroundTint="#00B4FD"
+        android:onClick="onClickRegister"
+        android:text="@string/txt_register"
         android:textColor="#FFFFFF" />
 
     <!-- Espaço extra em baixo de tudo no final -->

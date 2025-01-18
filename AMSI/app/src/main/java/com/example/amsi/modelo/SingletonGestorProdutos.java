@@ -17,9 +17,11 @@ import com.example.amsi.listeners.MetodoEntregaListener;
 import com.example.amsi.listeners.MetodoPagamentoListener;
 import com.example.amsi.listeners.ProdutosListener;
 import com.example.amsi.listeners.ProdutoListener;
+import com.example.amsi.listeners.RegisterListener;
 import com.example.amsi.listeners.UtilizadorListener;
 import com.example.amsi.utils.LoginJsonParser;
 import com.example.amsi.utils.ProdutoJsonParser;
+import com.example.amsi.utils.RegisterJsonParser;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -34,6 +36,7 @@ public class SingletonGestorProdutos {
 
     private static RequestQueue volleyQueue = null;
     private LoginListener loginListener;
+    private RegisterListener registerListener;
     private static volatile SingletonGestorProdutos instance = null;
     private Utilizador login;
     private ProdutosListener produtosListener;
@@ -43,17 +46,13 @@ public class SingletonGestorProdutos {
     private MetodoPagamentoListener metodoPagamentoListener;
 
     private static String mUrlAPIProdutos = "" ;
-
     private static String mUrlAPIProduto = "" ;
-
     private static String mUrlAPILogin = "";
+    private static String mUrlAPIRegister = "";
     private static String mUrlAPICarrinho ="";
     private static String mUrlAPIPagamento ="";
-
     private static String mUrlAPIEntrega ="";
-
     private static String mUrlAPIFatura ="";
-
     private static String mUrlAPIFavorito="";
 
     public static synchronized SingletonGestorProdutos getInstance(Context context) {
@@ -74,6 +73,7 @@ public class SingletonGestorProdutos {
         mUrlAPIProdutos = "http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/produtos/todosprodutos";
         mUrlAPIProduto = "http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/produtos";
         mUrlAPILogin = "http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/auth/login";
+        mUrlAPIRegister = "http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/auth/register";
         mUrlAPICarrinho ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/";
         mUrlAPIFatura ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/";
         mUrlAPIFavorito ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/";
@@ -97,6 +97,10 @@ public class SingletonGestorProdutos {
 
     public void setLoginListener(LoginListener loginListener) {
         this.loginListener = loginListener;
+    }
+
+    public void setRegisterListener(RegisterListener registerListener) {
+        this.registerListener = registerListener;
     }
 
     public void setProdutoListener(ProdutoListener produtoListener) {
@@ -157,6 +161,54 @@ public class SingletonGestorProdutos {
                 }
             };
             volleyQueue.add(request);
+        }
+    }
+
+    public void registerAPI(Utilizador utilizador, final Context context) {
+        if (!ProdutoJsonParser.isConnectionInternet(context)) {
+            Toast.makeText(context, "Não tem ligação à internet", Toast.LENGTH_SHORT).show();
+        } else {
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, mUrlAPIRegister,
+                    response -> {
+
+                        Log.e("RegisterAPIResponse", "Response: " + response);
+
+                        String message = RegisterJsonParser.parserJsonRegister(response);
+                        Log.e("ParsedMessage", "Message: '" + message + "'");
+
+                        if (message != null) {
+                            Log.e("ParsedMessage", "Message length: " + message.length());
+                        }
+                        Log.e("RegisterAPI", "Message before check: '" + message + "'");
+                        if (message != null && !message.trim().isEmpty()) {
+                            Log.e("RegisterAPI", "Message passed the check: '" + message + "'");
+                            registerListener.onSignup(message);
+                        } else {
+                            Log.e("RegisterAPI", "Message was null or empty");
+                            Toast.makeText(context, "Erro ao registrar", Toast.LENGTH_SHORT).show();
+                        }
+                    },
+                    error -> {
+                        String errorMsg = error.getMessage();
+                        if (error.networkResponse != null) {
+                            errorMsg = "Error Code: " + error.networkResponse.statusCode + "\n" +
+                                    "Response: " + new String(error.networkResponse.data);
+                        }
+                        Toast.makeText(context, "Erro 2: " + errorMsg, Toast.LENGTH_LONG).show();
+                        Log.e("RegisterError", errorMsg, error);
+                    }) {
+                @Override
+                public Map<String, String> getParams() {
+                    Map<String, String> params = new HashMap<>();
+                    params.put("username", utilizador.getUsername());
+                    params.put("password", utilizador.getPassword());
+                    params.put("email", utilizador.getEmail());
+                    params.put("morada", utilizador.getMorada());
+                    params.put("ntelefone", utilizador.getNtelefone());
+                    return params;
+                }
+            };
+            volleyQueue.add(stringRequest);
         }
     }
 
@@ -252,7 +304,7 @@ public class SingletonGestorProdutos {
         editor.apply();
     }
 
-    // Método para obter os métodos de entrega
+    //Método para obter os métodos de entrega
     public void getMetodosEntregaAPI(final Context context) {
         if (!ProdutoJsonParser.isConnectionInternet(context)) {
             Toast.makeText(context, "Sem ligação à internet", Toast.LENGTH_SHORT).show();

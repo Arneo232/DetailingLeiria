@@ -31,7 +31,7 @@
                     android:id="@+id/imgProduto"
                     android:layout_width="80dp"
                     android:layout_height="80dp"
-                    android:src="@drawable/ic_placeholder"
+                    android:src="@drawable/dl_logo"
                     android:contentDescription="@string/produto_img" />
 
                 <LinearLayout
