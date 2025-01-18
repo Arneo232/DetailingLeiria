@@ -1,6 +1,7 @@
 package com.example.amsi;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -57,10 +58,13 @@ public class MenuMainActivity extends AppCompatActivity  implements NavigationVi
             setTitle(item.getTitle());
         } else if (item.getItemId() == R.id.navPerfil) {
             setTitle(item.getTitle());
-        }else if (item.getItemId() == R.id.navSettings) {
+        } else if (item.getItemId() == R.id.navFavoritos) {
+            fragment = new ListaFavoritosFragment();
             setTitle(item.getTitle());
-        }
-        else {
+        } else if (item.getItemId() == R.id.navCarrinho){
+            Intent intent = new Intent(this, CarrinhoActivity.class);
+            startActivity(intent);
+            setTitle(item.getTitle());
         }
 
         if (fragment != null) {

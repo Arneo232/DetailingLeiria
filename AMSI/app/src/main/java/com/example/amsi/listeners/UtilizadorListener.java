@@ -4,6 +4,6 @@ import com.example.amsi.modelo.Utilizador;
 
 public interface UtilizadorListener {
 
-    void onGetUtilizadorData(Utilizador utilizadorData);
+    void onRefreshUtilizador(Utilizador utilizador);
 
 }

@@ -41,8 +41,8 @@ public class RegisterActivity extends AppCompatActivity implements RegisterListe
         String morada = etMorada.getText().toString();
         String telefone = etTelefone.getText().toString();
 
-        // Create the Utilizador object with the correct constructor
-        Utilizador utilizador = new Utilizador(username, email, password, telefone, morada);
+
+        Utilizador utilizador = new Utilizador(0, 0, username, email, password, telefone, morada, "0");
 
         SingletonGestorProdutos singletonGestorProdutos = SingletonGestorProdutos.getInstance(this);
         singletonGestorProdutos.setRegisterListener(this);

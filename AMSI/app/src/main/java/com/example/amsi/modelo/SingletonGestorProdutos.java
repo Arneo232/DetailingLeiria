@@ -12,6 +12,7 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.amsi.listeners.FavoritosListener;
 import com.example.amsi.listeners.LoginListener;
 import com.example.amsi.listeners.MetodoEntregaListener;
 import com.example.amsi.listeners.MetodoPagamentoListener;
@@ -22,6 +23,7 @@ import com.example.amsi.listeners.UtilizadorListener;
 import com.example.amsi.utils.LoginJsonParser;
 import com.example.amsi.utils.ProdutoJsonParser;
 import com.example.amsi.utils.RegisterJsonParser;
+import com.example.amsi.utils.UtilizadorJsonParser;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -35,13 +37,16 @@ public class SingletonGestorProdutos {
     public Utilizador utilizador;
 
     private static RequestQueue volleyQueue = null;
-    private LoginListener loginListener;
-    private RegisterListener registerListener;
     private static volatile SingletonGestorProdutos instance = null;
     private Utilizador login;
+    private ArrayList<Produto> listaProdutos;
+
+    private LoginListener loginListener;
+    private RegisterListener registerListener;
+    private UtilizadorListener utilizadorListener;
     private ProdutosListener produtosListener;
     private ProdutoListener produtoListener;
-    private ArrayList<Produto> listaProdutos;
+    private FavoritosListener favoritosListener;
     private MetodoEntregaListener metodoEntregaListener;
     private MetodoPagamentoListener metodoPagamentoListener;
 
@@ -54,6 +59,7 @@ public class SingletonGestorProdutos {
     private static String mUrlAPIEntrega ="";
     private static String mUrlAPIFatura ="";
     private static String mUrlAPIFavorito="";
+    private static String mUrlAPIProfile="";
 
     public static synchronized SingletonGestorProdutos getInstance(Context context) {
         if (instance == null) {
@@ -76,9 +82,10 @@ public class SingletonGestorProdutos {
         mUrlAPIRegister = "http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/auth/register";
         mUrlAPICarrinho ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/";
         mUrlAPIFatura ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/";
-        mUrlAPIFavorito ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/";
+        mUrlAPIFavorito ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/favoritos";
         mUrlAPIPagamento ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/metodopagamento";
         mUrlAPIEntrega ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/metodoentrega";
+        mUrlAPIProfile ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/profile/perfil";
 
     }
 
@@ -95,6 +102,10 @@ public class SingletonGestorProdutos {
         this.produtosListener = produtosListener;
     }
 
+    public void setProdutoListener(ProdutoListener produtoListener) {
+        this.produtoListener = produtoListener;
+    }
+
     public void setLoginListener(LoginListener loginListener) {
         this.loginListener = loginListener;
     }
@@ -103,22 +114,12 @@ public class SingletonGestorProdutos {
         this.registerListener = registerListener;
     }
 
-    public void setProdutoListener(ProdutoListener produtoListener) {
-        this.produtoListener = produtoListener;
+    public void setFavoritosListener(FavoritosListener favoritosListener) {
+        this.favoritosListener = favoritosListener;
     }
 
     public ArrayList<Produto> getProdutosBD() {
         return listaProdutos;
-    }
-
-    public int getUserId(Context context) {
-        SharedPreferences preferences = context.getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
-        return preferences.getInt("user_id", 0); // 0 is the default value if the user ID is not found
-    }
-
-    public String getUserToken(Context context) {
-        SharedPreferences preferences = context.getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
-        return preferences.getString("user_token", null);
     }
 
     public void loginAPI(final String username, final String password, final Context context) {
@@ -288,6 +289,63 @@ public class SingletonGestorProdutos {
         return produto;
     }
 
+    public void getAllFavoritosAPI(final Context context) {
+        SharedPreferences sp = context.getSharedPreferences("DADOSUSER", Context.MODE_PRIVATE);
+        int idp = sp.getInt("idprofile", login.getIdprofile());
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, mUrlAPIFavorito + '/' + idp + "?token=" + login.token, null, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                try {
+                    JSONArray produtosArray = response.getJSONArray(0);
+
+                    ArrayList<Produto> produtos = ProdutoJsonParser.parserJsonProdutos(produtosArray, context);
+
+                    if (produtosListener != null) {
+                        produtosListener.onRefreshListaProdutos(produtos);
+                    }
+
+                } catch (JSONException e) {
+                    Toast.makeText(context, "Erro ao carregar produtos: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Log.e("Erro:", e.getMessage());
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(context, "Erro ao obter produtos: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                Log.e("VolleyError", error.getMessage());
+            }
+        });
+
+        volleyQueue.add(request);
+    }
+
+    public void getUtilizadorAPI(final Context context) {
+        StringRequest request = new StringRequest(Request.Method.GET, mUrlAPIProfile + "?id=" + login.idprofile + "?token=" + login.token, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    Utilizador utilizador = UtilizadorJsonParser.parserJsonUtilizador(response);
+
+                    Log.d("RESPONSE", "Response: " + response);
+                    // Notificar o listener que a lista foi atualizada
+                    if (utilizadorListener != null) {
+                        utilizadorListener.onRefreshUtilizador(utilizador);
+                    }
+
+                } catch (Exception e) {
+                    Toast.makeText(context, "Erro ao carregar o utilizador: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(context, "Erro na API: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        volleyQueue.add(request);
+    }
 
     public void saveUserToken(Context context, String token, String username) {
         SharedPreferences preferences = context.getSharedPreferences("user_prefs", Context.MODE_PRIVATE);

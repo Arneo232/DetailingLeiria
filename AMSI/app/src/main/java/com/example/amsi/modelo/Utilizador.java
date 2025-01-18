@@ -2,6 +2,7 @@ package com.example.amsi.modelo;
 
 public class Utilizador {
     public int id;
+    public int idprofile;
     public String username;
     public String email;
     public String password;
@@ -13,15 +14,20 @@ public class Utilizador {
 
     }
 
-    public Utilizador(String username, String email, String password, String ntelefone, String morada) {
+    public Utilizador(int id, int idprofile, String username, String email, String password, String ntelefone, String morada, String token) {
+        this.id = id;
+        this.idprofile = idprofile;
         this.username = username;
         this.email = email;
         this.password = password;
         this.ntelefone = ntelefone;
         this.morada = morada;
+        this.token = token;
     }
 
     public void setId(int id) { this.id = id; }
+
+    public void setIdprofile(int idprofile) { this.idprofile = idprofile; }
 
     public void setUsername(String username) { this.username = username; }
 
@@ -44,6 +50,8 @@ public class Utilizador {
     public int getId() {
         return id;
     }
+
+    public int getIdprofile() { return idprofile; }
 
     public String getUsername() {
         return username;

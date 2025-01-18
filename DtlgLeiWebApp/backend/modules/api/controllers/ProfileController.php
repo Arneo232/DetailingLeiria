@@ -54,6 +54,7 @@ class ProfileController extends ActiveController
         $profile = Profile::findOne($idprofile);
 
         $data = [
+            'idUtilizador' => $profile->user->id,
             'idProfile' => $profile->idprofile,
             'username' => $profile->user->username,
             'email' => $profile->user->email,

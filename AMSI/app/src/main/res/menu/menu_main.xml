@@ -9,8 +9,11 @@
         <item android:id="@+id/navLoja"
             android:icon="@drawable/ic_action_loja"
             android:title="@string/txt_loja" />
-        <item android:id="@+id/navSettings"
-            android:icon="@drawable/ic_action_settings"
-            android:title="Defenições" />
+        <item android:id="@+id/navFavoritos"
+            android:icon="@drawable/ic_action_favorito"
+            android:title="Favoritos" />
+        <item android:id="@+id/navCarrinho"
+            android:icon="@drawable/ic_action_carrinho"
+            android:title="@string/txt_carrinho" />
     </group>
 </menu>

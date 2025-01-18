@@ -23,6 +23,7 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
     public static final String USERNAME = "username";
     public static final String PASSWORD = "password";
     public static final String TOKEN = "token";
+    public static final String IDPROFILE = "idprofile";
 
     public EditText etUsername, etPassword;
 
@@ -77,6 +78,7 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
             Intent intent = new Intent(this, MenuMainActivity.class);
             intent.putExtra(USERNAME, utilizador.getUsername());
             intent.putExtra(TOKEN, utilizador.getToken());
+            intent.putExtra(IDPROFILE, utilizador.getIdprofile());
             startActivity(intent);
             finish();
         } else {
