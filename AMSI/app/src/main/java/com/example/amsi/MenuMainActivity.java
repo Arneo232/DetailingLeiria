@@ -67,7 +67,10 @@ public class MenuMainActivity extends AppCompatActivity  implements NavigationVi
             Intent intent = new Intent(this, CarrinhoActivity.class);
             startActivity(intent);
             setTitle(item.getTitle());
-        }
+        }  else if (item.getItemId() == R.id.navLogout){
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+            setTitle(item.getTitle());
 
         if (fragment != null) {
             fragmentManager.beginTransaction().replace(R.id.contentFragment, fragment).commit();
