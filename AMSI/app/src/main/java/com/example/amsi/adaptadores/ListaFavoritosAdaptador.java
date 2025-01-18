@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -12,6 +13,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.amsi.R;
 import com.example.amsi.modelo.Favorito;
+import com.example.amsi.modelo.SingletonGestorProdutos;
 
 import java.util.ArrayList;
 
@@ -42,34 +44,35 @@ public class ListaFavoritosAdaptador extends BaseAdapter {
 
     @Override
     public View getView(int position, View view, ViewGroup viewGroup) {
-        if(inflater == null){
+        if (inflater == null) {
             inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        } if(view == null){
+        }
+        if (view == null) {
             view = inflater.inflate(R.layout.item_lista_favorito, null);
         }
-        ListaFavoritosAdaptador.ViewHolderLista viewHolder = (ListaFavoritosAdaptador.ViewHolderLista) view.getTag();
-        if(viewHolder == null){
-            viewHolder = new ListaFavoritosAdaptador.ViewHolderLista(view);
+        ViewHolderLista viewHolder = (ViewHolderLista) view.getTag();
+        if (viewHolder == null) {
+            viewHolder = new ViewHolderLista(view);
             view.setTag(viewHolder);
         }
 
-        viewHolder.update(favorito.get(position));
+        viewHolder.update(favorito.get(position), position);
         return view;
     }
 
-    private class ViewHolderLista{
+    private class ViewHolderLista {
         private TextView tvNome, tvPreco;
         private ImageView imgProduto;
+        private Button btnRemoverFav;
 
-        public ViewHolderLista(View view){
-
+        public ViewHolderLista(View view) {
             tvNome = view.findViewById(R.id.tvNome);
             tvPreco = view.findViewById(R.id.tvPreco);
             imgProduto = view.findViewById(R.id.imgProduto);
+            btnRemoverFav = view.findViewById(R.id.btnRemoverFav);
         }
 
-        //invoca 1 vez por cada linha da lista
-        public void update(Favorito favorito){
+        public void update(Favorito favorito, int position) {
             tvNome.setText(favorito.getNome());
             tvPreco.setText(favorito.getPreco() + "");
             Glide.with(context)
@@ -77,6 +80,12 @@ public class ListaFavoritosAdaptador extends BaseAdapter {
                     .placeholder(R.drawable.dl_logo)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(imgProduto);
+
+            btnRemoverFav.setOnClickListener(v -> {
+                SingletonGestorProdutos.getInstance(context).deleteFavoritoAPI(context, favorito.getIdfavorito());
+                ListaFavoritosAdaptador.this.favorito.remove(position);
+                notifyDataSetChanged();
+            });
         }
     }
 }

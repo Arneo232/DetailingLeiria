@@ -62,6 +62,7 @@ public class SingletonGestorProdutos {
     private static String mUrlAPIFatura ="";
     private static String mUrlAPIFavorito="";
     private static String mUrlAPIFavoritoRemover="";
+    private static String mUrlAPIFavoritoAdicionar="";
     private static String mUrlAPIProfile="";
 
     public static synchronized SingletonGestorProdutos getInstance(Context context) {
@@ -86,7 +87,8 @@ public class SingletonGestorProdutos {
         mUrlAPICarrinho ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/";
         mUrlAPIFatura ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/";
         mUrlAPIFavorito ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/favoritos";
-        mUrlAPIFavoritoRemover ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/favoritos/";
+        mUrlAPIFavoritoRemover ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/favorito/removefav";
+        mUrlAPIFavoritoAdicionar ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/favorito/addfav";
         mUrlAPIPagamento ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/metodopagamento";
         mUrlAPIEntrega ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/metodoentrega";
         mUrlAPIProfile ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/profile/perfil";
@@ -342,16 +344,70 @@ public class SingletonGestorProdutos {
         volleyQueue.add(request);
     }
 
-    public void deleteFavoritoAPI(final Context context) {
+    public void deleteFavoritoAPI(final Context context, final int idFavorito) {
         SharedPreferences sp = context.getSharedPreferences("DADOSUSER", Context.MODE_PRIVATE);
-        int idp = sp.getInt("idprofile", login.getIdprofile());
-        StringRequest request = new StringRequest(Request.Method.GET, mUrlAPIFavorito + '/' + idp + "?token=" + login.token,
-                new Response.Listener<String>() {
+        int idProfile = sp.getInt("idprofile", login.getIdprofile());
 
+        String url = mUrlAPIFavoritoRemover + "?idfavorito=" + idFavorito + "&idprofile=" + idProfile + "&token=" + login.token;
+
+        StringRequest request = new StringRequest(Request.Method.DELETE, url,
+                response -> {
+                    // Handle the success response
+                    Toast.makeText(context, "Favorito removido com sucesso!", Toast.LENGTH_SHORT).show();
+                    getAllFavoritosAPI(context); // Refresh the list after deletion
                 },
-                new Response.ErrorListener() {
-
+                error -> {
+                    // Log error details
+                    Log.e("DeleteFavoritoError", "Error: " + error.toString());
+                    if (error.networkResponse != null) {
+                        Log.e("DeleteFavoritoError", "Status Code: " + error.networkResponse.statusCode);
+                        try {
+                            String responseBody = new String(error.networkResponse.data, "UTF-8");
+                            Log.e("DeleteFavoritoError", "Response: " + responseBody);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    Toast.makeText(context, "Erro ao remover favorito!", Toast.LENGTH_SHORT).show();
                 });
+
+        volleyQueue.add(request);
+    }
+
+    public void addFavoritoAPI(final Context context, final int idProduto) {
+        SharedPreferences sp = context.getSharedPreferences("DADOSUSER", Context.MODE_PRIVATE);
+        int idProfile = sp.getInt("idprofile", login.getIdprofile());
+
+        String url = mUrlAPIFavoritoAdicionar + "?idProfile=" + idProfile + "&idProduto=" + idProduto + "&token=" + login.token;
+
+        StringRequest request = new StringRequest(Request.Method.POST, url,
+                response -> {
+                    Toast.makeText(context, "Favorito adicionado com sucesso!", Toast.LENGTH_SHORT).show();
+                    getAllFavoritosAPI(context);
+                },
+                error -> {
+                    Log.e("AddFavoritoError", "Error: " + error.toString());
+                    if (error.networkResponse != null) {
+                        Log.e("AddFavoritoError", "Status Code: " + error.networkResponse.statusCode);
+                        try {
+                            String responseBody = new String(error.networkResponse.data, "UTF-8");
+                            Log.e("AddFavoritoError", "Response: " + responseBody);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    Toast.makeText(context, "Erro ao adicionar favorito!", Toast.LENGTH_SHORT).show();
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("idproduto", String.valueOf(idProduto));
+                params.put("idprofile", String.valueOf(idProfile));
+                params.put("token", login.token);
+                return params;
+            }
+        };
+
 
         volleyQueue.add(request);
     }

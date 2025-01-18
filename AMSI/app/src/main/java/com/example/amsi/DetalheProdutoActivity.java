@@ -1,6 +1,7 @@
 package com.example.amsi;
 
 import android.os.Bundle;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,11 +20,13 @@ import com.example.amsi.modelo.SingletonGestorProdutos;
 
 import org.json.JSONException;
 
-public class DetalheProdutoActivity extends AppCompatActivity implements ProdutoListener {
+import android.widget.Button;
 
+public class DetalheProdutoActivity extends AppCompatActivity implements ProdutoListener {
     private ImageView imgProduto;
     private TextView tvNomeProduto, tvPrecoProduto, tvDetalhes;
     private Produto produto;
+    private ImageButton btnFavorito; // Add a reference to the button
     public static final String IDPRODUTO = "idProduto";
 
     @Override
@@ -35,11 +38,24 @@ public class DetalheProdutoActivity extends AppCompatActivity implements Produto
         tvNomeProduto = findViewById(R.id.tvNomeProduto);
         tvPrecoProduto = findViewById(R.id.tvPrecoProduto);
         tvDetalhes = findViewById(R.id.tvDetalhes);
+        btnFavorito = findViewById(R.id.btnFavorito); // Initialize the button
 
         SingletonGestorProdutos.getInstance(this).setProdutoListener(this);
         produto = SingletonGestorProdutos.getInstance(this).getProdutoAPI(this, getIntent().getIntExtra(IDPRODUTO, 0));
-        if (produto != null){
+
+        if (produto != null) {
             buscaInfo();
+        }
+
+        // Set up the button to handle adding to favorites
+        btnFavorito.setOnClickListener(v -> addProdutoToFavoritos());
+    }
+
+    private void addProdutoToFavoritos() {
+        if (produto != null) {
+            SingletonGestorProdutos.getInstance(this).addFavoritoAPI(this, produto.getIdProduto());
+        } else {
+            Toast.makeText(this, "Erro: Produto não encontrado!", Toast.LENGTH_SHORT).show();
         }
     }
 

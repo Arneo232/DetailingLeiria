@@ -59,7 +59,7 @@
         </LinearLayout>
 
         <Button
-            android:id="@+id/btnRemover"
+            android:id="@+id/btnRemoverFav"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_weight="1"
