@@ -301,33 +301,37 @@ public class SingletonGestorProdutos {
     public void getAllFavoritosAPI(final Context context) {
         SharedPreferences sp = context.getSharedPreferences("DADOSUSER", Context.MODE_PRIVATE);
         int idp = sp.getInt("idprofile", login.getIdprofile());
-        StringRequest request = new StringRequest(Request.Method.GET, mUrlAPIFavorito + '/' + idp + "?token=" + login.token, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                try {
-                    JSONArray produtosArray = new JSONArray(response);
 
-                    ArrayList<Favorito> favorito = FavoritoJsonParser.parserJsonFavoritos(produtosArray);
+        StringRequest request = new StringRequest(Request.Method.GET, mUrlAPIFavorito + '/' + idp + "?token=" + login.token,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            // Directly pass the response string to the parser
+                            ArrayList<Favorito> favoritos = FavoritoJsonParser.parserJsonFavoritos(response);
 
-                    if (favoritosListener != null) {
-                        favoritosListener.onRefreshFavoritos(favorito);
+                            // Notify listener
+                            if (favoritosListener != null) {
+                                favoritosListener.onRefreshFavoritos(favoritos);
+                            }
+                        } catch (Exception e) {
+                            // Handle errors gracefully
+                            Toast.makeText(context, "Erro ao carregar favoritos: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            Log.e("Erro", "Erro ao carregar favoritos", e);
+                        }
                     }
-
-                } catch (Exception e) {
-                    Toast.makeText(context, "Erro ao carregar produtos: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    Log.e("Erro:", e.getMessage());
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(context, "Erro ao obter produtos: " + error.getMessage(), Toast.LENGTH_SHORT).show();
-                Log.e("VolleyError", error.getMessage());
-            }
-        });
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(context, "Erro ao obter favoritos: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                        Log.e("VolleyError", "Erro ao obter favoritos", error);
+                    }
+                });
 
         volleyQueue.add(request);
     }
+
 
     public void getUtilizadorAPI(final Context context) {
         StringRequest request = new StringRequest(Request.Method.GET, mUrlAPIProfile + "/" + login.idprofile + "?token=" + login.token, new Response.Listener<String>() {
