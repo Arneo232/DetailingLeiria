@@ -57,10 +57,13 @@ public class UtilizadorBDHelper extends SQLiteOpenHelper {
         values.put(NTELEFONE, utilizador.getNtelefone());
         values.put(MORADA, utilizador.getMorada());
         values.put(TOKEN, utilizador.getToken());
+        values.put(IDPROFILE, utilizador.getIdprofile());  // Garantir que o idprofile é atualizado
 
-        int nLinhasEdit = (int) db.update(TABLE_NAME,values, ID + " = ?", new String[] {utilizador.getId()+""});
-        return nLinhasEdit>0;
+        // Atualiza o utilizador na base de dados com o id especificado
+        int nLinhasEdit = (int) db.update(TABLE_NAME, values, ID + " = ?", new String[]{String.valueOf(utilizador.getId())});
+        return nLinhasEdit > 0;  // Retorna true se uma ou mais linhas foram afetadas
     }
+
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
