@@ -173,6 +173,19 @@ class VendaController extends ActiveController
 
         $vendas = Venda::find()->where(['idProfileFK' => $idprofilefk])->all();
 
+        foreach ($vendas as $venda) {
+            $data[] = [
+                'idvendas' => $venda->idVenda,
+                'total' => $venda->total,
+                'datavenda' => $venda->datavenda,
+                'metodoentrega' => $venda ->metodoEntrega->designacao,
+                'metodopagamento' => $venda-> metodoPagamento->designacao,
+                'idlinhasvenda' => $venda -> linhasVenda -> idLinhasVenda,
+
+
+
+            ];
+        }
         if (empty($vendas)) {
             return [
                 'success' => false,
@@ -183,7 +196,7 @@ class VendaController extends ActiveController
         return [
             'success' => true,
             'message' => 'Vendas encontradas com sucesso.',
-            'data' => $vendas
+            'dados' => $data
         ];
     }
 

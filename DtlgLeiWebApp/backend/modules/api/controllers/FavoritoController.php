@@ -143,15 +143,29 @@ class FavoritoController extends ActiveController
     public function actionProfilefav($profile_id)
     {
         $favoritos = $this->modelClass::find()->where(['profile_id' => $profile_id])->all();
-
-        if ($favoritos) {
-            return $favoritos;
-        } else {
-            return [
-                'success' => false,
-                'message' => 'Não foram encontrados produtos favoritados deste utilizador.',
+        foreach ($favoritos as $favorito) {
+            $data[] = [
+                'idprofile' => $favorito->profile_id,
+                'idfavorito' => $favorito->idfavorito,
+                'idproduto' => $favorito->produto_id,
+                'nomeproduto' => $favorito->produto->nome,
+                'preco' => $favorito->produto->preco,
+                'imagem' => $this->getImagem($favorito),
             ];
         }
+        return [
+        $data
+        ];
     }
+     public static function getImagem($favorito)
+     {
+         $baseUrl = "http://172.22.21.201/detailingleiria/dtlgleiwebapp/frontend/web/uploads/";
+
+         if (!empty($favorito->produto->imagem)) {
+             $primeiraImagem = $favorito->produto->imagem[0];
+             return $baseUrl . $primeiraImagem->fileName;
+         }
+     }
+
 }
 
