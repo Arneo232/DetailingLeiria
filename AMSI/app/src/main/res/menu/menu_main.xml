@@ -15,5 +15,11 @@
         <item android:id="@+id/navCarrinho"
             android:icon="@drawable/ic_action_carrinho"
             android:title="@string/txt_carrinho" />
+        <item android:id="@+id/navFaturas"
+            android:icon="@drawable/fatura"
+            android:title="Faturas" />
+        <item android:id="@+id/navLogout"
+            android:icon="@drawable/logout"
+            android:title="Logout" />
     </group>
 </menu>
