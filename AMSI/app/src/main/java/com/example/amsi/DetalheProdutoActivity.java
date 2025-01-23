@@ -33,7 +33,7 @@ public class DetalheProdutoActivity extends AppCompatActivity implements Produto
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detalhe_produto);
-
+        setTitle("Detalhes do produto");
         imgProduto = findViewById(R.id.imgProduto);
         tvNomeProduto = findViewById(R.id.tvNomeProduto);
         tvPrecoProduto = findViewById(R.id.tvPrecoProduto);

@@ -57,11 +57,10 @@ public class UtilizadorBDHelper extends SQLiteOpenHelper {
         values.put(NTELEFONE, utilizador.getNtelefone());
         values.put(MORADA, utilizador.getMorada());
         values.put(TOKEN, utilizador.getToken());
-        values.put(IDPROFILE, utilizador.getIdprofile());  // Garantir que o idprofile é atualizado
+        values.put(IDPROFILE, utilizador.getIdprofile());
 
-        // Atualiza o utilizador na base de dados com o id especificado
         int nLinhasEdit = (int) db.update(TABLE_NAME, values, ID + " = ?", new String[]{String.valueOf(utilizador.getId())});
-        return nLinhasEdit > 0;  // Retorna true se uma ou mais linhas foram afetadas
+        return nLinhasEdit > 0;
     }
 
 
@@ -76,9 +75,9 @@ public class UtilizadorBDHelper extends SQLiteOpenHelper {
         String username = null;
 
         Cursor cursor = db.query(
-                "UtilizadoresTable",
-                new String[]{"username"},
-                "id = ?",
+                TABLE_NAME,
+                new String[]{USERNAME},
+                ID + " = ?",
                 new String[]{String.valueOf(userId)},
                 null,
                 null,
@@ -87,13 +86,12 @@ public class UtilizadorBDHelper extends SQLiteOpenHelper {
 
         try {
             if (cursor != null && cursor.moveToFirst()) {
-                int columnIndex = cursor.getColumnIndex("username");
+                int columnIndex = cursor.getColumnIndex(USERNAME);
 
                 if (columnIndex != -1) {
                     username = cursor.getString(columnIndex);
                 } else {
-                    // Log an error or handle the situation where "username" column is not found
-                    Log.d("TAG", "getUsernameById: " + "username column not found");
+                    Log.e("TAG", "getUsernameById: " + "username column not found");
                 }
             }
         } finally {

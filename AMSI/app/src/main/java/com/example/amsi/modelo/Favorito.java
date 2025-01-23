@@ -5,10 +5,6 @@ public class Favorito {
     private double preco;
     private String nomeproduto, imagem;
 
-    public void Favorito(){
-
-    }
-
     public Favorito(int idfavorito, int idproduto, int idprofile, String nomeproduto, double preco, String imagem){
         this.idfavorito = idfavorito;
         this.idproduto = idproduto;

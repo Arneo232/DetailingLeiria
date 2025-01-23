@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.SearchView;
 
 import androidx.fragment.app.Fragment;
 
@@ -15,16 +14,11 @@ import com.example.amsi.adaptadores.ListaProdutosAdaptador;
 import com.example.amsi.listeners.ProdutosListener;
 import com.example.amsi.modelo.Produto;
 import com.example.amsi.modelo.SingletonGestorProdutos;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
 public class ListaProdutosFragment extends Fragment implements ProdutosListener {
     private ListView lvProdutos;
-    private ArrayList<Produto> produtos;
-
-    private FloatingActionButton fabLista;
-    private SearchView searchView;
 
     public ListaProdutosFragment() {
 
