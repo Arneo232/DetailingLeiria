@@ -59,6 +59,7 @@ return [
                     'class' => 'yii\rest\UrlRule', 'controller' => 'api/profile',
                     'extraPatterns' => [
                         'GET perfil/{idprofile}' => 'perfil', // actionComperfil
+                        'POST editperfil/{idprofile}' => 'editperfil', // actionEditperfil
                     ],
                     'tokens' => [
                         '{idprofile}' => '<idprofile:\\d+>'

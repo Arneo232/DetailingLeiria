@@ -14,12 +14,14 @@ public class UtilizadorBDHelper extends SQLiteOpenHelper {
     public static final String TABLE_NAME = "UsersTable";
     private static final int DB_VERSION = 18;
     private SQLiteDatabase db;
+    private Context context;
 
     public static final String USERNAME = "username", EMAIL = "email", ID = "id", IDPROFILE = "idprofile", MORADA = "morada",
             NTELEFONE = "ntelefone", TOKEN = "token";
 
     public UtilizadorBDHelper(@Nullable Context context) {
         super(context, DB_NAME, null, DB_VERSION);
+        this.context = context;
         db = getWritableDatabase();
     }
 
@@ -59,7 +61,17 @@ public class UtilizadorBDHelper extends SQLiteOpenHelper {
         values.put(TOKEN, utilizador.getToken());
         values.put(IDPROFILE, utilizador.getIdprofile());
 
+        Log.d("UPDATE", "Atualizando utilizador com ID: " + utilizador.getId());
+
         int nLinhasEdit = (int) db.update(TABLE_NAME, values, ID + " = ?", new String[]{String.valueOf(utilizador.getId())});
+
+        Log.d("UPDATE", "Linhas afetadas: " + nLinhasEdit);
+
+        // Atualizar o Singleton após a alteração
+        if (nLinhasEdit > 0) {
+            SingletonGestorProdutos.getInstance(context).setUtilizador(utilizador);
+        }
+
         return nLinhasEdit > 0;
     }
 

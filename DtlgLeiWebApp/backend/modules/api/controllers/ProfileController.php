@@ -65,4 +65,60 @@ class ProfileController extends ActiveController
 
         return $data;
     }
+
+    public function actionEditperfil($idprofile)
+    {
+        $profile = Profile::findOne($idprofile);
+        if (!$profile) {
+            throw new \yii\web\NotFoundHttpException("Perfil não encontrado");
+        }
+
+        $data = Yii::$app->request->post();
+
+        if (isset($data['username'])) {
+            $profile->user->username = $data['username'];
+        }
+        if (isset($data['email'])) {
+            $profile->user->email = $data['email'];
+        }
+        if (isset($data['morada'])) {
+            $profile->morada = $data['morada'];
+        }
+        if (isset($data['ntelefone'])) {
+            $profile->ntelefone = $data['ntelefone'];
+        }
+
+        if (isset($data['username']) || isset($data['email'])) {
+            if (!$profile->user->save()) {
+                return [
+                    'success' => false,
+                    'message' => 'Erro ao atualizar o username ou email',
+                    'errors' => $profile->user->errors,
+                ];
+            }
+        }
+
+        if ($profile->validate() && $profile->save()) {
+            return [
+                'success' => true,
+                'message' => 'Perfil atualizado com sucesso',
+                'data' => [
+                    'idUtilizador' => $profile->user->id,
+                    'idProfile' => $profile->idprofile,
+                    'username' => $profile->user->username,
+                    'email' => $profile->user->email,
+                    'morada' => $profile->morada,
+                    'ntelefone' => $profile->ntelefone,
+                ]
+            ];
+        } else {
+            return [
+                'success' => false,
+                'message' => 'Erro ao atualizar o perfil',
+                'errors' => $profile->errors,
+            ];
+        }
+    }
+
+
 }

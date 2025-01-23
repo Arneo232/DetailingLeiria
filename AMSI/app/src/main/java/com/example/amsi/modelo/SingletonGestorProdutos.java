@@ -76,6 +76,7 @@ public class SingletonGestorProdutos {
     private SingletonGestorProdutos(Context context) {
         favoritos = new ArrayList<>();
         favoritosBD = new FavoritoBDHelper(context);
+        this.utilizador = carregarUtilizador(context);
     }
 
     public void setIpAddress(String ipAddress, Context context) {
@@ -113,6 +114,13 @@ public class SingletonGestorProdutos {
 
     public void setFavoritosListener(FavoritosListener favoritosListener) {
         this.favoritosListener = favoritosListener;
+    }
+
+    public Utilizador getUtilizador() {
+        return utilizador;
+    }
+    public void setUtilizador(Utilizador utilizador) {
+        this.utilizador = utilizador;
     }
 
     public Favorito getFavorito(int idfavorito){
@@ -452,6 +460,73 @@ public class SingletonGestorProdutos {
         SharedPreferences.Editor editor = preferences.edit();
         editor.putInt("user_id", userId);
         editor.apply();
+    }
+
+    private Utilizador carregarUtilizador(Context context) {
+        // carregar os dados iniciais ou carregar dados sempre que a aplicação for reiniciada.
+        SharedPreferences preferences = context.getSharedPreferences("UserPreferences", Context.MODE_PRIVATE);
+        Utilizador utilizador = new Utilizador();
+        utilizador.setUsername(preferences.getString("nome", ""));
+        utilizador.setEmail(preferences.getString("email", ""));
+        utilizador.setNtelefone(preferences.getString("telefone", ""));
+        utilizador.setMorada(preferences.getString("morada", ""));
+        // Defina o token ou outros valores, conforme necessário.
+        return utilizador;
+    }
+
+    public void saveUpdatedUserOffline(Context context, Utilizador utilizadorAtualizado) {
+        SharedPreferences preferences = context.getSharedPreferences("DADOS_USER", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("nome", utilizadorAtualizado.getUsername());
+        editor.putString("email", utilizadorAtualizado.getEmail());
+        editor.putString("telefone", utilizadorAtualizado.getNtelefone());
+        editor.putString("morada", utilizadorAtualizado.getMorada());
+        editor.apply();
+
+        // Atualizar o utilizador no Singleton
+        SingletonGestorProdutos.getInstance(context).utilizador = utilizadorAtualizado;
+    }
+
+    public void atualizarPerfilAPI(final Context context, final Utilizador utilizadorAtualizado) {
+        StringRequest request = new StringRequest(Request.Method.PUT, mUrlAPIProfile + "/" + login.idprofile + "?token=" + login.token, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    Utilizador updatedUser = UtilizadorJsonParser.parserJsonUtilizador(response);
+                    // Atualizar o utilizador no Singleton
+                    SingletonGestorProdutos.getInstance(context).utilizador = updatedUser;
+
+                    // Atualizar offline
+                    saveUpdatedUserOffline(context, updatedUser);
+
+                    // Notificar o listener que o perfil foi atualizado
+                    if (utilizadorListener != null) {
+                        utilizadorListener.onRefreshUtilizador(updatedUser);
+                    }
+
+                    Toast.makeText(context, "Perfil atualizado com sucesso!", Toast.LENGTH_SHORT).show();
+                } catch (Exception e) {
+                    Toast.makeText(context, "Erro ao atualizar perfil: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(context, "Erro na atualização do perfil: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("nome", utilizadorAtualizado.getUsername());
+                params.put("email", utilizadorAtualizado.getEmail());
+                params.put("telefone", utilizadorAtualizado.getNtelefone());
+                params.put("morada", utilizadorAtualizado.getMorada());
+                return params;
+            }
+        };
+
+        volleyQueue.add(request);
     }
 
     //Método para obter os métodos de entrega

@@ -3,6 +3,7 @@ package com.example.amsi;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -10,14 +11,15 @@ import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.amsi.modelo.SingletonGestorProdutos;
 import com.example.amsi.modelo.UtilizadorBDHelper;
 import com.example.amsi.modelo.Utilizador;
 
 public class EditarDadosActivity extends AppCompatActivity {
 
     private EditText editTextEmail, editTextNome, editTextTelefone, editTextMorada;
-    private UtilizadorBDHelper utilizadorBDHelper; // Instância de UtilizadorBDHelper
-    private SharedPreferences sharedPreferences; // Instância do SharedPreferences
+    private UtilizadorBDHelper utilizadorBDHelper;
+    private SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,10 +32,7 @@ public class EditarDadosActivity extends AppCompatActivity {
         editTextTelefone = findViewById(R.id.editTextTelefone);
         editTextMorada = findViewById(R.id.editTextMorada);
 
-        // Instanciando o Helper da base de dados
         utilizadorBDHelper = new UtilizadorBDHelper(this);
-
-        // Inicializando o SharedPreferences
         sharedPreferences = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE);
 
         // Carregar os dados atuais do utilizador (com base nos dados do SharedPreferences)
@@ -42,7 +41,6 @@ public class EditarDadosActivity extends AppCompatActivity {
         editTextTelefone.setText(sharedPreferences.getString("telefone", ""));
         editTextMorada.setText(sharedPreferences.getString("morada", ""));
 
-        // Botão Guardar
         findViewById(R.id.buttonSave).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -50,7 +48,6 @@ public class EditarDadosActivity extends AppCompatActivity {
             }
         });
 
-        // Botão Cancelar
         Button btnCancel = findViewById(R.id.btnCancel);
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,7 +57,6 @@ public class EditarDadosActivity extends AppCompatActivity {
         });
     }
 
-    // Função para guardar os dados
     private void guardarDados() {
         String email = editTextEmail.getText().toString();
         String nome = editTextNome.getText().toString();
@@ -80,13 +76,12 @@ public class EditarDadosActivity extends AppCompatActivity {
         utilizadorAtualizado.setMorada(morada);
         utilizadorAtualizado.setToken("");  // Se necessário, você pode definir um token ou mantê-lo
 
-        // Obter o ID do utilizador
-        int idUtilizador = sharedPreferences.getInt("id", -1); // Supondo que o ID esteja guardado em SharedPreferences
-
+        int idUtilizador = sharedPreferences.getInt("id", -1);
         if (idUtilizador == -1) {
             Toast.makeText(this, "Erro: ID do utilizador não encontrado", Toast.LENGTH_SHORT).show();
             return;
         }
+        Log.d("EditarDados", "ID recuperado: " + idUtilizador);
 
         // Definir o ID para o objeto Utilizador
         utilizadorAtualizado.setId(idUtilizador);
@@ -95,13 +90,15 @@ public class EditarDadosActivity extends AppCompatActivity {
         boolean sucesso = utilizadorBDHelper.editarUtilizadorBD(utilizadorAtualizado);
 
         if (sucesso) {
-            // Atualizar os dados em SharedPreferences
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putString("email", email);
             editor.putString("nome", nome);
             editor.putString("telefone", telefone);
             editor.putString("morada", morada);
-            editor.apply();
+            editor.commit();
+
+            // Atualizar o utilizador no Singleton
+            SingletonGestorProdutos.getInstance(this).setUtilizador(utilizadorAtualizado);
 
             // Mostrar mensagem de sucesso
             Toast.makeText(this, "Dados atualizados com sucesso!", Toast.LENGTH_SHORT).show();
@@ -111,4 +108,5 @@ public class EditarDadosActivity extends AppCompatActivity {
             Toast.makeText(this, "Falha ao atualizar dados. Tente novamente.", Toast.LENGTH_SHORT).show();
         }
     }
+
 }
