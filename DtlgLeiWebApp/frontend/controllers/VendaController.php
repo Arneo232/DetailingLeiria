@@ -75,6 +75,7 @@ class VendaController extends Controller
         $venda->idCarrinhoFK = $carrinho->idCarrinho;
         $venda->total = $carrinho->total;
         $venda->datavenda = date('Y-m-d H:i:s');
+        $venda->estado_encomenda = 0;
         $venda->metodoPagamento_id = $carrinho->idMetodoPagamento;
         $venda->metodoEntrega_id = $carrinho->idMetodoEntrega;
 

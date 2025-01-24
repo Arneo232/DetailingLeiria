@@ -7,6 +7,7 @@ use backend\models\VendaSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use Yii;
 
 /**
  * VendaController implements the CRUD actions for venda model.
@@ -29,6 +30,48 @@ class VendaController extends Controller
                 ],
             ]
         );
+    }
+
+    public function actionToggleEstadoEncomenda($idVenda)
+    {
+        $model = Venda::findOne($idVenda);
+
+        if ($model) {
+            $model->estado_encomenda = !$model->estado_encomenda;
+            if ($model->save(false)) {
+                Yii::$app->session->setFlash('success', 'Estado da encomenda atualizado com sucesso.');
+            } else {
+                Yii::$app->session->setFlash('error', 'Falha ao atualizar o estado da encomenda.');
+            }
+        } else {
+            Yii::$app->session->setFlash('error', 'Venda não encontrada.');
+        }
+
+        return $this->redirect(['index']);
+    }
+
+    public function actionNaoEntregue()
+    {
+        $searchModel = new VendaSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider->query->andWhere(['estado_encomenda' => 0]);
+
+        return $this->render('index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+    public function actionEntregue()
+    {
+        $searchModel = new VendaSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider->query->andWhere(['estado_encomenda' => 1]);
+
+        return $this->render('encomendaFeita', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
     }
 
     /**

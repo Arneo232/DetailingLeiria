@@ -1,19 +1,18 @@
 <?php
 
-use common\models\venda;
 use yii\helpers\Html;
+use yii\grid\GridView;
 use yii\helpers\Url;
 use yii\grid\ActionColumn;
-use yii\grid\GridView;
 
 /** @var yii\web\View $this */
 /** @var backend\models\VendaSearch $searchModel */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
-$this->title = 'Vendas';
+$this->title = 'Vendas Feitas';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="venda-index">
+<div class="venda-feito">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
@@ -21,8 +20,6 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= Html::a('Encomendas Não Entregues', ['venda/nao-entregue'], ['class' => 'btn btn-warning']) ?>
         <?= Html::a('Encomendas Entregues', ['venda/entregue'], ['class' => 'btn btn-success']) ?>
     </div>
-
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,

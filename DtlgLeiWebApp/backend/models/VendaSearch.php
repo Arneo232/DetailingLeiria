@@ -66,6 +66,7 @@ class VendaSearch extends venda
             'metodoEntrega_id' => $this->metodoEntrega_id,
             'idCarrinhoFK' => $this->idCarrinhoFK,
             'idProfileFK' => $this->idProfileFK,
+            'estado_encomenda' => $this->estado_encomenda,
         ]);
 
         return $dataProvider;

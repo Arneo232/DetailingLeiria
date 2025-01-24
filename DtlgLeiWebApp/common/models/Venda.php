@@ -13,6 +13,7 @@ use yii\debug\models\search\Profile;
  * @property string|null $datavenda
  * @property int $metodoPagamento_id
  * @property int $metodoEntrega_id
+ * @property bool|null $estado_encomenda
  *
  * @property Linhasvenda[] $linhasvendas
  * @property Metodoentrega $metodoEntrega
@@ -38,6 +39,7 @@ class Venda extends \yii\db\ActiveRecord
             [['datavenda'], 'safe'],
             [['metodoPagamento_id', 'metodoEntrega_id'], 'required'],
             [['metodoPagamento_id', 'metodoEntrega_id'], 'integer'],
+            [['estado_encomenda'], 'boolean'],
             [['metodoEntrega_id'], 'exist', 'skipOnError' => true, 'targetClass' => Metodoentrega::class, 'targetAttribute' => ['metodoEntrega_id' => 'idmetodoEntrega']],
             [['metodoPagamento_id'], 'exist', 'skipOnError' => true, 'targetClass' => Metodopagamento::class, 'targetAttribute' => ['metodoPagamento_id' => 'idMetodoPagamento']],
         ];
@@ -54,6 +56,7 @@ class Venda extends \yii\db\ActiveRecord
             'datavenda' => 'Datavenda',
             'metodoPagamento_id' => 'Metodo Pagamento ID',
             'metodoEntrega_id' => 'Metodo Entrega ID',
+            'estado_encomenda' => 'Estado Encomenda',
         ];
     }
 
@@ -86,6 +89,7 @@ class Venda extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Metodopagamento::class, ['idMetodoPagamento' => 'metodoPagamento_id']);
     }
+
     public function getProfile()
     {
         return $this->hasOne(Profile::class, ['idprofile' => 'idProfileFK']);
@@ -104,6 +108,7 @@ class Venda extends \yii\db\ActiveRecord
 
         $this->FazPublishNoMosquitto("INSERT_VENDA", $mensagemCriacao);
     }
+
     public function FazPublishNoMosquitto($canal, $msg)
     {
         $server = "127.0.0.1";
