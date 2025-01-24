@@ -12,6 +12,7 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.amsi.EditarDadosActivity;
 import com.example.amsi.listeners.FavoritosListener;
 import com.example.amsi.listeners.LoginListener;
 import com.example.amsi.listeners.MetodoEntregaListener;
@@ -64,6 +65,7 @@ public class SingletonGestorProdutos {
     private static String mUrlAPIFavoritoRemover="";
     private static String mUrlAPIFavoritoAdicionar="";
     private static String mUrlAPIProfile="";
+    private static String mUrlAPIProfileEditar="";
 
     public static synchronized SingletonGestorProdutos getInstance(Context context) {
         if (instance == null) {
@@ -93,6 +95,7 @@ public class SingletonGestorProdutos {
         mUrlAPIPagamento ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/metodopagamento";
         mUrlAPIEntrega ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/metodoentrega";
         mUrlAPIProfile ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/profile/perfil";
+        mUrlAPIProfileEditar ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/profile/editperfil";
 
     }
 
@@ -420,6 +423,46 @@ public class SingletonGestorProdutos {
         volleyQueue.add(request);
     }
 
+    public void saveUserToken(Context context, String token, String username) {
+        SharedPreferences preferences = context.getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("user_token", token);
+        editor.putString("username", username);
+        editor.apply();
+    }
+
+    public void saveUserId(Context context, int userId) {
+        SharedPreferences preferences = context.getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt("user_id", userId);
+        editor.apply();
+    }
+
+    private Utilizador carregarUtilizador(Context context) {
+        SharedPreferences preferences = context.getSharedPreferences("UserPreferences", Context.MODE_PRIVATE);
+        Utilizador utilizador = new Utilizador();
+        utilizador.setId(preferences.getInt("id", -1)); // Carregar o ID do utilizador
+        utilizador.setUsername(preferences.getString("nome", ""));
+        utilizador.setEmail(preferences.getString("email", ""));
+        utilizador.setNtelefone(preferences.getString("telefone", ""));
+        utilizador.setMorada(preferences.getString("morada", ""));
+
+        Log.d("carregarUtilizador", "ID carregado: " + utilizador.getId());
+        return utilizador;
+    }
+    public void saveUpdatedUserOffline(Context context, Utilizador utilizadorAtualizado) {
+        SharedPreferences preferences = context.getSharedPreferences("UserPreferences", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt("id", utilizadorAtualizado.getId());
+        editor.putString("nome", utilizadorAtualizado.getUsername());
+        editor.putString("email", utilizadorAtualizado.getEmail());
+        editor.putString("telefone", utilizadorAtualizado.getNtelefone());
+        editor.putString("morada", utilizadorAtualizado.getMorada());
+        editor.apply();
+
+        // Atualizar o utilizador no Singleton
+        SingletonGestorProdutos.getInstance(context).utilizador = utilizadorAtualizado;
+    }
     public void getUtilizadorAPI(final Context context) {
         StringRequest request = new StringRequest(Request.Method.GET, mUrlAPIProfile + "/" + login.idprofile + "?token=" + login.token, new Response.Listener<String>() {
             @Override
@@ -446,73 +489,29 @@ public class SingletonGestorProdutos {
 
         volleyQueue.add(request);
     }
-
-    public void saveUserToken(Context context, String token, String username) {
-        SharedPreferences preferences = context.getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putString("user_token", token);
-        editor.putString("username", username);
-        editor.apply();
-    }
-
-    public void saveUserId(Context context, int userId) {
-        SharedPreferences preferences = context.getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putInt("user_id", userId);
-        editor.apply();
-    }
-
-    private Utilizador carregarUtilizador(Context context) {
-        // carregar os dados iniciais ou carregar dados sempre que a aplicação for reiniciada.
-        SharedPreferences preferences = context.getSharedPreferences("UserPreferences", Context.MODE_PRIVATE);
-        Utilizador utilizador = new Utilizador();
-        utilizador.setUsername(preferences.getString("nome", ""));
-        utilizador.setEmail(preferences.getString("email", ""));
-        utilizador.setNtelefone(preferences.getString("telefone", ""));
-        utilizador.setMorada(preferences.getString("morada", ""));
-        // Defina o token ou outros valores, conforme necessário.
-        return utilizador;
-    }
-
-    public void saveUpdatedUserOffline(Context context, Utilizador utilizadorAtualizado) {
-        SharedPreferences preferences = context.getSharedPreferences("DADOS_USER", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putString("nome", utilizadorAtualizado.getUsername());
-        editor.putString("email", utilizadorAtualizado.getEmail());
-        editor.putString("telefone", utilizadorAtualizado.getNtelefone());
-        editor.putString("morada", utilizadorAtualizado.getMorada());
-        editor.apply();
-
-        // Atualizar o utilizador no Singleton
-        SingletonGestorProdutos.getInstance(context).utilizador = utilizadorAtualizado;
-    }
-
     public void atualizarPerfilAPI(final Context context, final Utilizador utilizadorAtualizado) {
-        StringRequest request = new StringRequest(Request.Method.PUT, mUrlAPIProfile + "/" + login.idprofile + "?token=" + login.token, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                try {
-                    Utilizador updatedUser = UtilizadorJsonParser.parserJsonUtilizador(response);
-                    // Atualizar o utilizador no Singleton
-                    SingletonGestorProdutos.getInstance(context).utilizador = updatedUser;
+        StringRequest request = new StringRequest(Request.Method.POST, mUrlAPIProfileEditar + "/" + utilizadorAtualizado.getId() + "?token=" + utilizadorAtualizado.getToken(),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            Utilizador updatedUser = UtilizadorJsonParser.parserJsonUtilizador(response);
 
-                    // Atualizar offline
-                    saveUpdatedUserOffline(context, updatedUser);
+                            // Atualizar o utilizador no Singleton
+                            utilizador = updatedUser;
 
-                    // Notificar o listener que o perfil foi atualizado
-                    if (utilizadorListener != null) {
-                        utilizadorListener.onRefreshUtilizador(updatedUser);
+                            // Notificar o contexto da atividade que o perfil foi atualizado
+                            if (context instanceof EditarDadosActivity) {
+                                Toast.makeText(context, "Perfil atualizado com sucesso no servidor!", Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (Exception e) {
+                            Toast.makeText(context, "Erro ao atualizar perfil no servidor: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                        }
                     }
-
-                    Toast.makeText(context, "Perfil atualizado com sucesso!", Toast.LENGTH_SHORT).show();
-                } catch (Exception e) {
-                    Toast.makeText(context, "Erro ao atualizar perfil: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                }
-            }
-        }, new Response.ErrorListener() {
+                }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(context, "Erro na atualização do perfil: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Erro na atualização do perfil no servidor: " + error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         }) {
             @Override

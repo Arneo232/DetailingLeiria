@@ -86,10 +86,11 @@ public class EditarDadosActivity extends AppCompatActivity {
         // Definir o ID para o objeto Utilizador
         utilizadorAtualizado.setId(idUtilizador);
 
-        // Atualizar na base de dados
+        // Atualizar na base de dados local
         boolean sucesso = utilizadorBDHelper.editarUtilizadorBD(utilizadorAtualizado);
 
         if (sucesso) {
+            // Atualizar SharedPreferences
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putString("email", email);
             editor.putString("nome", nome);
@@ -100,6 +101,9 @@ public class EditarDadosActivity extends AppCompatActivity {
             // Atualizar o utilizador no Singleton
             SingletonGestorProdutos.getInstance(this).setUtilizador(utilizadorAtualizado);
 
+            // Atualizar o utilizador no servidor
+            SingletonGestorProdutos.getInstance(this).atualizarPerfilAPI(this, utilizadorAtualizado);
+
             // Mostrar mensagem de sucesso
             Toast.makeText(this, "Dados atualizados com sucesso!", Toast.LENGTH_SHORT).show();
             finish();
@@ -108,5 +112,4 @@ public class EditarDadosActivity extends AppCompatActivity {
             Toast.makeText(this, "Falha ao atualizar dados. Tente novamente.", Toast.LENGTH_SHORT).show();
         }
     }
-
 }
