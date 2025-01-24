@@ -41,8 +41,7 @@ public class SingletonGestorProdutos {
     private static RequestQueue volleyQueue = null;
     private static volatile SingletonGestorProdutos instance = null;
     private Utilizador login;
-    private ArrayList<Favorito> favoritos;
-    private FavoritoBDHelper favoritosBD;
+    private FavoritoBDHelper favoritoBDHelper;
 
     private LoginListener loginListener;
     private RegisterListener registerListener;
@@ -76,9 +75,7 @@ public class SingletonGestorProdutos {
     }
 
     private SingletonGestorProdutos(Context context) {
-        favoritos = new ArrayList<>();
-        favoritosBD = new FavoritoBDHelper(context);
-        this.utilizador = carregarUtilizador(context);
+        favoritoBDHelper = new FavoritoBDHelper(context);
     }
 
     public void setIpAddress(String ipAddress, Context context) {
@@ -126,29 +123,10 @@ public class SingletonGestorProdutos {
         this.utilizador = utilizador;
     }
 
-    public Favorito getFavorito(int idfavorito){
-        for(Favorito favorito : favoritos)
-            if (favorito.getIdfavorito() == idfavorito)
-                return favorito;
-        return null;
+    public ArrayList<Favorito> getFavoritoBD(Context context) {
+        Log.e("SingletonGestorProdutos", "getFavoritoBD called");
+        return favoritoBDHelper.getFavoritosBD(context);
     }
-
-    public ArrayList<Favorito> getAllFavoritosBD() {
-        favoritos = favoritosBD.getAllFavoritosBD();
-        return new ArrayList<>(favoritos);
-    }
-
-    public void adicionarFavoritoBD(Favorito favorito){
-        favoritosBD.adicionarFavoritoBD(favorito);
-    }
-
-    public void removerFavoritoBD(int idfavorito){
-        Favorito f = getFavorito(idfavorito);
-        if(f !=null) {
-            favoritosBD.removerFavoritoBD(idfavorito);
-        }
-    }
-
 
     public void loginAPI(final String username, final String password, final Context context) {
         if (!ProdutoJsonParser.isConnectionInternet(context)) {

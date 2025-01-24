@@ -1,6 +1,7 @@
 package com.example.amsi;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import androidx.fragment.app.Fragment;
 import com.example.amsi.adaptadores.ListaFavoritosAdaptador;
 import com.example.amsi.listeners.FavoritosListener;
 import com.example.amsi.modelo.Favorito;
+import com.example.amsi.modelo.FavoritoBDHelper;
 import com.example.amsi.modelo.SingletonGestorProdutos;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -34,24 +36,26 @@ public class ListaFavoritosFragment extends Fragment implements FavoritosListene
     public ListaFavoritosFragment() {
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.lista_favoritos_fragment, container, false);
-        setHasOptionsMenu(true);
-
         lvFavoritos = view.findViewById(R.id.lvFavoritos);
-        SingletonGestorProdutos.getInstance(getContext()).setFavoritosListener(this);
-        SingletonGestorProdutos.getInstance(getContext()).getAllFavoritosAPI(getContext());
+
+        SingletonGestorProdutos gestorProdutos = SingletonGestorProdutos.getInstance(getContext());
+        Log.d("ListaFavoritosFragment", "Before calling getFavoritoBD");
+        ArrayList<Favorito> favoritos = gestorProdutos.getFavoritoBD(getContext());
+        Log.d("ListaFavoritosFragment", "After calling getFavoritoBD. Favoritos size: " + favoritos.size());
+
+        if (favoritos != null) {
+            lvFavoritos.setAdapter(new ListaFavoritosAdaptador(getContext(), favoritos));
+        }
 
         return view;
     }
 
-
     @Override
     public void onRefreshFavoritos(ArrayList<Favorito> favorito) {
-        if(favorito != null){
+        if (favorito != null) {
             lvFavoritos.setAdapter(new ListaFavoritosAdaptador(getContext(), favorito));
         }
     }
