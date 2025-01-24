@@ -439,7 +439,7 @@ public class SingletonGestorProdutos {
     }
 
     private Utilizador carregarUtilizador(Context context) {
-        SharedPreferences preferences = context.getSharedPreferences("UserPreferences", Context.MODE_PRIVATE);
+        SharedPreferences preferences = context.getSharedPreferences("DADOS_USER", Context.MODE_PRIVATE);
         Utilizador utilizador = new Utilizador();
         utilizador.setId(preferences.getInt("id", -1)); // Carregar o ID do utilizador
         utilizador.setUsername(preferences.getString("nome", ""));

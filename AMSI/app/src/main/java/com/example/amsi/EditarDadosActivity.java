@@ -33,7 +33,7 @@ public class EditarDadosActivity extends AppCompatActivity {
         editTextMorada = findViewById(R.id.editTextMorada);
 
         utilizadorBDHelper = new UtilizadorBDHelper(this);
-        sharedPreferences = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE);
+        sharedPreferences = getSharedPreferences("DADOS_USER", Context.MODE_PRIVATE);
 
         // Carregar os dados atuais do utilizador (com base nos dados do SharedPreferences)
         editTextEmail.setText(sharedPreferences.getString("email", ""));
@@ -90,6 +90,12 @@ public class EditarDadosActivity extends AppCompatActivity {
         boolean sucesso = utilizadorBDHelper.editarUtilizadorBD(utilizadorAtualizado);
 
         if (sucesso) {
+            // Atualizar o utilizador no Singleton
+            SingletonGestorProdutos.getInstance(this).setUtilizador(utilizadorAtualizado);
+
+            // Atualizar o utilizador no servidor
+            SingletonGestorProdutos.getInstance(this).atualizarPerfilAPI(this, utilizadorAtualizado);
+
             // Atualizar SharedPreferences
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putString("email", email);
@@ -97,12 +103,6 @@ public class EditarDadosActivity extends AppCompatActivity {
             editor.putString("telefone", telefone);
             editor.putString("morada", morada);
             editor.commit();
-
-            // Atualizar o utilizador no Singleton
-            SingletonGestorProdutos.getInstance(this).setUtilizador(utilizadorAtualizado);
-
-            // Atualizar o utilizador no servidor
-            SingletonGestorProdutos.getInstance(this).atualizarPerfilAPI(this, utilizadorAtualizado);
 
             // Mostrar mensagem de sucesso
             Toast.makeText(this, "Dados atualizados com sucesso!", Toast.LENGTH_SHORT).show();
