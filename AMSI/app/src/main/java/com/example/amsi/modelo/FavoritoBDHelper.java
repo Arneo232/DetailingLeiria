@@ -52,32 +52,31 @@ public class FavoritoBDHelper extends SQLiteOpenHelper {
      * Get all favoritos for the last logged-in user by idprofile from SharedPreferences.
      */
     public ArrayList<Favorito> getFavoritosBD(Context context) {
-        ArrayList<Favorito> favoritos = new ArrayList<>();
         SharedPreferences sharedPreferences = context.getSharedPreferences("AppPreferences", Context.MODE_PRIVATE);
-        int idprofile = sharedPreferences.getInt("idprofile",  -1);
-
+        String idprofileStr = sharedPreferences.getString("idprofile", "-1");
+        int idprofile = Integer.parseInt(idprofileStr);
         Log.d("FavoritoBDHelper", "Fetching favoritos for idprofile: " + idprofile);
 
-        Cursor cursor = this.favoritosDB.query(TABLE_NAME, new String[]{IDFAVORITO, IDPRODUTO, IDPROFILE, NOME, PRECO, IMAGEM},
+        ArrayList<Favorito> favoritos = new ArrayList<>();
+        Cursor cursor = favoritosDB.query(TABLE_NAME, new String[]{IDFAVORITO, IDPRODUTO, IDPROFILE, NOME, PRECO, IMAGEM},
                 IDPROFILE + " = ?", new String[]{String.valueOf(idprofile)}, null, null, null);
 
-        if (cursor != null) {
-            Log.d("FavoritoBDHelper", "Cursor count: " + cursor.getCount());
-            if (cursor.moveToFirst()) {
-                do {
-                    Favorito auxFavorito = new Favorito(
-                            cursor.getInt(0),
-                            cursor.getInt(1),
-                            cursor.getInt(2),
-                            cursor.getString(3),
-                            cursor.getDouble(4),
-                            cursor.getString(5)
-                    );
-                    favoritos.add(auxFavorito);
-                } while (cursor.moveToNext());
-            }
-            cursor.close();
+        Log.d("FavoritoBDHelper", "Cursor count: " + cursor.getCount());
+
+        if (cursor.moveToFirst()) {
+            do {
+                Favorito auxFavorito = new Favorito(
+                        cursor.getInt(0),
+                        cursor.getInt(1),
+                        cursor.getInt(2),
+                        cursor.getString(3),
+                        cursor.getFloat(4),
+                        cursor.getString(5)
+                );
+                favoritos.add(auxFavorito);
+            } while (cursor.moveToNext());
         }
+        cursor.close();
 
         Log.d("FavoritoBDHelper", "Fetched favoritos count: " + favoritos.size());
         return favoritos;

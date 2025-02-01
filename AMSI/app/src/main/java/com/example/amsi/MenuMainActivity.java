@@ -75,7 +75,7 @@ public class MenuMainActivity extends AppCompatActivity implements NavigationVie
             startActivity(intent);
             setTitle(item.getTitle());
         } else if (item.getItemId() == R.id.navLogout) {
-            logoutUser(); // Call the logout function
+            logoutUser();
         }
 
         if (fragment != null) {

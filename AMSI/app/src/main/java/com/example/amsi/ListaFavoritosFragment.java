@@ -1,5 +1,7 @@
 package com.example.amsi;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -41,12 +43,13 @@ public class ListaFavoritosFragment extends Fragment implements FavoritosListene
         View view = inflater.inflate(R.layout.lista_favoritos_fragment, container, false);
         lvFavoritos = view.findViewById(R.id.lvFavoritos);
 
-        SingletonGestorProdutos gestorProdutos = SingletonGestorProdutos.getInstance(getContext());
         Log.d("ListaFavoritosFragment", "Before calling getFavoritoBD");
-        ArrayList<Favorito> favoritos = gestorProdutos.getFavoritoBD(getContext());
+
+        ArrayList<Favorito> favoritos = SingletonGestorProdutos.getInstance(getContext()).getFavoritoBD(getContext());
+
         Log.d("ListaFavoritosFragment", "After calling getFavoritoBD. Favoritos size: " + favoritos.size());
 
-        if (favoritos != null) {
+        if (favoritos != null && !favoritos.isEmpty()) {
             lvFavoritos.setAdapter(new ListaFavoritosAdaptador(getContext(), favoritos));
         }
 

@@ -74,6 +74,7 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
             editor.putString("morada", utilizador.getMorada());
             editor.apply();
 
+            Log.e("SharedPreferences", "idprofile saved: " + utilizador.getIdprofile());
             Toast.makeText(context, "Login efetuado com sucesso! Bem-vindo, " + utilizador.getUsername(), Toast.LENGTH_SHORT).show();
 
             // Pass a flag to MenuMainActivity to load ListaProdutosFragment

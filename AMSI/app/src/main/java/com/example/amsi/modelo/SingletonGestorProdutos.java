@@ -131,7 +131,7 @@ public class SingletonGestorProdutos {
     public void loginAPI(final String username, final String password, final Context context) {
         if (!ProdutoJsonParser.isConnectionInternet(context)) {
             Toast.makeText(context, "Não tem ligação à internet", Toast.LENGTH_SHORT).show();
-        }else{
+        } else {
             StringRequest request = new StringRequest(Request.Method.POST, mUrlAPILogin, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
@@ -140,32 +140,37 @@ public class SingletonGestorProdutos {
 
                         login = LoginJsonParser.parserJsonLogin(response);
 
-                        SharedPreferences.Editor editor = context.getSharedPreferences("DADOS_USER", Context.MODE_PRIVATE).edit();
+                        SharedPreferences sharedPreferences = context.getSharedPreferences("DADOS_USER", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
                         editor.putString("token", jsonObject.getString("token"));
                         editor.putString("idprofile", jsonObject.getString("idprofile"));
                         editor.putInt("id", jsonObject.getInt("id"));
                         editor.apply();
 
-                        if(loginListener != null) {
+                        String savedIdProfile = sharedPreferences.getString("idprofile", "NOT FOUND");
+                        Log.d("SharedPreferences", "idprofile saved: " + savedIdProfile);
+
+                        if (loginListener != null) {
                             loginListener.onValidateLogin(context, login);
                         }
                     } catch (Exception e) {
                         Toast.makeText(context, "Erro: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Log.e("LoginAPI", "Error parsing response: " + e.getMessage());
                     }
                 }
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     Toast.makeText(context, "Erro: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                    Log.e("LoginAPI", "Volley Error: " + error.getMessage());
                 }
             }) {
                 @Override
                 protected Map<String, String> getParams() {
                     Map<String, String> params = new HashMap<>();
-                    //params.put("username", username);
-                    //params.put("password", password);
                     return params;
                 }
+
                 @Override
                 public Map<String, String> getHeaders() {
                     Map<String, String> headers = new HashMap<>();
