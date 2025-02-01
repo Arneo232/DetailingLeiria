@@ -309,33 +309,47 @@ public class SingletonGestorProdutos {
     }
 
     public void getAllFavoritosAPI(final Context context) {
+        Log.d("API", "getAllFavoritosAPI chamado");
+
         SharedPreferences sp = context.getSharedPreferences("DADOSUSER", Context.MODE_PRIVATE);
         int idp = sp.getInt("idprofile", login.getIdprofile());
+
+        Log.d("API", "Buscar os favoritos para o idprofile: " + idp);
 
         StringRequest request = new StringRequest(Request.Method.GET, mUrlAPIFavorito + '/' + idp + "?token=" + login.token,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        Log.d("API", "Response received: " + response);
                         try {
                             ArrayList<Favorito> favoritos = FavoritoJsonParser.parserJsonFavoritos(response);
+                            Log.d("API", "Favoritos totais: " + favoritos.size());
+
+                            FavoritoBDHelper dbHelper = new FavoritoBDHelper(context);
+                            dbHelper.removerTodosFavoritos();
+                            Log.d("DB_DELETE", "Remover todos os favoritos na DB");
+
+                            for (Favorito f : favoritos) {
+                                dbHelper.adicionarFavorito(f);
+                                Log.d("DB_INSERT", "Inserir o Favorito por ID: " + f.getIdfavorito());
+                            }
                             if (favoritosListener != null) {
                                 favoritosListener.onRefreshFavoritos(favoritos);
                             }
                         } catch (Exception e) {
-                            Toast.makeText(context, "Erro ao carregar favoritos: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                            Log.e("Erro", "Erro ao carregar favoritos", e);
+                            Log.e("API", "Erro a fazer o parsing dos favoritos: " + e.getMessage(), e);
                         }
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(context, "Erro ao obter favoritos: " + error.getMessage(), Toast.LENGTH_SHORT).show();
-                        Log.e("VolleyError", "Erro ao obter favoritos", error);
+                        Log.e("VolleyError", "Erro a buscar os favoritos: " + error.getMessage(), error);
                     }
                 });
 
         volleyQueue.add(request);
+        Log.d("API", "Request adicionada a queue");
     }
 
     public void deleteFavoritoAPI(final Context context, final int idFavorito) {

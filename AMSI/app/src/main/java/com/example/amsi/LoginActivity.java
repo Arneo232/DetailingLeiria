@@ -64,7 +64,7 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
     @Override
     public void onValidateLogin(final Context context, final Utilizador utilizador) {
         if (utilizador.token != null) {
-            // Save user data in SharedPreferences
+            // Salvar dados do user
             SharedPreferences sharedPreferences = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putInt("idprofile", utilizador.getIdprofile());
@@ -77,7 +77,7 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
             Log.e("SharedPreferences", "idprofile saved: " + utilizador.getIdprofile());
             Toast.makeText(context, "Login efetuado com sucesso! Bem-vindo, " + utilizador.getUsername(), Toast.LENGTH_SHORT).show();
 
-            // Pass a flag to MenuMainActivity to load ListaProdutosFragment
+            // Passar a flag para o MenuMainActivity para dar load a ListaProdutosFragment
             Intent intent = new Intent(this, MenuMainActivity.class);
             intent.putExtra("startFragment", "ListaProdutosFragment");
             intent.putExtra(USERNAME, utilizador.getUsername());

@@ -1,5 +1,6 @@
 package com.example.amsi.modelo;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -48,11 +49,33 @@ public class FavoritoBDHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    /**
-     * Get all favoritos for the last logged-in user by idprofile from SharedPreferences.
-     */
+    public void removerTodosFavoritos() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        int deletedRows = db.delete("favoritos", null, null);
+        Log.d("DB_DELETE", "Favoritos removidos: " + deletedRows);
+        db.close();
+    }
+
+    public void adicionarFavorito(Favorito favorito) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put("idfavorito", favorito.getIdfavorito());
+        values.put("idprofile", favorito.getIdprofile());
+        values.put("idproduto", favorito.getIdproduto());
+
+        long result = db.insert("favoritos", null, values);
+        if (result == -1) {
+            Log.e("DB_INSERT", "Erro ao inserir favorito ID: " + favorito.getIdfavorito());
+        } else {
+            Log.d("DB_INSERT", "Favorito inserido ID: " + favorito.getIdfavorito());
+        }
+
+        db.close();
+    }
+
     public ArrayList<Favorito> getFavoritosBD(Context context) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences("AppPreferences", Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = context.getSharedPreferences("DADOS_USER", Context.MODE_PRIVATE);
         String idprofileStr = sharedPreferences.getString("idprofile", "-1");
         int idprofile = Integer.parseInt(idprofileStr);
         Log.d("FavoritoBDHelper", "Fetching favoritos for idprofile: " + idprofile);

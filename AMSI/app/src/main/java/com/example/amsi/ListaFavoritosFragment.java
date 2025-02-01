@@ -43,22 +43,30 @@ public class ListaFavoritosFragment extends Fragment implements FavoritosListene
         View view = inflater.inflate(R.layout.lista_favoritos_fragment, container, false);
         lvFavoritos = view.findViewById(R.id.lvFavoritos);
 
-        Log.d("ListaFavoritosFragment", "Before calling getFavoritoBD");
+        Log.d("ListaFavoritosFragment", "Fragment criado, a buscar os favoritos a API");
 
-        ArrayList<Favorito> favoritos = SingletonGestorProdutos.getInstance(getContext()).getFavoritoBD(getContext());
+        SingletonGestorProdutos.getInstance(getContext()).getAllFavoritosAPI(getContext());
+        SingletonGestorProdutos.getInstance(getContext()).setFavoritosListener(this);
 
-        Log.d("ListaFavoritosFragment", "After calling getFavoritoBD. Favoritos size: " + favoritos.size());
-
-        if (favoritos != null && !favoritos.isEmpty()) {
-            lvFavoritos.setAdapter(new ListaFavoritosAdaptador(getContext(), favoritos));
-        }
+        carregarFavoritosBD();
 
         return view;
     }
 
+    private void carregarFavoritosBD() {
+        ArrayList<Favorito> favoritos = SingletonGestorProdutos.getInstance(getContext()).getFavoritoBD(getContext());
+        Log.d("ListaFavoritosFragment", "Depois de chamar o getFavoritoBD. Tamanho dos Favoritos: " + favoritos.size());
+
+        if (favoritos != null && !favoritos.isEmpty()) {
+            lvFavoritos.setAdapter(new ListaFavoritosAdaptador(getContext(), favoritos));
+        }
+    }
+
     @Override
     public void onRefreshFavoritos(ArrayList<Favorito> favorito) {
-        if (favorito != null) {
+        Log.d("ListaFavoritosFragment", "onRefreshFavoritos chamado. Novo tamanho dos favoritos: " + favorito.size());
+
+        if (favorito != null && !favorito.isEmpty()) {
             lvFavoritos.setAdapter(new ListaFavoritosAdaptador(getContext(), favorito));
         }
     }
