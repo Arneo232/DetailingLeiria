@@ -74,6 +74,9 @@ public class MenuMainActivity extends AppCompatActivity implements NavigationVie
             Intent intent = new Intent(this, CarrinhoActivity.class);
             startActivity(intent);
             setTitle(item.getTitle());
+        }else if (item.getItemId() == R.id.navFaturas) {
+            fragment = new ListaFaturasFragment();
+            setTitle(item.getTitle());
         } else if (item.getItemId() == R.id.navLogout) {
             logoutUser();
         }

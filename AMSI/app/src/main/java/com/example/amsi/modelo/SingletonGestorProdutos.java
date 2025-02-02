@@ -13,6 +13,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.amsi.EditarDadosActivity;
+import com.example.amsi.listeners.FaturasListener;
 import com.example.amsi.listeners.FavoritosListener;
 import com.example.amsi.listeners.LoginListener;
 import com.example.amsi.listeners.MetodoEntregaListener;
@@ -21,6 +22,7 @@ import com.example.amsi.listeners.ProdutosListener;
 import com.example.amsi.listeners.ProdutoListener;
 import com.example.amsi.listeners.RegisterListener;
 import com.example.amsi.listeners.UtilizadorListener;
+import com.example.amsi.utils.FaturaJsonParser;
 import com.example.amsi.utils.FavoritoJsonParser;
 import com.example.amsi.utils.LoginJsonParser;
 import com.example.amsi.utils.ProdutoJsonParser;
@@ -49,6 +51,7 @@ public class SingletonGestorProdutos {
     private ProdutosListener produtosListener;
     private ProdutoListener produtoListener;
     private FavoritosListener favoritosListener;
+    private FaturasListener faturasListener;
     private MetodoEntregaListener metodoEntregaListener;
     private MetodoPagamentoListener metodoPagamentoListener;
 
@@ -85,7 +88,7 @@ public class SingletonGestorProdutos {
         mUrlAPILogin = "http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/auth/login";
         mUrlAPIRegister = "http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/auth/register";
         mUrlAPICarrinho ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/";
-        mUrlAPIFatura ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/";
+        mUrlAPIFatura ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/vendas/vendasporperfil";
         mUrlAPIFavorito ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/favoritos";
         mUrlAPIFavoritoRemover ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/favorito/removefav";
         mUrlAPIFavoritoAdicionar ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/favorito/addfav";
@@ -114,6 +117,10 @@ public class SingletonGestorProdutos {
 
     public void setFavoritosListener(FavoritosListener favoritosListener) {
         this.favoritosListener = favoritosListener;
+    }
+
+    public void setFaturasListener(FaturasListener faturasListener) {
+        this.faturasListener = faturasListener;
     }
 
     public Utilizador getUtilizador() {
@@ -418,6 +425,46 @@ public class SingletonGestorProdutos {
 
 
         volleyQueue.add(request);
+    }
+
+    public void getAllFaturasAPI(final Context context){
+        if (!ProdutoJsonParser.isConnectionInternet(context)) {
+            Toast.makeText(context, "Sem ligação à internet", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        Log.d("API", "getAllFaturasAPI chamado");
+
+        SharedPreferences sp = context.getSharedPreferences("DADOSUSER", Context.MODE_PRIVATE);
+        int idp = sp.getInt("idprofile", login.getIdprofile());
+
+        Log.d("API", "Buscar as faturas para o idprofile: " + idp);
+
+        StringRequest request = new StringRequest(Request.Method.GET, mUrlAPIFatura + '/' + idp + "?token=" + login.token,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d("API", "Response received: " + response);
+                        try {
+                            ArrayList<Fatura> faturas = FaturaJsonParser.parserJsonFaturas(response);
+                            Log.d("API", "Faturas totais: " + faturas.size());
+
+                            if (faturasListener != null) {
+                                faturasListener.onRefreshFaturas(faturas);
+                            }
+                        } catch (Exception e) {
+                            Log.e("API", "Erro a fazer o parsing dos favoritos: " + e.getMessage(), e);
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.e("VolleyError", "Erro a buscar os favoritos: " + error.getMessage(), error);
+                    }
+                });
+
+        volleyQueue.add(request);
+        Log.d("API", "Request adicionada a queue");
     }
 
     public void saveUserToken(Context context, String token, String username) {
