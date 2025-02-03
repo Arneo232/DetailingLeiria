@@ -121,6 +121,7 @@ return [
                         'POST finalizarcompra' => 'finalizarcompra', // actionFinalizarcompra
                         'GET vendasporperfil/{idprofilefk}' => 'vendasporperfil', // actionVendasporperfil
                         'GET linhasvendaporvenda/{idvenda}' => 'linhasvendaporvenda', // actionLinhasvendaporvenda
+                        'GET vendapdf/{idvenda}' => 'vendapdf', // actionVendapdf
                     ],
                     'tokens' => [
                         '{idvenda}' => '<idvenda:\\d+>',

@@ -238,4 +238,37 @@ class VendaController extends ActiveController
         ];
     }
 
+    public function actionVendapdf($idvenda)
+    {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_RAW;
+
+        $venda = Venda::findOne($idvenda);
+        if (!$venda) {
+            return [
+                'success' => false,
+                'message' => 'Venda não encontrada.'
+            ];
+        }
+        
+        $linhasVenda = $venda->getLinhasVenda()->all();
+
+        $cssFile = Yii::getAlias('@frontend/web/css/styledata.css');
+        $css = file_get_contents($cssFile);
+
+        $content = $this->renderPartial('@frontend/views/venda/_fatura', [
+            'venda' => $venda,
+            'linhasVenda' => $linhasVenda,
+        ]);
+
+        $mpdf = new \Mpdf\Mpdf();
+
+        $mpdf->WriteHTML($css, \Mpdf\HTMLParserMode::HEADER_CSS);
+        $mpdf->WriteHTML($content, \Mpdf\HTMLParserMode::HTML_BODY);
+
+        Yii::$app->response->headers->set('Content-Type', 'application/pdf');
+        Yii::$app->response->headers->set('Content-Disposition', 'attachment; filename="Fatura_' . $venda->idVenda . '.pdf"');
+
+        return $mpdf->Output('', \Mpdf\Output\Destination::STRING_RETURN);
+    }
+
 }
