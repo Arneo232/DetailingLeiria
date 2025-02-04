@@ -6,14 +6,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.amsi.R;
 import com.example.amsi.modelo.Fatura;
-import com.example.amsi.modelo.Favorito;
 import com.example.amsi.modelo.SingletonGestorProdutos;
 
 import java.util.ArrayList;
@@ -66,11 +63,17 @@ public class ListaFaturasAdaptador extends BaseAdapter {
         viewHolder.tvPrecoTotal.setText(String.format("%.2f€", fatura.getPrecototal()));
         viewHolder.tvDataVenda.setText(fatura.getDatavenda());
 
+        viewHolder.btnDownloadPDF.setOnClickListener(v -> {
+            Toast.makeText(context, "Baixando fatura...", Toast.LENGTH_SHORT).show();
+            SingletonGestorProdutos.getInstance(context).downloadFaturaAPI(context, fatura.getIdfatura());
+        });
+
         return view;
     }
 
-    private class ViewHolderLista {
+    private static class ViewHolderLista {
         private TextView tvIdFatura, tvMetodoPagamento, tvMetodoEntrega, tvPrecoTotal, tvDataVenda;
+        private Button btnDownloadPDF;
 
         public ViewHolderLista(View view) {
             tvIdFatura = view.findViewById(R.id.tvIdFatura);
@@ -78,6 +81,8 @@ public class ListaFaturasAdaptador extends BaseAdapter {
             tvMetodoEntrega = view.findViewById(R.id.tvMetodoEntrega);
             tvPrecoTotal = view.findViewById(R.id.tvPrecoTotal);
             tvDataVenda = view.findViewById(R.id.tvDataVenda);
+            btnDownloadPDF = view.findViewById(R.id.btnDownloadPDF);
         }
     }
 }
+

@@ -1,18 +1,26 @@
 package com.example.amsi.modelo;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
+import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
+
+import androidx.core.content.FileProvider;
+
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.amsi.EditarDadosActivity;
+import com.example.amsi.listeners.FaturaListener;
 import com.example.amsi.listeners.FaturasListener;
 import com.example.amsi.listeners.FavoritosListener;
 import com.example.amsi.listeners.LoginListener;
@@ -24,6 +32,7 @@ import com.example.amsi.listeners.RegisterListener;
 import com.example.amsi.listeners.UtilizadorListener;
 import com.example.amsi.utils.FaturaJsonParser;
 import com.example.amsi.utils.FavoritoJsonParser;
+import com.example.amsi.utils.LinhasFaturaJsonParser;
 import com.example.amsi.utils.LoginJsonParser;
 import com.example.amsi.utils.ProdutoJsonParser;
 import com.example.amsi.utils.RegisterJsonParser;
@@ -32,6 +41,10 @@ import com.example.amsi.utils.UtilizadorJsonParser;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -52,6 +65,7 @@ public class SingletonGestorProdutos {
     private ProdutoListener produtoListener;
     private FavoritosListener favoritosListener;
     private FaturasListener faturasListener;
+    private FaturaListener faturaListener;
     private MetodoEntregaListener metodoEntregaListener;
     private MetodoPagamentoListener metodoPagamentoListener;
 
@@ -62,7 +76,9 @@ public class SingletonGestorProdutos {
     private static String mUrlAPICarrinho ="";
     private static String mUrlAPIPagamento ="";
     private static String mUrlAPIEntrega ="";
+    private static String mUrlAPIFaturas ="";
     private static String mUrlAPIFatura ="";
+    private static String mUrlAPIDownloadFatura ="";
     private static String mUrlAPIFavorito="";
     private static String mUrlAPIFavoritoRemover="";
     private static String mUrlAPIFavoritoAdicionar="";
@@ -88,7 +104,9 @@ public class SingletonGestorProdutos {
         mUrlAPILogin = "http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/auth/login";
         mUrlAPIRegister = "http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/auth/register";
         mUrlAPICarrinho ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/";
+        mUrlAPIFaturas ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/vendas/vendasporperfil";
         mUrlAPIFatura ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/vendas/vendasporperfil";
+        mUrlAPIDownloadFatura ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/venda/vendapdf";
         mUrlAPIFavorito ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/favoritos";
         mUrlAPIFavoritoRemover ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/favorito/removefav";
         mUrlAPIFavoritoAdicionar ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/favorito/addfav";
@@ -121,6 +139,10 @@ public class SingletonGestorProdutos {
 
     public void setFaturasListener(FaturasListener faturasListener) {
         this.faturasListener = faturasListener;
+    }
+
+    public void setFaturaListener(FaturaListener faturaListener) {
+        this.faturaListener = faturaListener;
     }
 
     public Utilizador getUtilizador() {
@@ -439,7 +461,7 @@ public class SingletonGestorProdutos {
 
         Log.d("API", "Buscar as faturas para o idprofile: " + idp);
 
-        StringRequest request = new StringRequest(Request.Method.GET, mUrlAPIFatura + '/' + idp + "?token=" + login.token,
+        StringRequest request = new StringRequest(Request.Method.GET, mUrlAPIFaturas + '/' + idp + "?token=" + login.token,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -465,6 +487,101 @@ public class SingletonGestorProdutos {
 
         volleyQueue.add(request);
         Log.d("API", "Request adicionada a queue");
+    }
+
+    public void getAllLinhasFaturaAPI(final Context context, final int idFatura) {
+        if (!ProdutoJsonParser.isConnectionInternet(context)) {
+            Toast.makeText(context, "Sem ligação à internet", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        SharedPreferences sp = context.getSharedPreferences("DADOSUSER", Context.MODE_PRIVATE);
+        int idp = sp.getInt("idprofile", login.getIdprofile());
+
+        Log.d("API", "Buscar as linhas de fatura para idFatura: " + idFatura);
+
+        String url = mUrlAPIFatura + "/" + idp + "?token=" + login.token;
+
+        StringRequest request = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d("API", "Response received: " + response);
+                        try {
+                            // Parse JSON response to ArrayList<LinhasFatura>
+                            ArrayList<LinhasFatura> linhasFatura = LinhasFaturaJsonParser.parserJsonLinhasFatura(response);
+                            Log.d("API", "Linhas de fatura totais: " + linhasFatura.size());
+
+                            // Notify listener (DetalheFaturaActivity)
+                            if (faturaListener != null) {
+                                faturaListener.onRefreshDetalhes(linhasFatura);
+                            }
+                        } catch (Exception e) {
+                            Log.e("API", "Erro ao fazer parsing das linhas de fatura: " + e.getMessage(), e);
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.e("VolleyError", "Erro ao buscar as linhas de fatura: " + error.getMessage(), error);
+                    }
+                });
+
+        volleyQueue.add(request);
+        Log.d("API", "Request adicionada à queue");
+    }
+
+    public void downloadFaturaAPI(final Context context, final int idfatura) {
+        if (!ProdutoJsonParser.isConnectionInternet(context)) {
+            Toast.makeText(context, "Sem ligação à internet", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String url = mUrlAPIDownloadFatura + "?idvenda=" + idfatura + "&token=" + login.token;
+
+        StringRequest request = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            // Convert response to bytes
+                            byte[] pdfData = response.getBytes();
+
+                            // Define file location
+                            File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
+                                    "Fatura_" + idfatura + ".pdf");
+
+                            // Save the PDF data to the file
+                            FileOutputStream fos = new FileOutputStream(file);
+                            fos.write(pdfData);
+                            fos.close();
+
+                            // Use FileProvider to get URI for the file
+                            Uri fileUri = FileProvider.getUriForFile(context,
+                                    context.getApplicationContext().getPackageName() + ".provider", file);
+
+                            // Grant permission to read the URI
+                            Intent intent = new Intent(Intent.ACTION_VIEW);
+                            intent.setDataAndType(fileUri, "application/pdf");
+                            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);  // Grant permission to read URI
+
+                            context.startActivity(intent);
+
+                            Toast.makeText(context, "Fatura baixada com sucesso!", Toast.LENGTH_SHORT).show();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            Toast.makeText(context, "Erro ao salvar fatura.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(context, "Erro ao baixar fatura: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+        volleyQueue.add(request);
     }
 
     public void saveUserToken(Context context, String token, String username) {
