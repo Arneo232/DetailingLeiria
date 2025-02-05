@@ -25,10 +25,6 @@ import java.util.ArrayList;
 public class ListaFavoritosFragment extends Fragment implements FavoritosListener {
 
     private ListView lvFavoritos;
-    private ArrayList<Favorito> favorito;
-
-    private FloatingActionButton fablista;
-    private SearchView searchView;
 
     public ListaFavoritosFragment() {
     }

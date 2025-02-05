@@ -86,6 +86,7 @@
     <string name="preco_final">Preço final: %1$s</string>
     <string name="confirmar_compra">Confirmar compra</string>
     <string name="txt_carrinho">Carrinho</string>
+    <string name="txt_finalizar_compra">Finalizar Compra</string>
 
 
 </resources>
