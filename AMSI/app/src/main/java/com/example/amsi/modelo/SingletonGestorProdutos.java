@@ -20,6 +20,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.amsi.EditarDadosActivity;
+import com.example.amsi.listeners.CarrinhoListener;
 import com.example.amsi.listeners.CarrinhosListener;
 import com.example.amsi.listeners.FaturaListener;
 import com.example.amsi.listeners.FaturasListener;
@@ -69,6 +70,7 @@ public class SingletonGestorProdutos {
     private FaturasListener faturasListener;
     private FaturaListener faturaListener;
     private CarrinhosListener carrinhosListener;
+    private CarrinhoListener carrinhoListener;
     private MetodoEntregaListener metodoEntregaListener;
     private MetodoPagamentoListener metodoPagamentoListener;
 
@@ -158,6 +160,10 @@ public class SingletonGestorProdutos {
 
     public void setCarrinhosListener(CarrinhosListener carrinhosListener) {
         this.carrinhosListener = carrinhosListener;
+    }
+
+    public void setCarrinhoListener(CarrinhoListener carrinhoListener) {
+        this.carrinhoListener = carrinhoListener;
     }
 
     public Utilizador getUtilizador() {
@@ -593,6 +599,70 @@ public class SingletonGestorProdutos {
                         Toast.makeText(context, "Erro ao baixar fatura: " + error.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
+        volleyQueue.add(request);
+    }
+
+    public void getCarrinhoAPI(final Context context) {
+        if (!ProdutoJsonParser.isConnectionInternet(context)) {
+            Toast.makeText(context, "Sem ligação à internet", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        SharedPreferences sp = context.getSharedPreferences("DADOSUSER", Context.MODE_PRIVATE);
+        int idp = sp.getInt("idprofile", login.getIdprofile());
+
+        String url = mUrlAPICarrinho + '/' + idp + "?token=" + login.token;
+
+        StringRequest request = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d("API_RESPONSE", "Carrinho API Response: " + response); // DEBUG
+
+                        try {
+                            // Extract the first array
+                            JSONArray outerArray = new JSONArray(response);
+                            if (outerArray.length() == 0) {
+                                Log.e("API_ERROR", "Outer array is empty!");
+                                return;
+                            }
+
+                            // Extract the second array
+                            JSONArray innerArray = outerArray.getJSONArray(0);
+                            if (innerArray.length() == 0) {
+                                Log.e("API_ERROR", "Inner array is empty!");
+                                return;
+                            }
+
+                            // Extract the first object from the inner array
+                            JSONObject carrinhoObj = innerArray.getJSONObject(0);
+
+                            int idCarrinho = carrinhoObj.getInt("idCarrinho");
+                            String total = carrinhoObj.getString("total");
+
+                            // Save idCarrinho in SharedPreferences
+                            SharedPreferences.Editor editor = sp.edit();
+                            editor.putInt("idCarrinho", idCarrinho);
+                            editor.apply();
+
+                            // Notify listener (if exists)
+                            if (carrinhoListener != null) {
+                                carrinhoListener.onCarrinhoLoaded(total, idCarrinho);
+                            }
+                        } catch (JSONException e) {
+                            Log.e("API_ERROR", "Erro ao processar dados do carrinho: " + e.getMessage(), e);
+                            Toast.makeText(context, "Erro ao processar dados do carrinho!", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.e("API_ERROR", "Erro ao buscar o carrinho: " + error.getMessage(), error);
+                        Toast.makeText(context, "Erro ao buscar o carrinho!", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
         volleyQueue.add(request);
     }
 

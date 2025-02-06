@@ -54,6 +54,7 @@ class CarrinhoController extends ActiveController
     }
 
     public function actionCarrinhoporid($idprofile){
+        // Fetch the carrinho (cart) based on the profile ID
         $carrinho = Carrinho::find()->where(['idProfile' => $idprofile])->one();
 
         if (!$carrinho) {
@@ -65,15 +66,22 @@ class CarrinhoController extends ActiveController
 
         $linhas = Linhascarrinho::find()->where(['carrinho_id' => $carrinho->idCarrinho])->all();
         $baseUrl = "http://172.22.21.201/detailingleiria/dtlgleiwebapp/frontend/web/uploads/";
+
+        // Prepare the response array
+        $dados = [];
+        $metodoEntrega = $carrinho->metodoEntrega ? $carrinho->metodoEntrega->designacao : null;
+        $metodoPagamento = $carrinho->metodoPagamento ? $carrinho->metodoPagamento->designacao : null;
+
         $dados[] = [
             'idCarrinho' => $carrinho->idCarrinho,
             'idProfile' => $carrinho->idProfile,
-            'metodoEntrega' => $carrinho->metodoEntrega->designacao,
-            'metodoPagamento' => $carrinho->metodoPagamento->designacao,
+            'metodoEntrega' => $metodoEntrega,
+            'metodoPagamento' => $metodoPagamento,
             'linhasCarrinho' => [],
             'total' => $carrinho->total
         ];
 
+        // Add the cart line details (linhasCarrinho) to the response
         foreach ($linhas as $linha) {
             $dados[0]['linhasCarrinho'][] = [
                 'idLinhaCarrinho' => $linha->idLinhasCarrinho,
@@ -86,6 +94,7 @@ class CarrinhoController extends ActiveController
             ];
         }
 
+        // Return the data as a JSON response
         return [
             $dados
         ];
