@@ -82,6 +82,8 @@ public class SingletonGestorProdutos {
     private static String mUrlAPILinhasCarrinho ="";
     private static String mUrlAPIAddCarrinho ="";
     private static String mUrlAPIRemoverCarrinho ="";
+    private static String mUrlAPIAumentarQuantidade = "";
+    private static String mUrlAPIDiminuirQuantidade = "";
     private static String mUrlAPIFinalizarCompra ="";
     private static String mUrlAPIPagamento ="";
     private static String mUrlAPIEntrega ="";
@@ -116,6 +118,8 @@ public class SingletonGestorProdutos {
         mUrlAPILinhasCarrinho ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/carrinhos";
         mUrlAPIAddCarrinho ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/linhas-carrinho/addlinha";
         mUrlAPIRemoverCarrinho ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/linhas-carrinho/removerlinha";
+        mUrlAPIAumentarQuantidade = "http://" + ipAddress + "/DetailingLeiria/DtlgLeiWebApp/backend/web/api/linhas-carrinho/aumentarlinha";
+        mUrlAPIDiminuirQuantidade = "http://" + ipAddress + "/DetailingLeiria/DtlgLeiWebApp/backend/web/api/linhas-carrinho/diminuirlinha";
         mUrlAPIFinalizarCompra ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/venda/finalizarcompra";
         mUrlAPIFaturas ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/vendas/vendasporperfil";
         mUrlAPIFatura ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/vendas/vendasporperfil";
@@ -617,35 +621,28 @@ public class SingletonGestorProdutos {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Log.d("API_RESPONSE", "Carrinho API Response: " + response); // DEBUG
+                        Log.d("API_RESPONSE", "Carrinho API Response: " + response);
 
                         try {
-                            // Extract the first array
                             JSONArray outerArray = new JSONArray(response);
                             if (outerArray.length() == 0) {
                                 Log.e("API_ERROR", "Outer array is empty!");
                                 return;
                             }
 
-                            // Extract the second array
                             JSONArray innerArray = outerArray.getJSONArray(0);
                             if (innerArray.length() == 0) {
                                 Log.e("API_ERROR", "Inner array is empty!");
                                 return;
                             }
-
-                            // Extract the first object from the inner array
                             JSONObject carrinhoObj = innerArray.getJSONObject(0);
 
                             int idCarrinho = carrinhoObj.getInt("idCarrinho");
                             String total = carrinhoObj.getString("total");
-
-                            // Save idCarrinho in SharedPreferences
                             SharedPreferences.Editor editor = sp.edit();
                             editor.putInt("idCarrinho", idCarrinho);
                             editor.apply();
 
-                            // Notify listener (if exists)
                             if (carrinhoListener != null) {
                                 carrinhoListener.onCarrinhoLoaded(total, idCarrinho);
                             }
@@ -764,7 +761,6 @@ public class SingletonGestorProdutos {
         Log.d("API", "Request to add product to cart added to queue");
     }
 
-
     public void removerLinhaCarrinhoAPI(final Context context, final int idLinhaCarrinho){
         if (!ProdutoJsonParser.isConnectionInternet(context)) {
             Toast.makeText(context, "Sem ligação à internet", Toast.LENGTH_SHORT).show();
@@ -810,6 +806,88 @@ public class SingletonGestorProdutos {
         // Add request to the queue
         volleyQueue.add(request);
         Log.d("API", "Request added to queue for deletion");
+    }
+
+    public void aumentarQuantidadeAPI(final Context context, int idLinhasCarrinho) {
+        if (!ProdutoJsonParser.isConnectionInternet(context)) {
+            Toast.makeText(context, "Sem ligação à internet", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String url = mUrlAPIAumentarQuantidade + "?token=" + login.token;
+
+        StringRequest request = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject jsonResponse = new JSONObject(response);
+                            if (jsonResponse.getBoolean("success")) {
+                                Toast.makeText(context, "Quantidade aumentada com sucesso!", Toast.LENGTH_SHORT).show();
+                                getCarrinhoAPI(context);
+                            } else {
+                                Toast.makeText(context, "Erro: " + jsonResponse.getString("message"), Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (JSONException e) {
+                            Toast.makeText(context, "Erro ao processar resposta do servidor!", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(context, "Erro ao aumentar quantidade: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("idLinhasCarrinho", String.valueOf(idLinhasCarrinho));
+                return params;
+            }
+        };
+        volleyQueue.add(request);
+    }
+
+    public void diminuirQuantidadeAPI(final Context context, int idLinhasCarrinho){
+        if (!ProdutoJsonParser.isConnectionInternet(context)) {
+            Toast.makeText(context, "Sem ligação à internet", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String url = mUrlAPIDiminuirQuantidade + "?token=" + login.token;
+
+        StringRequest request = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject jsonResponse = new JSONObject(response);
+                            if (jsonResponse.getBoolean("success")) {
+                                Toast.makeText(context, "Quantidade diminuida com sucesso!", Toast.LENGTH_SHORT).show();
+                                getCarrinhoAPI(context);
+                            } else {
+                                Toast.makeText(context, "Erro: " + jsonResponse.getString("message"), Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (JSONException e) {
+                            Toast.makeText(context, "Erro ao processar resposta do servidor!", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(context, "Erro ao diminuir quantidade: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("idLinhasCarrinho", String.valueOf(idLinhasCarrinho));
+                return params;
+            }
+        };
+        volleyQueue.add(request);
     }
 
     public void finalizarCompraAPI(final Context context, int idCarrinho, int idMetodoEntrega, int idMetodoPagamento) {

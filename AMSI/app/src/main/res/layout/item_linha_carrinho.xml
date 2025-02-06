@@ -93,13 +93,37 @@
                 android:layout_height="wrap_content" />
         </LinearLayout>
 
-        <Button
-            android:id="@+id/btnRemoverCarrinho"
-            android:layout_width="66dp"
-            android:layout_height="50dp"
-            android:layout_weight="1"
-            android:backgroundTint="#FD0019"
-            android:drawableRight="@android:drawable/ic_menu_delete"
-            android:text="" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btnRemoverCarrinho"
+                android:layout_width="66dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:backgroundTint="#FD0019"
+                android:drawableRight="@android:drawable/ic_menu_delete"
+                android:text="" />
+
+            <Button
+                android:id="@+id/btnAumentarQuantidade"
+                android:layout_width="66dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:backgroundTint="#4CAF50"
+                android:drawableRight="@drawable/ic_action_aumentar"
+                android:text="" />
+
+            <Button
+                android:id="@+id/btnDiminuirQuantidade"
+                android:layout_width="66dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:backgroundTint="#FFC107"
+                android:drawableRight="@drawable/ic_action_diminuir"
+                android:text="" />
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>

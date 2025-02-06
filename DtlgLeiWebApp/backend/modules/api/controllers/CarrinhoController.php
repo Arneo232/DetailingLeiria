@@ -67,7 +67,6 @@ class CarrinhoController extends ActiveController
         $linhas = Linhascarrinho::find()->where(['carrinho_id' => $carrinho->idCarrinho])->all();
         $baseUrl = "http://172.22.21.201/detailingleiria/dtlgleiwebapp/frontend/web/uploads/";
 
-        // Prepare the response array
         $dados = [];
         $metodoEntrega = $carrinho->metodoEntrega ? $carrinho->metodoEntrega->designacao : null;
         $metodoPagamento = $carrinho->metodoPagamento ? $carrinho->metodoPagamento->designacao : null;
@@ -80,8 +79,6 @@ class CarrinhoController extends ActiveController
             'linhasCarrinho' => [],
             'total' => $carrinho->total
         ];
-
-        // Add the cart line details (linhasCarrinho) to the response
         foreach ($linhas as $linha) {
             $dados[0]['linhasCarrinho'][] = [
                 'idLinhaCarrinho' => $linha->idLinhasCarrinho,

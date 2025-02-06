@@ -66,7 +66,7 @@ public class ListaLinhasCarrinhoAdaptador extends BaseAdapter {
     private class ViewHolder {
         private TextView tvNomeProduto, tvPrecoUnitario, tvQuantidade, tvSubtotal;
         private ImageView imgProduto;
-        private Button btnRemoverCarrinho;
+        private Button btnRemoverCarrinho, btnAumentarQuantidade, btnDiminuirQuantidade;
 
         public ViewHolder(View view) {
             tvNomeProduto = view.findViewById(R.id.tvNomeProduto);
@@ -75,6 +75,8 @@ public class ListaLinhasCarrinhoAdaptador extends BaseAdapter {
             tvSubtotal = view.findViewById(R.id.tvSubtotal);
             imgProduto = view.findViewById(R.id.imgLinha);
             btnRemoverCarrinho = view.findViewById(R.id.btnRemoverCarrinho);
+            btnAumentarQuantidade = view.findViewById(R.id.btnAumentarQuantidade);
+            btnDiminuirQuantidade = view.findViewById(R.id.btnDiminuirQuantidade);
         }
 
         public void update(final LinhasCarrinho linhaCarrinho, final int position) {
@@ -92,6 +94,22 @@ public class ListaLinhasCarrinhoAdaptador extends BaseAdapter {
             btnRemoverCarrinho.setOnClickListener(v -> {
                 SingletonGestorProdutos.getInstance(context).removerLinhaCarrinhoAPI(context, linhaCarrinho.getIdLinhaCarrinho());
                 linhasCarrinhoList.remove(position);
+                notifyDataSetChanged();
+            });
+
+            btnAumentarQuantidade.setOnClickListener(v -> {
+                SingletonGestorProdutos.getInstance(context).aumentarQuantidadeAPI(context, linhaCarrinho.getIdLinhaCarrinho());
+
+                linhaCarrinho.setQuantidade(linhaCarrinho.getQuantidade() + 1);
+                linhaCarrinho.setSubtotal(linhaCarrinho.getQuantidade() * linhaCarrinho.getPrecounitario());
+                notifyDataSetChanged();
+            });
+
+            btnDiminuirQuantidade.setOnClickListener(v -> {
+                SingletonGestorProdutos.getInstance(context).diminuirQuantidadeAPI(context, linhaCarrinho.getIdLinhaCarrinho());
+
+                linhaCarrinho.setQuantidade(linhaCarrinho.getQuantidade() - 1);
+                linhaCarrinho.setSubtotal(linhaCarrinho.getQuantidade() * linhaCarrinho.getPrecounitario());
                 notifyDataSetChanged();
             });
         }
