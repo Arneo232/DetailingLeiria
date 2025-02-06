@@ -91,7 +91,6 @@ class CarrinhoController extends ActiveController
             ];
         }
 
-        // Return the data as a JSON response
         return [
             $dados
         ];

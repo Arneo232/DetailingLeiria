@@ -90,6 +90,9 @@ public class SingletonGestorProdutos {
     private static String mUrlAPIFaturas ="";
     private static String mUrlAPIFatura ="";
     private static String mUrlAPIDownloadFatura ="";
+    private static String mUrlAPIAvaliacoes = "";
+    private static String mUrlAPIAddAvaliacao = "";
+    private static String mUrlAPIRemoverAvaliacao = "";
     private static String mUrlAPIFavorito="";
     private static String mUrlAPIFavoritoRemover="";
     private static String mUrlAPIFavoritoAdicionar="";
@@ -124,6 +127,9 @@ public class SingletonGestorProdutos {
         mUrlAPIFaturas ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/vendas/vendasporperfil";
         mUrlAPIFatura ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/vendas/vendasporperfil";
         mUrlAPIDownloadFatura ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/venda/vendapdf";
+        mUrlAPIAvaliacoes = "http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/avaliacaos/avaliacoesporproduto";
+        mUrlAPIAddAvaliacao = "http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/avaliacaos/fazeravaliacao";
+        mUrlAPIRemoverAvaliacao = "http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/avaliacaos/delavaliacaoporid";
         mUrlAPIFavorito ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/favoritos";
         mUrlAPIFavoritoRemover ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/favorito/removefav";
         mUrlAPIFavoritoAdicionar ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/favorito/addfav";
@@ -931,6 +937,15 @@ public class SingletonGestorProdutos {
             }
         });
         volleyQueue.add(jsonObjectRequest);
+    }
+
+    public void getAllAvaliacoesAPI(final Context context, int idProduto){
+        if (!ProdutoJsonParser.isConnectionInternet(context)) {
+            Toast.makeText(context, "Sem ligação à internet", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String url =  mUrlAPIAvaliacoes + '/' + idProduto + "?token=" + login.token;
     }
 
     public void saveUserToken(Context context, String token, String username) {

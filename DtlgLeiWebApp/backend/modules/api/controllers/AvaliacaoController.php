@@ -169,7 +169,7 @@ class AvaliacaoController extends ActiveController
         if (!$user) {
             return [
                 'success' => false,
-                'message' => 'Invalido ou token em falta.'
+                'message' => 'Inválido ou token em falta.'
             ];
         }
 
@@ -182,11 +182,22 @@ class AvaliacaoController extends ActiveController
             ];
         }
 
+        $dados = [];
+
+        foreach ($avaliacoes as $avaliacao) {
+            $dados[] = [
+                'idavaliacao' => $avaliacao->idavaliacao,
+                'rating' => $avaliacao->rating,
+                'comentario' => $avaliacao->comentario,
+                'utilizador' => $avaliacao->profile->user->username,
+                'idProdutoFK' => $avaliacao->idProdutoFK
+            ];
+        }
+
         return [
-            'success' => true,
-            'message' => 'Avaliações encontradas com sucesso.',
-            'data' => $avaliacoes
+            $dados
         ];
     }
+
 
 }
