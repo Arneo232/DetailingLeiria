@@ -20,4 +20,8 @@ public class MetodoPagamento {
         this.designacao = designacao;
     }
 
+    @Override
+    public String toString() {
+        return designacao;
+    }
 }

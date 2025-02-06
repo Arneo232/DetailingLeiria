@@ -960,18 +960,17 @@ public class SingletonGestorProdutos {
         volleyQueue.add(request);
     }
 
-    //Método para obter os métodos de entrega
-    public void getMetodosEntregaAPI(final Context context) {
+    public void getMetodosEntregaAPI(final Context context, final MetodoEntregaListener listener) {
         if (!ProdutoJsonParser.isConnectionInternet(context)) {
             Toast.makeText(context, "Sem ligação à internet", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, mUrlAPIEntrega, null, new Response.Listener<JSONArray>() {
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, mUrlAPIEntrega + "?token=" + login.token, null, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
                 try {
-                    // Parse dos métodos de entrega
+                    // Parse the delivery methods
                     List<MetodoEntrega> metodosEntrega = new ArrayList<>();
                     for (int i = 0; i < response.length(); i++) {
                         JSONObject metodoEntregaJson = response.getJSONObject(i);
@@ -982,9 +981,8 @@ public class SingletonGestorProdutos {
                         metodosEntrega.add(metodo);
                     }
 
-                    // Chama o listener, se definido
-                    if (metodoEntregaListener != null) {
-                        metodoEntregaListener.onMetodosEntregaObtidos(metodosEntrega);  // Passar lista de MetodoEntrega
+                    if (listener != null) {
+                        listener.onMetodosEntregaObtidos(metodosEntrega);
                     }
 
                 } catch (JSONException e) {
@@ -1001,18 +999,18 @@ public class SingletonGestorProdutos {
         volleyQueue.add(request);
     }
 
-    // Método para obter os métodos de pagamento
-    public void getMetodosPagamentoAPI(final Context context) {
+    public void getMetodosPagamentoAPI(final Context context, final MetodoPagamentoListener listener) {
         if (!ProdutoJsonParser.isConnectionInternet(context)) {
             Toast.makeText(context, "Sem ligação à internet", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, mUrlAPIPagamento, null, new Response.Listener<JSONArray>() {
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, mUrlAPIPagamento + "?token=" + login.token, null, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
                 try {
-                    // Parse dos métodos de pagamento
+                    Log.d("API_RESPONSE", "Response: " + response.toString());
+
                     List<MetodoPagamento> metodosPagamento = new ArrayList<>();
                     for (int i = 0; i < response.length(); i++) {
                         JSONObject metodoPagamentoJson = response.getJSONObject(i);
@@ -1022,10 +1020,9 @@ public class SingletonGestorProdutos {
                         MetodoPagamento metodo = new MetodoPagamento(id, designacao);
                         metodosPagamento.add(metodo);
                     }
-
-                    // Chama o listener, se definido
-                    if (metodoPagamentoListener != null) {
-                        metodoPagamentoListener.onMetodosPagamentoObtidos(metodosPagamento);  // Passar lista de MetodoPagamento
+                    Log.d("API_RESPONSE", "Payment Methods: " + metodosPagamento.size());
+                    if (listener != null) {
+                        listener.onMetodosPagamentoObtidos(metodosPagamento);
                     }
 
                 } catch (JSONException e) {
@@ -1040,14 +1037,5 @@ public class SingletonGestorProdutos {
         });
 
         volleyQueue.add(request);
-    }
-
-    // Métodos para definir os listeners
-    public void setMetodoEntregaListener(MetodoEntregaListener listener) {
-        this.metodoEntregaListener = listener;
-    }
-
-    public void setMetodoPagamentoListener(MetodoPagamentoListener listener) {
-        this.metodoPagamentoListener = listener;
     }
 }
