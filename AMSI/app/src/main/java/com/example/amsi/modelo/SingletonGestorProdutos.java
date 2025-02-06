@@ -112,7 +112,7 @@ public class SingletonGestorProdutos {
         mUrlAPIRegister = "http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/auth/register";
         mUrlAPICarrinho ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/carrinhos";
         mUrlAPILinhasCarrinho ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/carrinhos";
-        mUrlAPIAddCarrinho ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/linhas-carrinho";
+        mUrlAPIAddCarrinho ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/linhas-carrinho/addlinha";
         mUrlAPIRemoverCarrinho ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/linhas-carrinho/removerlinha";
         mUrlAPIFinalizarCompra ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/venda/finalizarcompra";
         mUrlAPIFaturas ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/vendas/vendasporperfil";
@@ -633,6 +633,67 @@ public class SingletonGestorProdutos {
         volleyQueue.add(request);
         Log.d("API", "Request adicionada à queue");
     }
+
+    public void addLinhaCarrinhoAPI(final Context context, final int idProduto, final int quantidade) {
+        if (!ProdutoJsonParser.isConnectionInternet(context)) {
+            Toast.makeText(context, "Sem ligação à internet", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String url = mUrlAPIAddCarrinho + "?token=" + login.token;
+
+        Map<String, String> params = new HashMap<>();
+        params.put("produto_id", String.valueOf(idProduto));
+        params.put("quantidade", String.valueOf(quantidade));
+
+        StringRequest request = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject jsonResponse = new JSONObject(response);
+                            boolean success = jsonResponse.getBoolean("success");
+
+                            if (success) {
+                                Toast.makeText(context, "Produto adicionado ao carrinho com sucesso.", Toast.LENGTH_SHORT).show();
+                            } else {
+                                String message = jsonResponse.getString("message");
+                                Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (JSONException e) {
+                            Log.e("AddCarrinhoAPI", "Error parsing response: " + e.getMessage());
+                            Toast.makeText(context, "Erro ao adicionar o produto ao carrinho.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // Log error details and display error message
+                        Log.e("VolleyError", "Error: " + error.toString());
+                        if (error.networkResponse != null) {
+                            Log.e("VolleyError", "Status Code: " + error.networkResponse.statusCode);
+                            try {
+                                String responseBody = new String(error.networkResponse.data, "UTF-8");
+                                Log.e("VolleyError", "Response: " + responseBody);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        Toast.makeText(context, "Erro ao adicionar o produto ao carrinho.", Toast.LENGTH_SHORT).show();
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                return params;
+            }
+        };
+
+        // Add the request to the Volley queue
+        volleyQueue.add(request);
+        Log.d("API", "Request to add product to cart added to queue");
+    }
+
 
     public void removerLinhaCarrinhoAPI(final Context context, final int idLinhaCarrinho){
         if (!ProdutoJsonParser.isConnectionInternet(context)) {

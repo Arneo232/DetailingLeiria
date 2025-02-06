@@ -26,7 +26,8 @@ public class DetalheProdutoActivity extends AppCompatActivity implements Produto
     private ImageView imgProduto;
     private TextView tvNomeProduto, tvPrecoProduto, tvDetalhes;
     private Produto produto;
-    private ImageButton btnFavorito; // Add a reference to the button
+    private ImageButton btnFavorito;
+    private Button btnAdicionarCarrinho; // Declare the button for adding to cart
     public static final String IDPRODUTO = "idProduto";
 
     @Override
@@ -34,11 +35,13 @@ public class DetalheProdutoActivity extends AppCompatActivity implements Produto
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detalhe_produto);
         setTitle("Detalhes do produto");
+
         imgProduto = findViewById(R.id.imgProduto);
         tvNomeProduto = findViewById(R.id.tvNomeProduto);
         tvPrecoProduto = findViewById(R.id.tvPrecoProduto);
         tvDetalhes = findViewById(R.id.tvDetalhes);
-        btnFavorito = findViewById(R.id.btnFavorito); // Initialize the button
+        btnFavorito = findViewById(R.id.btnFavorito); // Initialize the favorito button
+        btnAdicionarCarrinho = findViewById(R.id.btnAdicionarCarrinho); // Initialize the add to cart button
 
         SingletonGestorProdutos.getInstance(this).setProdutoListener(this);
         produto = SingletonGestorProdutos.getInstance(this).getProdutoAPI(this, getIntent().getIntExtra(IDPRODUTO, 0));
@@ -49,11 +52,24 @@ public class DetalheProdutoActivity extends AppCompatActivity implements Produto
 
         // Set up the button to handle adding to favorites
         btnFavorito.setOnClickListener(v -> addProdutoToFavoritos());
+
+        // Set up the button to handle adding to the cart
+        btnAdicionarCarrinho.setOnClickListener(v -> addProdutoToCarrinho());
     }
 
     private void addProdutoToFavoritos() {
         if (produto != null) {
             SingletonGestorProdutos.getInstance(this).addFavoritoAPI(this, produto.getIdProduto());
+        } else {
+            Toast.makeText(this, "Erro: Produto não encontrado!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void addProdutoToCarrinho() {
+        if (produto != null) {
+            // Add the product to the cart using the SingletonGestorProdutos instance
+            int quantidade = 1;  // Default quantity
+            SingletonGestorProdutos.getInstance(this).addLinhaCarrinhoAPI(this, produto.getIdProduto(), quantidade);
         } else {
             Toast.makeText(this, "Erro: Produto não encontrado!", Toast.LENGTH_SHORT).show();
         }
