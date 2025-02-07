@@ -138,8 +138,8 @@ public class SingletonGestorProdutos {
         mUrlAPIFavoritoAdicionar ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/favorito/addfav";
         mUrlAPIPagamento ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/metodopagamento";
         mUrlAPIEntrega ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/metodoentrega";
-        mUrlAPIProfile ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/profile/perfil";
-        mUrlAPIProfileEditar ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/profile/editperfil";
+        mUrlAPIProfile ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/profiles/perfil";
+        mUrlAPIProfileEditar ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/profiles/editperfil";
 
     }
 
@@ -181,6 +181,10 @@ public class SingletonGestorProdutos {
 
     public void setAvaliacoesListener(AvaliacoesListener avaliacoesListener){
         this.avaliacoesListener = avaliacoesListener;
+    }
+
+    public void setUtilizadorListener(UtilizadorListener utilizadorListener){
+        this.utilizadorListener = utilizadorListener;
     }
 
     public Utilizador getUtilizador() {
@@ -1073,61 +1077,31 @@ public class SingletonGestorProdutos {
         volleyQueue.add(request);
     }
 
-    public void saveUserToken(Context context, String token, String username) {
-        SharedPreferences preferences = context.getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putString("user_token", token);
-        editor.putString("username", username);
-        editor.apply();
-    }
-
-    public void saveUserId(Context context, int userId) {
-        SharedPreferences preferences = context.getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putInt("user_id", userId);
-        editor.apply();
-    }
-
-    private Utilizador carregarUtilizador(Context context) {
-        SharedPreferences preferences = context.getSharedPreferences("DADOS_USER", Context.MODE_PRIVATE);
-        Utilizador utilizador = new Utilizador();
-        utilizador.setId(preferences.getInt("id", -1)); // Carregar o ID do utilizador
-        utilizador.setUsername(preferences.getString("nome", ""));
-        utilizador.setEmail(preferences.getString("email", ""));
-        utilizador.setNtelefone(preferences.getString("telefone", ""));
-        utilizador.setMorada(preferences.getString("morada", ""));
-
-        Log.d("carregarUtilizador", "ID carregado: " + utilizador.getId());
-        return utilizador;
-    }
-    public void saveUpdatedUserOffline(Context context, Utilizador utilizadorAtualizado) {
-        SharedPreferences preferences = context.getSharedPreferences("UserPreferences", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putInt("id", utilizadorAtualizado.getId());
-        editor.putString("nome", utilizadorAtualizado.getUsername());
-        editor.putString("email", utilizadorAtualizado.getEmail());
-        editor.putString("telefone", utilizadorAtualizado.getNtelefone());
-        editor.putString("morada", utilizadorAtualizado.getMorada());
-        editor.apply();
-
-        // Atualizar o utilizador no Singleton
-        SingletonGestorProdutos.getInstance(context).utilizador = utilizadorAtualizado;
-    }
     public void getUtilizadorAPI(final Context context) {
-        StringRequest request = new StringRequest(Request.Method.GET, mUrlAPIProfile + "/" + login.idprofile + "?token=" + login.token, new Response.Listener<String>() {
+        if (!ProdutoJsonParser.isConnectionInternet(context)) {
+            Toast.makeText(context, "Sem ligação à internet", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        SharedPreferences sp = context.getSharedPreferences("DADOSUSER", Context.MODE_PRIVATE);
+        int idp = sp.getInt("idprofile", login.getIdprofile());
+
+        String url = mUrlAPIProfile + '/' + idp + "?token=" + login.token;
+
+        StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
                     Utilizador utilizador = UtilizadorJsonParser.parserJsonUtilizador(response);
-
                     Log.d("RESPONSE", "Response: " + response);
-                    // Notificar o listener que a lista foi atualizada
+                    SingletonGestorProdutos.getInstance(context).setUtilizador(utilizador);
+
                     if (utilizadorListener != null) {
                         utilizadorListener.onRefreshUtilizador(utilizador);
                     }
 
                 } catch (Exception e) {
-                    Toast.makeText(context, "Erro ao carregar o utilizador: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, "Erro ao carregar os dados do utilizador: " + e.getMessage(), Toast.LENGTH_LONG).show();
                 }
             }
         }, new Response.ErrorListener() {
@@ -1136,48 +1110,68 @@ public class SingletonGestorProdutos {
                 Toast.makeText(context, "Erro na API: " + error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-
         volleyQueue.add(request);
     }
-    public void atualizarPerfilAPI(final Context context, final Utilizador utilizadorAtualizado) {
-        StringRequest request = new StringRequest(Request.Method.POST, mUrlAPIProfileEditar + "/" + utilizadorAtualizado.getId() + "?token=" + utilizadorAtualizado.getToken(),
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            Utilizador updatedUser = UtilizadorJsonParser.parserJsonUtilizador(response);
 
-                            // Atualizar o utilizador no Singleton
-                            utilizador = updatedUser;
+    public void atualizarPerfilAPI(final Context context, final String username, final String email, final String morada, final String ntelefone) {
+        // Step 1: Check if there is an internet connection
+        if (!ProdutoJsonParser.isConnectionInternet(context)) {
+            Toast.makeText(context, "Sem ligação à internet", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
-                            // Notificar o contexto da atividade que o perfil foi atualizado
-                            if (context instanceof EditarDadosActivity) {
-                                Toast.makeText(context, "Perfil atualizado com sucesso no servidor!", Toast.LENGTH_SHORT).show();
-                            }
-                        } catch (Exception e) {
-                            Toast.makeText(context, "Erro ao atualizar perfil no servidor: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                        }
+        // Step 2: Retrieve the idprofile from SharedPreferences
+        SharedPreferences sp = context.getSharedPreferences("DADOSUSER", Context.MODE_PRIVATE);
+        int idp = sp.getInt("idprofile", login.getIdprofile());
+
+        // Step 3: Construct the URL
+        String url = mUrlAPIProfileEditar + '/' + idp + "?token=" + login.token;
+
+        // Step 4: Prepare the data to send in the request
+        // You can either use a JSON object or send form parameters.
+        // Using JSONObject for sending JSON data
+
+        JSONObject postData = new JSONObject();
+        try {
+            postData.put("username", username);
+            postData.put("email", email);
+            postData.put("morada", morada);
+            postData.put("ntelefone", ntelefone);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        // Step 5: Create the POST request
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, postData, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    // Handle the response from the API
+                    boolean success = response.getBoolean("success");
+                    if (success) {
+                        // Profile updated successfully
+                        Toast.makeText(context, "Perfil atualizado com sucesso", Toast.LENGTH_SHORT).show();
+                    } else {
+                        // Handle errors
+                        String errorMessage = response.getString("message");
+                        Toast.makeText(context, "Erro: " + errorMessage, Toast.LENGTH_LONG).show();
                     }
-                }, new Response.ErrorListener() {
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Toast.makeText(context, "Erro ao processar a resposta da API", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(context, "Erro na atualização do perfil no servidor: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                // Handle error response from the API
+                Toast.makeText(context, "Erro na API: " + error.getMessage(), Toast.LENGTH_SHORT).show();
             }
-        }) {
-            @Override
-            protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<>();
-                params.put("nome", utilizadorAtualizado.getUsername());
-                params.put("email", utilizadorAtualizado.getEmail());
-                params.put("telefone", utilizadorAtualizado.getNtelefone());
-                params.put("morada", utilizadorAtualizado.getMorada());
-                return params;
-            }
-        };
+        });
 
+        // Step 6: Add the request to the Volley request queue
         volleyQueue.add(request);
     }
-
     public void getMetodosEntregaAPI(final Context context, final MetodoEntregaListener listener) {
         if (!ProdutoJsonParser.isConnectionInternet(context)) {
             Toast.makeText(context, "Sem ligação à internet", Toast.LENGTH_SHORT).show();

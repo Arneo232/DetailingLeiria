@@ -10,51 +10,63 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.amsi.modelo.Utilizador;
 import com.example.amsi.modelo.SingletonGestorProdutos;
+import com.example.amsi.listeners.UtilizadorListener;
 
-public class PerfilActivity extends AppCompatActivity {
-
-    private SharedPreferences sharedPreferences;
+public class PerfilActivity extends AppCompatActivity implements UtilizadorListener {
+    private TextView tvEmail, tvNome, tvTelefone, tvMorada;
+    private Button buttonEditProfile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_perfil);
 
-        // Obter o utilizador mais recente do Singleton
-        Utilizador utilizador = SingletonGestorProdutos.getInstance(this).getUtilizador();
+        tvEmail = findViewById(R.id.textViewEmail);
+        tvNome = findViewById(R.id.textViewName);
+        tvTelefone = findViewById(R.id.textViewPhone);
+        tvMorada = findViewById(R.id.textViewAddress);
+        buttonEditProfile = findViewById(R.id.buttonEditProfile);
 
-        if (utilizador != null) {
-            // Atualizar os TextViews com os dados do utilizador
-            TextView tvEmail = findViewById(R.id.textViewEmail);
-            TextView tvNome = findViewById(R.id.textViewName);
-            TextView tvTelefone = findViewById(R.id.textViewPhone);
-            TextView tvMorada = findViewById(R.id.textViewAddress);
+        SingletonGestorProdutos.getInstance(this).setUtilizadorListener(this);
+        SingletonGestorProdutos.getInstance(this).getUtilizadorAPI(this);
 
-            // Inicializando o SharedPreferences
-            sharedPreferences = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE);
-
-            // Carregar os dados atuais do utilizador (com base nos dados do SharedPreferences)
-            tvEmail.setText(sharedPreferences.getString("email", ""));
-            tvNome.setText(sharedPreferences.getString("nome", ""));
-            tvTelefone.setText(sharedPreferences.getString("telefone", ""));
-            tvMorada.setText(sharedPreferences.getString("morada", ""));
-        } else {
-            // Caso não exista um utilizador no Singleton
-            Toast.makeText(this, "Não foi possível carregar os dados do utilizador", Toast.LENGTH_SHORT).show();
-        }
-
-        // Botão Alterar Dados
-        Button buttonEditProfile = findViewById(R.id.buttonEditProfile);
         buttonEditProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Abrir a EditarDadosActivity
                 Intent intent = new Intent(PerfilActivity.this, EditarDadosActivity.class);
                 startActivity(intent);
             }
         });
     }
-}
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        SharedPreferences sharedPreferences = getSharedPreferences("UsePreferences", Context.MODE_PRIVATE);
+        String novoEmail = sharedPreferences.getString("email", "");
+        String novoNome = sharedPreferences.getString("nome", "");
+        String novoTelefone = sharedPreferences.getString("telefone", "");
+        String novaMorada = sharedPreferences.getString("morada", "");
+
+        tvEmail.setText(novoEmail);
+        tvNome.setText(novoNome);
+        tvTelefone.setText(novoTelefone);
+        tvMorada.setText(novaMorada);
+    }
+
+    @Override
+    public void onRefreshUtilizador(Utilizador utilizador) {
+        if (utilizador != null) {
+            tvEmail.setText(utilizador.getEmail());
+            tvNome.setText(utilizador.getUsername());
+            tvTelefone.setText(utilizador.getNtelefone());
+            tvMorada.setText(utilizador.getMorada());
+        } else {
+            Toast.makeText(this, "Não foi possível carregar os dados do utilizador", Toast.LENGTH_SHORT).show();
+        }
+    }
+}

@@ -5,5 +5,4 @@ import com.example.amsi.modelo.Utilizador;
 public interface UtilizadorListener {
 
     void onRefreshUtilizador(Utilizador utilizador);
-
 }

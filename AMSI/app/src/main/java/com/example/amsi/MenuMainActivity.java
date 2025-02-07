@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.appcompat.widget.Toolbar;
 
@@ -88,12 +89,12 @@ public class MenuMainActivity extends AppCompatActivity implements NavigationVie
         return true;
     }
 
-    private void carregarCabecalho() {
-        username = getIntent().getStringExtra(LoginActivity.USERNAME);
-        View hView = navigationView.getHeaderView(0);
-        TextView tvUsername = hView.findViewById(R.id.tvUsername);
-        tvUsername.setText(username);
-    }
+        private void carregarCabecalho() {
+            username = getIntent().getStringExtra(LoginActivity.USERNAME);
+            View hView = navigationView.getHeaderView(0);
+            TextView tvUsername = hView.findViewById(R.id.tvUsername);
+            tvUsername.setText(username);
+        }
 
     private void logoutUser() {
         SharedPreferences sharedPreferences = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE);

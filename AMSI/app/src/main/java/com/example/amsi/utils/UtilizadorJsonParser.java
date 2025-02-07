@@ -11,7 +11,7 @@ public class UtilizadorJsonParser {
         try {
             JSONObject utilizadorJSON = new JSONObject(response);
 
-            utilizador.setId(utilizadorJSON.getInt("id"));
+            utilizador.setId(utilizadorJSON.getInt("idUtilizador"));
             utilizador.setIdprofile(utilizadorJSON.getInt("idProfile"));
             utilizador.setNtelefone(utilizadorJSON.getString("ntelefone"));
             utilizador.setUsername(utilizadorJSON.getString("username"));
