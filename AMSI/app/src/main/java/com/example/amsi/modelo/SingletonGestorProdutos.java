@@ -20,6 +20,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.amsi.EditarDadosActivity;
+import com.example.amsi.listeners.AvaliacoesListener;
 import com.example.amsi.listeners.CarrinhoListener;
 import com.example.amsi.listeners.CarrinhosListener;
 import com.example.amsi.listeners.FaturaListener;
@@ -32,6 +33,7 @@ import com.example.amsi.listeners.ProdutosListener;
 import com.example.amsi.listeners.ProdutoListener;
 import com.example.amsi.listeners.RegisterListener;
 import com.example.amsi.listeners.UtilizadorListener;
+import com.example.amsi.utils.AvaliacaoJsonParser;
 import com.example.amsi.utils.FaturaJsonParser;
 import com.example.amsi.utils.FavoritoJsonParser;
 import com.example.amsi.utils.LinhasCarrinhoJsonParser;
@@ -69,6 +71,7 @@ public class SingletonGestorProdutos {
     private FavoritosListener favoritosListener;
     private FaturasListener faturasListener;
     private FaturaListener faturaListener;
+    private AvaliacoesListener avaliacoesListener;
     private CarrinhosListener carrinhosListener;
     private CarrinhoListener carrinhoListener;
     private MetodoEntregaListener metodoEntregaListener;
@@ -174,6 +177,10 @@ public class SingletonGestorProdutos {
 
     public void setCarrinhoListener(CarrinhoListener carrinhoListener) {
         this.carrinhoListener = carrinhoListener;
+    }
+
+    public void setAvaliacoesListener(AvaliacoesListener avaliacoesListener){
+        this.avaliacoesListener = avaliacoesListener;
     }
 
     public Utilizador getUtilizador() {
@@ -939,13 +946,131 @@ public class SingletonGestorProdutos {
         volleyQueue.add(jsonObjectRequest);
     }
 
-    public void getAllAvaliacoesAPI(final Context context, int idProduto){
+    public void getAllAvaliacoesAPI(final Context context, int idProduto) {
         if (!ProdutoJsonParser.isConnectionInternet(context)) {
             Toast.makeText(context, "Sem ligação à internet", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        String url =  mUrlAPIAvaliacoes + '/' + idProduto + "?token=" + login.token;
+        String url = mUrlAPIAvaliacoes + '/' + idProduto + "?token=" + login.token;
+
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        ArrayList<Avaliacao> listaAvaliacoes = AvaliacaoJsonParser.parseJsonAvaliacoes(response);
+                        avaliacoesListener.onRefreshAvaliacoes(listaAvaliacoes);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(context, "Erro ao carregar avaliações.", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+        Volley.newRequestQueue(context).add(request);
+    }
+
+    public void fazerAvaliacaoAPI(final Context context, int idProduto, final double rating, final String comentario) {
+        if (!ProdutoJsonParser.isConnectionInternet(context)) {
+            Toast.makeText(context, "Sem ligação à internet", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String url = mUrlAPIAddAvaliacao + "/" + idProduto + "?token=" + login.token;
+
+        StringRequest request = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject jsonResponse = new JSONObject(response);
+                            boolean success = jsonResponse.getBoolean("success");
+                            String message = jsonResponse.getString("message");
+
+                            if (success) {
+                                Toast.makeText(context, "Avaliação enviada com sucesso.", Toast.LENGTH_SHORT).show();
+                            } else {
+                                if (message.contains("preciso comprar o produto")) {
+                                    Toast.makeText(context, "Erro: Você precisa comprar o produto antes de avaliá-lo.", Toast.LENGTH_LONG).show();
+                                } else if (message.contains("Produto não encontrado")) {
+                                    Toast.makeText(context, "Erro: Produto não encontrado.", Toast.LENGTH_LONG).show();
+                                } else if (message.contains("Invalido ou token em falta")) {
+                                    Toast.makeText(context, "Erro: Token inválido ou ausente.", Toast.LENGTH_LONG).show();
+                                } else {
+                                    Toast.makeText(context, "Erro: " + message, Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            Toast.makeText(context, "Erro ao processar a resposta do servidor.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(context, "Erro na requisição: " + (error.getMessage() != null ? error.getMessage() : "Erro desconhecido"), Toast.LENGTH_SHORT).show();
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("rating", String.valueOf(rating));
+                params.put("comentario", comentario);
+                return params;
+            }
+        };
+
+        volleyQueue.add(request);
+    }
+
+    public void removerAvaliacaoAPI(final Context context, int idAvaliacao, final Response.Listener<String> successListener) {
+        if (!ProdutoJsonParser.isConnectionInternet(context)) {
+            Toast.makeText(context, "Sem ligação à internet", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String url = mUrlAPIRemoverAvaliacao + "/" + idAvaliacao + "?token=" + login.token;
+
+        StringRequest request = new StringRequest(Request.Method.DELETE, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject jsonResponse = new JSONObject(response);
+                            boolean success = jsonResponse.getBoolean("success");
+                            String message = jsonResponse.getString("message");
+
+                            if (success) {
+                                Toast.makeText(context, "Avaliação apagada com sucesso.", Toast.LENGTH_SHORT).show();
+                                successListener.onResponse(response);
+                            } else {
+                                if (message.contains("não tem permissão")) {
+                                    Toast.makeText(context, "Erro: Você não tem permissão para apagar esta avaliação.", Toast.LENGTH_LONG).show();
+                                } else if (message.contains("Avaliação não encontrada")) {
+                                    Toast.makeText(context, "Erro: Avaliação não encontrada.", Toast.LENGTH_LONG).show();
+                                } else if (message.contains("token em falta")) {
+                                    Toast.makeText(context, "Erro: Token inválido ou ausente.", Toast.LENGTH_LONG).show();
+                                } else {
+                                    Toast.makeText(context, "Erro: " + message, Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            Toast.makeText(context, "Erro ao processar a resposta do servidor.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(context, "Erro na requisição: " + (error.getMessage() != null ? error.getMessage() : "Erro desconhecido"), Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+        volleyQueue.add(request);
     }
 
     public void saveUserToken(Context context, String token, String username) {

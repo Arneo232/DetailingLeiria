@@ -2,28 +2,44 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="8dp">
+    android:orientation="horizontal"
+    android:padding="8dp"
+    android:gravity="center_vertical">
 
-    <TextView
-        android:id="@+id/tvNomeUsuario"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_weight="1"
         android:layout_height="wrap_content"
-        android:textStyle="bold"
-        android:text="Nome do Usuário" />
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/tvRating"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textStyle="bold"
-        android:layout_marginTop="2dp"
-        android:text="4.2/5" />
+        <TextView
+            android:id="@+id/tvUtilizador"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:text="Utilizador" />
 
-    <TextView
-        android:id="@+id/tvComentario"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Comentário do usuário"
-        android:layout_marginTop="2dp"/>
+        <RatingBar
+            android:id="@+id/rbAvaliacao"
+            android:layout_width="wrap_content"
+            style="@android:style/Widget.Holo.Light.RatingBar.Small"
+            android:layout_height="wrap_content"
+            android:numStars="5"
+            android:stepSize="0.5" />
+
+        <TextView
+            android:id="@+id/tvComentario"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Comentário do usuário" />
+    </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/btnDeleteAvaliacao"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@android:drawable/ic_delete"
+        android:contentDescription="Remover Avaliação"
+        android:padding="4dp"
+        android:visibility="gone"/>
 </LinearLayout>

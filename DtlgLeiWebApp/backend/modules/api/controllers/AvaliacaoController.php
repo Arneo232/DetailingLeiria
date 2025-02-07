@@ -190,7 +190,8 @@ class AvaliacaoController extends ActiveController
                 'rating' => $avaliacao->rating,
                 'comentario' => $avaliacao->comentario,
                 'utilizador' => $avaliacao->profile->user->username,
-                'idProdutoFK' => $avaliacao->idProdutoFK
+                'idProdutoFK' => $avaliacao->idProdutoFK,
+                'idProfileFK' => $avaliacao->idProfileFK
             ];
         }
 
