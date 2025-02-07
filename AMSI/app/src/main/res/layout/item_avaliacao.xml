@@ -41,5 +41,5 @@
         android:src="@android:drawable/ic_delete"
         android:contentDescription="Remover Avaliação"
         android:padding="4dp"
-        android:visibility="gone"/>
+        android:visibility="visible"/>
 </LinearLayout>

@@ -1,6 +1,8 @@
 package com.example.amsi.adaptadores;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +15,8 @@ import androidx.appcompat.app.AlertDialog;
 import com.example.amsi.R;
 import com.example.amsi.modelo.Avaliacao;
 import com.example.amsi.modelo.SingletonGestorProdutos;
+import com.example.amsi.modelo.Utilizador;
+
 import java.util.ArrayList;
 
 public class ListaAvaliacoesAdaptador extends BaseAdapter {
@@ -75,7 +79,10 @@ public class ListaAvaliacoesAdaptador extends BaseAdapter {
             tvComentario.setText(avaliacao.getComentario());
             rbAvaliacao.setRating((float) avaliacao.getRating());
 
-            if (avaliacao.getIdProfileFK() == SingletonGestorProdutos.getInstance(context).utilizador.getIdprofile()) {
+            SharedPreferences sharedPreferences = context.getSharedPreferences("UserPreferences", Context.MODE_PRIVATE);
+            int idp = sharedPreferences.getInt("idprofile", -1);
+
+            if (avaliacao.getIdProfileFK() == idp) {
                 btnDeleteAvaliacao.setVisibility(View.VISIBLE);
                 btnDeleteAvaliacao.setOnClickListener(v -> showDeleteDialog(avaliacao, position));
             } else {

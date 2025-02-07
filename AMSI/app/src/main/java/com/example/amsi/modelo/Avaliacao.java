@@ -26,7 +26,7 @@ public class Avaliacao {
 
     public void setIdProdutoFK(int idProdutoFK) { this.idProdutoFK = idProdutoFK; }
 
-    public int getIdProfileFK() { return idProdutoFK; }
+    public int getIdProfileFK() { return idProfileFK; }
 
     public void setIdProfileFK(int idProfileFK) { this.idProfileFK = idProfileFK; }
 
