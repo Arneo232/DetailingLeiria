@@ -25,7 +25,7 @@ public class DetalheFaturaActivity extends AppCompatActivity implements FaturaLi
         setContentView(R.layout.activity_detalhe_fatura);
 
         idFatura = getIntent().getIntExtra(IDFATURA, -1);
-
+        setTitle("Detalhes da fatura #"+idFatura);
         lvLinhasFatura = findViewById(R.id.lvLinhasFatura);
         linhasFaturaList = new ArrayList<>();
         adapter = new ListaLinhasFaturaAdaptador(this, linhasFaturaList);

@@ -34,6 +34,7 @@ import com.example.amsi.listeners.ProdutosListener;
 import com.example.amsi.listeners.ProdutoListener;
 import com.example.amsi.listeners.RegisterListener;
 import com.example.amsi.listeners.UtilizadorListener;
+import com.example.amsi.listeners.VerificaFavoritoListener;
 import com.example.amsi.utils.AvaliacaoJsonParser;
 import com.example.amsi.utils.FaturaJsonParser;
 import com.example.amsi.utils.FavoritoJsonParser;
@@ -70,6 +71,7 @@ public class SingletonGestorProdutos {
     private ProdutosListener produtosListener;
     private ProdutoListener produtoListener;
     private FavoritosListener favoritosListener;
+    private VerificaFavoritoListener verificafavoritoListener;
     private FaturasListener faturasListener;
     private FaturaListener faturaListener;
     private AvaliacoesListener avaliacoesListener;
@@ -98,6 +100,7 @@ public class SingletonGestorProdutos {
     private static String mUrlAPIAddAvaliacao = "";
     private static String mUrlAPIRemoverAvaliacao = "";
     private static String mUrlAPIFavorito="";
+    private static String mUrlAPIFavoritoVerifica ="";
     private static String mUrlAPIFavoritoRemover="";
     private static String mUrlAPIFavoritoAdicionar="";
     private static String mUrlAPIProfile="";
@@ -135,6 +138,7 @@ public class SingletonGestorProdutos {
         mUrlAPIAddAvaliacao = "http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/avaliacaos/fazeravaliacao";
         mUrlAPIRemoverAvaliacao = "http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/avaliacaos/delavaliacaoporid";
         mUrlAPIFavorito ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/favoritos";
+        mUrlAPIFavoritoVerifica ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/favoritos/verificafav";
         mUrlAPIFavoritoRemover ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/favorito/removefav";
         mUrlAPIFavoritoAdicionar ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/favorito/addfav";
         mUrlAPIPagamento ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/metodopagamento";
@@ -162,6 +166,10 @@ public class SingletonGestorProdutos {
 
     public void setFavoritosListener(FavoritosListener favoritosListener) {
         this.favoritosListener = favoritosListener;
+    }
+
+    public void setVerificaFavoritoListener(VerificaFavoritoListener verificafavoritoListener){
+        this.verificafavoritoListener = verificafavoritoListener;
     }
 
     public void setFaturasListener(FaturasListener faturasListener) {
@@ -423,6 +431,37 @@ public class SingletonGestorProdutos {
         volleyQueue.add(request);
         Log.d("API", "Request adicionada a queue");
     }
+
+    public void verificaFavAPI(final Context context, int idProduto) {
+        SharedPreferences sp = context.getSharedPreferences("DADOSUSER", Context.MODE_PRIVATE);
+        int idProfile = sp.getInt("idprofile", login.getIdprofile());
+
+        String url = mUrlAPIFavoritoVerifica + "?produto_id=" + idProduto + "&profile_id=" + idProfile + "&token=" + login.token;
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
+                response -> {
+                    try {
+                        boolean isFavorito = response.getBoolean("success");
+                        if (verificafavoritoListener != null) {
+                            verificafavoritoListener.onVerificaFavorito(isFavorito);  // Notify listener
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        if (verificafavoritoListener != null) {
+                            verificafavoritoListener.onVerificaFavorito(false);
+                        }
+                    }
+                },
+                error -> {
+                    Log.e("VerificaFavError", "Erro ao verificar favorito: " + error.toString());
+                    if (verificafavoritoListener != null) {
+                        verificafavoritoListener.onVerificaFavorito(false);  // Default to false on error
+                    }
+                });
+
+        volleyQueue.add(request);
+    }
+
 
     public void deleteFavoritoAPI(final Context context, final int idFavorito) {
         SharedPreferences sp = context.getSharedPreferences("DADOSUSER", Context.MODE_PRIVATE);

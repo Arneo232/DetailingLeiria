@@ -23,6 +23,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.amsi.adaptadores.ListaAvaliacoesAdaptador;
 import com.example.amsi.listeners.AvaliacoesListener;
 import com.example.amsi.listeners.ProdutoListener;
+import com.example.amsi.listeners.VerificaFavoritoListener;
 import com.example.amsi.modelo.Avaliacao;
 import com.example.amsi.modelo.Produto;
 import com.example.amsi.modelo.SingletonGestorProdutos;
@@ -33,7 +34,7 @@ import android.widget.Button;
 
 import java.util.ArrayList;
 
-public class DetalheProdutoActivity extends AppCompatActivity implements ProdutoListener, AvaliacoesListener {
+public class DetalheProdutoActivity extends AppCompatActivity implements ProdutoListener, AvaliacoesListener, VerificaFavoritoListener {
     private ImageView imgProduto;
     private TextView tvNomeProduto, tvPrecoProduto, tvDetalhes;
     private Produto produto;
@@ -66,6 +67,7 @@ public class DetalheProdutoActivity extends AppCompatActivity implements Produto
 
         SingletonGestorProdutos.getInstance(this).setProdutoListener(this);
         SingletonGestorProdutos.getInstance(this).setAvaliacoesListener(this);
+        SingletonGestorProdutos.getInstance(this).setVerificaFavoritoListener(this);
 
         produto = SingletonGestorProdutos.getInstance(this).getProdutoAPI(this, getIntent().getIntExtra(IDPRODUTO, 0));
 
@@ -75,6 +77,8 @@ public class DetalheProdutoActivity extends AppCompatActivity implements Produto
 
         int idProduto = getIntent().getIntExtra(IDPRODUTO, 0);
         SingletonGestorProdutos.getInstance(this).getAllAvaliacoesAPI(this, idProduto);
+
+        SingletonGestorProdutos.getInstance(this).verificaFavAPI(this, idProduto);
 
         btnFavorito.setOnClickListener(v -> addProdutoToFavoritos());
 
@@ -86,6 +90,7 @@ public class DetalheProdutoActivity extends AppCompatActivity implements Produto
     private void addProdutoToFavoritos() {
         if (produto != null) {
             SingletonGestorProdutos.getInstance(this).addFavoritoAPI(this, produto.getIdProduto());
+            SingletonGestorProdutos.getInstance(this).verificaFavAPI(this, produto.getIdProduto());
         } else {
             Toast.makeText(this, "Erro: Produto não encontrado!", Toast.LENGTH_SHORT).show();
         }
@@ -153,5 +158,14 @@ public class DetalheProdutoActivity extends AppCompatActivity implements Produto
         listaAvaliacoes.clear();
         listaAvaliacoes.addAll(avaliacoes);
         adaptador.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onVerificaFavorito(boolean isFavorito) {
+        if (isFavorito) {
+            btnFavorito.setImageResource(R.drawable.favorito_full);
+        } else {
+            btnFavorito.setImageResource(R.drawable.favorito);
+        }
     }
 }
