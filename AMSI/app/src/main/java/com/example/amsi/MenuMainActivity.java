@@ -9,6 +9,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.appcompat.widget.Toolbar;
 
 import androidx.annotation.NonNull;
@@ -19,6 +21,8 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import com.example.amsi.modelo.SingletonGestorProdutos;
+import com.example.amsi.utils.ProdutoJsonParser;
 import com.google.android.material.navigation.NavigationView;
 
 public class MenuMainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -69,8 +73,14 @@ public class MenuMainActivity extends AppCompatActivity implements NavigationVie
             startActivity(intent);
             setTitle(item.getTitle());
         } else if (item.getItemId() == R.id.navFavoritos) {
-            fragment = new ListaFavoritosFragment();
-            setTitle(item.getTitle());
+            if (!ProdutoJsonParser.isConnectionInternet(this)) {
+                Toast.makeText(this, "Sem ligação à internet", Toast.LENGTH_SHORT).show();
+                fragment = new ListaFavoritosFragment();
+                setTitle(item.getTitle());
+            }else{
+                fragment = new ListaFavoritosFragment();
+                setTitle(item.getTitle());
+            }
         } else if (item.getItemId() == R.id.navCarrinho) {
             fragment = new ListaCarrinhoFragment();
             setTitle(item.getTitle());
@@ -78,7 +88,11 @@ public class MenuMainActivity extends AppCompatActivity implements NavigationVie
             fragment = new ListaFaturasFragment();
             setTitle(item.getTitle());
         } else if (item.getItemId() == R.id.navLogout) {
-            logoutUser();
+            SingletonGestorProdutos singletonGestorProdutos = SingletonGestorProdutos.getInstance(this);
+            singletonGestorProdutos.logoutAPI(this);
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+            finish();
         }
 
         if (fragment != null) {
@@ -95,21 +109,4 @@ public class MenuMainActivity extends AppCompatActivity implements NavigationVie
             TextView tvUsername = hView.findViewById(R.id.tvUsername);
             tvUsername.setText(username);
         }
-
-    private void logoutUser() {
-        SharedPreferences sharedPreferences = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE);
-
-        Log.e("LogoutUser", "Before clearing: " + sharedPreferences.getAll().toString());
-
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.clear();
-        editor.apply();
-
-        Log.e("LogoutUser", "After clearing: " + sharedPreferences.getAll().toString());
-
-        Intent intent = new Intent(this, LoginActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
-        finish();
-    }
 }

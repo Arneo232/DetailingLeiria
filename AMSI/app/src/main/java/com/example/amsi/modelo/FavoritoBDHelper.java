@@ -13,7 +13,7 @@ import java.util.ArrayList;
 public class FavoritoBDHelper extends SQLiteOpenHelper {
     private static final String DBNAME = "detailingleiria";
     private static final String TABLE_NAME = "favoritos";
-    private static final int DB_VERSION = 1;
+    private static final int DB_VERSION = 2;
 
     private static final String IDFAVORITO = "idfavorito";
     private static final String IDPRODUTO = "idproduto";
@@ -63,6 +63,9 @@ public class FavoritoBDHelper extends SQLiteOpenHelper {
         values.put("idfavorito", favorito.getIdfavorito());
         values.put("idprofile", favorito.getIdprofile());
         values.put("idproduto", favorito.getIdproduto());
+        values.put("nome", favorito.getNome());
+        values.put("preco", favorito.getPreco());
+        values.put("imagem", favorito.getImagem());
 
         long result = db.insert("favoritos", null, values);
         if (result == -1) {
@@ -74,15 +77,15 @@ public class FavoritoBDHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    public ArrayList<Favorito> getFavoritosBD(Context context) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences("DADOS_USER", Context.MODE_PRIVATE);
-        String idprofileStr = sharedPreferences.getString("idprofile", "-1");
-        int idprofile = Integer.parseInt(idprofileStr);
-        Log.d("FavoritoBDHelper", "Fetching favoritos for idprofile: " + idprofile);
+    public void removerFavoritoBD(int id) {
+        int delete = this.favoritosDB.delete(TABLE_NAME, IDFAVORITO + "=?", new String[]{id + ""});
+    }
+
+    public ArrayList<Favorito> getFavoritosBD() {
 
         ArrayList<Favorito> favoritos = new ArrayList<>();
         Cursor cursor = favoritosDB.query(TABLE_NAME, new String[]{IDFAVORITO, IDPRODUTO, IDPROFILE, NOME, PRECO, IMAGEM},
-                IDPROFILE + " = ?", new String[]{String.valueOf(idprofile)}, null, null, null);
+                null, null, null, null, null);
 
         Log.d("FavoritoBDHelper", "Cursor count: " + cursor.getCount());
 

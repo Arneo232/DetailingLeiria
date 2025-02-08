@@ -64,6 +64,8 @@ public class SingletonGestorProdutos {
     private static volatile SingletonGestorProdutos instance = null;
     private Utilizador login;
     private FavoritoBDHelper favoritoBDHelper;
+    private ArrayList<Favorito> favoritos;
+    private ArrayList<Produto> produtos;
 
     private LoginListener loginListener;
     private RegisterListener registerListener;
@@ -203,9 +205,45 @@ public class SingletonGestorProdutos {
         this.utilizador = utilizador;
     }
 
-    public ArrayList<Favorito> getFavoritoBD(Context context) {
-        Log.e("SingletonGestorProdutos", "getFavoritoBD called");
-        return favoritoBDHelper.getFavoritosBD(context);
+    private Produto getProdutoById(int idProduto) {
+        for (Produto produto : produtos) {
+            if (produto.getIdProduto() == idProduto) {
+                return produto;
+            }
+        }
+        return null;
+    }
+
+    public Favorito getFavoritoBD(int id) {
+        for (Favorito favorito : favoritos) {
+            if (favorito.getIdfavorito() == id) {
+                return favorito;
+            }
+        }
+        return null;
+    }
+
+    public ArrayList<Favorito> getFavoritosBD() {
+        favoritos = favoritoBDHelper.getFavoritosBD();
+        return new ArrayList<>(favoritos);
+    }
+
+    public void adicionarFavoritoBD(Favorito favorito) {
+        favoritoBDHelper.adicionarFavorito(favorito);
+    }
+
+    public void removerFavoritoBD(int id) {
+        Favorito favorito = getFavoritoBD(id);
+        if (favorito != null) {
+            favoritoBDHelper.removerFavoritoBD(id);
+        }
+    }
+
+    public void adicionarFavoritosBD(ArrayList<Favorito> favoritos) {
+        favoritoBDHelper.removerTodosFavoritos();
+        for (Favorito favorito : favoritos) {
+            adicionarFavoritoBD(favorito);
+        }
     }
 
     public void loginAPI(final String username, final String password, final Context context) {
@@ -262,6 +300,13 @@ public class SingletonGestorProdutos {
             };
             volleyQueue.add(request);
         }
+    }
+
+    public void logoutAPI(final Context context) {
+        SharedPreferences sp = context.getSharedPreferences("UserPreferences", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.clear();
+        editor.apply();
     }
 
     public void registerAPI(Utilizador utilizador, final Context context) {
@@ -391,45 +436,63 @@ public class SingletonGestorProdutos {
     public void getAllFavoritosAPI(final Context context) {
         Log.d("API", "getAllFavoritosAPI chamado");
 
-        SharedPreferences sp = context.getSharedPreferences("DADOSUSER", Context.MODE_PRIVATE);
-        int idp = sp.getInt("idprofile", login.getIdprofile());
+        SharedPreferences sp = context.getSharedPreferences("UserPreferences", Context.MODE_PRIVATE);
+        int idp = sp.getInt("idprofile", -1);
+
+        if (idp == -1) {
+            Log.e("API", "User is not logged in. idprofile is missing.");
+            return;
+        }
 
         Log.d("API", "Buscar os favoritos para o idprofile: " + idp);
 
-        StringRequest request = new StringRequest(Request.Method.GET, mUrlAPIFavorito + '/' + idp + "?token=" + login.token,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        Log.d("API", "Response received: " + response);
-                        try {
-                            ArrayList<Favorito> favoritos = FavoritoJsonParser.parserJsonFavoritos(response);
-                            Log.d("API", "Favoritos totais: " + favoritos.size());
+        if (!ProdutoJsonParser.isConnectionInternet(context)) {
+            Toast.makeText(context, "Sem ligação à internet", Toast.LENGTH_SHORT).show();
+            Log.d("API", "Offline mode. Fetching favorites from local DB.");
+            FavoritoBDHelper dbHelper = new FavoritoBDHelper(context);
+            ArrayList<Favorito> favoritos = dbHelper.getFavoritosBD();
 
-                            FavoritoBDHelper dbHelper = new FavoritoBDHelper(context);
-                            dbHelper.removerTodosFavoritos();
-                            Log.d("DB_DELETE", "Remover todos os favoritos na DB");
+            if (favoritosListener != null) {
+                favoritosListener.onRefreshFavoritos(favoritos);
+            }
+        } else {
+            Log.d("API", "Online mode. Fetching favorites from API.");
+            StringRequest request = new StringRequest(Request.Method.GET, mUrlAPIFavorito + '/' + idp + "?token=" + login.token,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            Log.d("API", "Response received: " + response);
+                            try {
+                                ArrayList<Favorito> favoritos = FavoritoJsonParser.parserJsonFavoritos(response);
+                                Log.d("API", "Favoritos totais: " + favoritos.size());
 
-                            for (Favorito f : favoritos) {
-                                dbHelper.adicionarFavorito(f);
-                                Log.d("DB_INSERT", "Inserir o Favorito por ID: " + f.getIdfavorito());
+                                FavoritoBDHelper dbHelper = new FavoritoBDHelper(context);
+                                dbHelper.removerTodosFavoritos();
+                                Log.d("DB_DELETE", "Remover todos os favoritos na DB");
+
+                                for (Favorito f : favoritos) {
+                                    dbHelper.adicionarFavorito(f);
+                                    Log.d("DB_INSERT", "Inserir o Favorito por ID: " + f.getIdfavorito());
+                                }
+
+                                if (favoritosListener != null) {
+                                    favoritosListener.onRefreshFavoritos(favoritos);
+                                }
+                            } catch (Exception e) {
+                                Log.e("API", "Erro a fazer o parsing dos favoritos: " + e.getMessage(), e);
                             }
-                            if (favoritosListener != null) {
-                                favoritosListener.onRefreshFavoritos(favoritos);
-                            }
-                        } catch (Exception e) {
-                            Log.e("API", "Erro a fazer o parsing dos favoritos: " + e.getMessage(), e);
                         }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.e("VolleyError", "Erro a buscar os favoritos: " + error.getMessage(), error);
-                    }
-                });
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Log.e("VolleyError", "Erro a buscar os favoritos: " + error.getMessage(), error);
+                        }
+                    });
 
-        volleyQueue.add(request);
-        Log.d("API", "Request adicionada a queue");
+            volleyQueue.add(request);
+            Log.d("API", "Request adicionada a queue");
+        }
     }
 
     public void verificaFavAPI(final Context context, int idProduto) {
@@ -462,7 +525,6 @@ public class SingletonGestorProdutos {
         volleyQueue.add(request);
     }
 
-
     public void deleteFavoritoAPI(final Context context, final int idFavorito) {
         SharedPreferences sp = context.getSharedPreferences("DADOSUSER", Context.MODE_PRIVATE);
         int idProfile = sp.getInt("idprofile", login.getIdprofile());
@@ -471,12 +533,11 @@ public class SingletonGestorProdutos {
 
         StringRequest request = new StringRequest(Request.Method.DELETE, url,
                 response -> {
-                    // Handle the success response
+                    removerFavoritoBD(idFavorito);
                     Toast.makeText(context, "Favorito removido com sucesso!", Toast.LENGTH_SHORT).show();
-                    getAllFavoritosAPI(context); // Refresh the list after deletion
+                    getAllFavoritosAPI(context);
                 },
                 error -> {
-                    // Log error details
                     Log.e("DeleteFavoritoError", "Error: " + error.toString());
                     if (error.networkResponse != null) {
                         Log.e("DeleteFavoritoError", "Status Code: " + error.networkResponse.statusCode);
@@ -489,7 +550,6 @@ public class SingletonGestorProdutos {
                     }
                     Toast.makeText(context, "Erro ao remover favorito!", Toast.LENGTH_SHORT).show();
                 });
-
         volleyQueue.add(request);
     }
 
@@ -501,8 +561,38 @@ public class SingletonGestorProdutos {
 
         StringRequest request = new StringRequest(Request.Method.POST, url,
                 response -> {
-                    Toast.makeText(context, "Favorito adicionado com sucesso!", Toast.LENGTH_SHORT).show();
-                    getAllFavoritosAPI(context);
+                    try {
+                        Log.d("API_RESPONSE", "Raw response: " + response);
+
+                        JSONObject jsonResponse = new JSONObject(response);
+                        if (!jsonResponse.has("data") || !jsonResponse.getJSONObject("data").has("idFavorito")) {
+                            throw new JSONException("Faltas campos");
+                        }
+
+                        int idFavorito = jsonResponse.getJSONObject("data").getInt("idFavorito");
+
+                        if (SingletonGestorProdutos.getInstance(context).produtos != null) {
+                            Produto produto = getProdutoById(idProduto);
+                            if (produto != null) {
+                                Favorito favorito = new Favorito(idFavorito, idProduto, idProfile,
+                                        produto.getNome(), produto.getPreco(), produto.getImgProduto());
+
+                                adicionarFavoritoBD(favorito);
+                            } else {
+                                Log.e("AddFavoritoError", "Produto não encontrado localmente!");
+                            }
+                        } else {
+                            //Log.e("AddFavoritoError", "Produtos não carregados corretamente!");
+                            //Toast.makeText(context, "Erro: Produtos não carregados!", Toast.LENGTH_SHORT).show();
+                        }
+
+                        Toast.makeText(context, "Favorito adicionado com sucesso!", Toast.LENGTH_SHORT).show();
+                        getAllFavoritosAPI(context);
+
+                    } catch (JSONException e) {
+                        Log.e("AddFavoritoError", "JSON Parsing erro: " + e.getMessage());
+                        Toast.makeText(context, "Erro ao processar resposta!", Toast.LENGTH_SHORT).show();
+                    }
                 },
                 error -> {
                     Log.e("AddFavoritoError", "Error: " + error.toString());
@@ -526,7 +616,6 @@ public class SingletonGestorProdutos {
                 return params;
             }
         };
-
 
         volleyQueue.add(request);
     }

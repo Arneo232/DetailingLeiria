@@ -36,8 +36,8 @@ public class ListaFavoritosFragment extends Fragment implements FavoritosListene
 
         Log.d("ListaFavoritosFragment", "Fragment criado, a buscar os favoritos a API");
 
-        SingletonGestorProdutos.getInstance(getContext()).getAllFavoritosAPI(getContext());
         SingletonGestorProdutos.getInstance(getContext()).setFavoritosListener(this);
+        SingletonGestorProdutos.getInstance(getContext()).getAllFavoritosAPI(getContext());
 
         carregarFavoritosBD();
 
@@ -45,7 +45,7 @@ public class ListaFavoritosFragment extends Fragment implements FavoritosListene
     }
 
     private void carregarFavoritosBD() {
-        ArrayList<Favorito> favoritos = SingletonGestorProdutos.getInstance(getContext()).getFavoritoBD(getContext());
+        ArrayList<Favorito> favoritos = SingletonGestorProdutos.getInstance(getContext()).getFavoritosBD();
         Log.d("ListaFavoritosFragment", "Depois de chamar o getFavoritoBD. Tamanho dos Favoritos: " + favoritos.size());
 
         if (favoritos != null && !favoritos.isEmpty()) {

@@ -61,6 +61,14 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
         return password != null && password.length() >= MIN_PASS;
     }
 
+    public void onClickOffline(View view) {
+        SingletonGestorProdutos singletonGestorProdutos = SingletonGestorProdutos.getInstance(this);
+        singletonGestorProdutos.logoutAPI(this);
+        Intent intent = new Intent(this, MenuMainActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
     @Override
     public void onValidateLogin(final Context context, final Utilizador utilizador) {
         if (utilizador.token != null) {
