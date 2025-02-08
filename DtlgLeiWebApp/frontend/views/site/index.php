@@ -120,11 +120,8 @@ $this->params['breadcrumbs'][] = $this->title;
                     </div>
                     <div class="detail-box">
                         <h5>
-                            Fast Delivery
+                            Entregas rápidas
                         </h5>
-                        <p>
-                            variations of passages of Lorem Ipsum available
-                        </p>
                     </div>
                 </div>
             </div>
@@ -135,11 +132,8 @@ $this->params['breadcrumbs'][] = $this->title;
                     </div>
                     <div class="detail-box">
                         <h5>
-                            Free Shiping
+                            Entregas grátis
                         </h5>
-                        <p>
-                            variations of passages of Lorem Ipsum available
-                        </p>
                     </div>
                 </div>
             </div>
@@ -150,11 +144,8 @@ $this->params['breadcrumbs'][] = $this->title;
                     </div>
                     <div class="detail-box">
                         <h5>
-                            Best Quality
+                            Melhor Qualidade
                         </h5>
-                        <p>
-                            variations of passages of Lorem Ipsum available
-                        </p>
                     </div>
                 </div>
             </div>
@@ -165,11 +156,8 @@ $this->params['breadcrumbs'][] = $this->title;
                     </div>
                     <div class="detail-box">
                         <h5>
-                            24x7 Customer support
+                            24x7 Suporte ao cliente
                         </h5>
-                        <p>
-                            variations of passages of Lorem Ipsum available
-                        </p>
                     </div>
                 </div>
             </div>
@@ -198,176 +186,13 @@ $this->params['breadcrumbs'][] = $this->title;
             <div class="col-md-6">
                 <div class="detail-box">
                     <h2>
-                        About Our Shop
+                        Sobre a nossa loja
                     </h2>
                     <p>
                         O Detailing Leiria é um site dedicado à venda de produtos de limpeza para automóveis, com foco na facilidade de navegação e segurança nas transações.
                         O objetivo é garantir que os clientes encontrem rapidamente o que precisam, com informações claras sobre os produtos e opções de pagamento seguras.
                         O site também visa oferecer um bom desempenho e qualidade nas entregas, proporcionando uma experiência de compra confiável e prática.
                     </p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-<!-- end about section -->
-
-
-<!-- product section -->
-
-<section class="product_section ">
-    <div class="container">
-        <div class="product_heading">
-            <h2>
-                Top Sale Products
-            </h2>
-        </div>
-        <div class="product_container">
-            <div class="box">
-                <div class="box-content">
-                    <div class="img-box">
-                        <img src="<?= Yii::getAlias('@web') ?>/images/w1.png" alt="">
-                    </div>
-                    <div class="detail-box">
-                        <div class="text">
-                            <h6>
-                                Men's Watch
-                            </h6>
-                            <h5>
-                                <span>$</span> 300
-                            </h5>
-                        </div>
-                        <div class="like">
-                            <h6>
-                                Like
-                            </h6>
-                            <div class="star_container">
-                                <i class="fa fa-star" aria-hidden="true"></i>
-                                <i class="fa fa-star" aria-hidden="true"></i>
-                                <i class="fa fa-star" aria-hidden="true"></i>
-                                <i class="fa fa-star" aria-hidden="true"></i>
-                                <i class="fa fa-star" aria-hidden="true"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="btn-box">
-                    <a href="">
-                        Add To Cart
-                    </a>
-                </div>
-            </div>
-            <div class="box">
-                <div class="box-content">
-                    <div class="img-box">
-                        <img src="<?= Yii::getAlias('@web') ?>/images/w2.png" alt="">
-                    </div>
-                    <div class="detail-box">
-                        <div class="text">
-                            <h6>
-                                Men's Watch
-                            </h6>
-                            <h5>
-                                <span>$</span> 300
-                            </h5>
-                        </div>
-                        <div class="like">
-                            <h6>
-                                Like
-                            </h6>
-                            <div class="star_container">
-                                <i class="fa fa-star" aria-hidden="true"></i>
-                                <i class="fa fa-star" aria-hidden="true"></i>
-                                <i class="fa fa-star" aria-hidden="true"></i>
-                                <i class="fa fa-star" aria-hidden="true"></i>
-                                <i class="fa fa-star" aria-hidden="true"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="btn-box">
-                    <a href="">
-                        Add To Cart
-                    </a>
-                </div>
-            </div>
-            <div class="box">
-                <div class="box-content">
-                    <div class="img-box">
-                        <img src="<?= Yii::getAlias('@web') ?>/images/w3.png" alt="">
-                    </div>
-                    <div class="detail-box">
-                        <div class="text">
-                            <h6>
-                                Men's Watch
-                            </h6>
-                            <h5>
-                                <span>$</span> 300
-                            </h5>
-                        </div>
-                        <div class="like">
-                            <h6>
-                                Like
-                            </h6>
-                            <div class="star_container">
-                                <i class="fa fa-star" aria-hidden="true"></i>
-                                <i class="fa fa-star" aria-hidden="true"></i>
-                                <i class="fa fa-star" aria-hidden="true"></i>
-                                <i class="fa fa-star" aria-hidden="true"></i>
-                                <i class="fa fa-star" aria-hidden="true"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="btn-box">
-                    <a href="">
-                        Add To Cart
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- end product section -->
-
-<!-- contact section -->
-<section class="contact_section layout_padding">
-    <div class="container">
-        <div class="heading_container">
-            <h2>
-                Contact Us
-            </h2>
-        </div>
-        <div class="row">
-            <div class="col-md-6">
-                <div class="form_container">
-                    <form action="">
-                        <div>
-                            <input type="text" placeholder="Your Name" />
-                        </div>
-                        <div>
-                            <input type="text" placeholder="Phone Number" />
-                        </div>
-                        <div>
-                            <input type="email" placeholder="Email" />
-                        </div>
-                        <div>
-                            <input type="text" class="message-box" placeholder="Message" />
-                        </div>
-                        <div class="btn_box">
-                            <button>
-                                SEND
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-            <div class="col-md-6 ">
-                <div class="map_container">
-                    <div class="map">
-                        <div id="googleMap"></div>
-                    </div>
                 </div>
             </div>
         </div>

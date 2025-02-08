@@ -107,27 +107,26 @@ AppAsset::register($this);
     </div>
 </main>
 
-    <!-- info section -->
+<!-- info section -->
 <section class="info_section layout_padding2">
     <div class="container">
-        <div class="info_logo">
+        <div class="info_logo text-center">
             <h2>
                 Detailing Leiria
             </h2>
         </div>
-        <div class="row">
-
+        <div class="row d-flex justify-content-center text-center">
             <div class="col-md-3">
                 <div class="info_contact">
                     <h5>
-                        About Shop
+                        Temos uma App!
                     </h5>
                     <div>
-                        <div class="img-box">
+                        <div class="img-box mx-auto">
                             <img src="<?= Yii::getAlias('@web') ?>/images/telephone-white.png" width="12px" alt="">
                         </div>
                         <p>
-                            Download our App!
+                            Faça download da nossa App!
                         </p>
                     </div>
                 </div>
@@ -142,42 +141,8 @@ AppAsset::register($this);
                     </p>
                 </div>
             </div>
-
             <div class="col-md-3">
-                <div class="info_insta">
-                    <h5>
-                        Trending Products
-                    </h5>
-                    <div class="insta_container">
-                        <div class="row m-0">
-                            <div class="col-4 px-0">
-                                <a href="">
-                                    <div class="insta-box b-1">
-                                        <img src="<?= Yii::getAlias('@web') ?>/images/w1.png" alt="">
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="col-4 px-0">
-                                <a href="">
-                                    <div class="insta-box b-1">
-                                        <img src="<?= Yii::getAlias('@web') ?>/images/w2.png" alt="">
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="col-4 px-0">
-                                <a href="">
-                                    <div class="insta-box b-1">
-                                        <img src="<?= Yii::getAlias('@web') ?>/images/w3.png" alt="">
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-3">
-                <div class="info_form ">
+                <div class="info_form">
                     <h5>
                         Newsletter
                     </h5>
@@ -187,25 +152,26 @@ AppAsset::register($this);
                             Subscribe
                         </button>
                     </form>
-                    <div class="social_box">
-                        <a href="">
-                            <img src="<?= Yii::getAlias('@web') ?>/images/fb.png" alt="">
-                        </a>
-                        <a href="">
-                            <img src="<?= Yii::getAlias('@web') ?>/images/twitter.png" alt="">
-                        </a>
-                        <a href="">
-                            <img src="<?= Yii::getAlias('@web') ?>/images/linkedin.png" alt="">
-                        </a>
-                        <a href="">
-                            <img src="<?= Yii::getAlias('@web') ?>/images/youtube.png" alt="">
-                        </a>
-                    </div>
                 </div>
             </div>
         </div>
+        <div class="social_box d-flex justify-content-center mt-3">
+            <a href="" class="mx-2">
+                <img src="<?= Yii::getAlias('@web') ?>/images/fb.png" alt="">
+            </a>
+            <a href="" class="mx-2">
+                <img src="<?= Yii::getAlias('@web') ?>/images/twitter.png" alt="">
+            </a>
+            <a href="" class="mx-2">
+                <img src="<?= Yii::getAlias('@web') ?>/images/linkedin.png" alt="">
+            </a>
+            <a href="" class="mx-2">
+                <img src="<?= Yii::getAlias('@web') ?>/images/youtube.png" alt="">
+            </a>
+        </div>
     </div>
 </section>
+
 
 <?php $this->endBody() ?>
 <?php $this->endPage() ?>
