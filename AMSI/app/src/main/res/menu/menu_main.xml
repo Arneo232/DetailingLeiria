@@ -18,6 +18,12 @@
         <item android:id="@+id/navFaturas"
             android:icon="@drawable/fatura"
             android:title="Faturas" />
+        <item android:id="@+id/navContactos"
+            android:icon="@drawable/ic_action_contactos"
+            android:title="@string/txt_contactos" />
+        <item android:id="@+id/navAbout"
+            android:icon="@drawable/ic_action_about"
+            android:title="@string/txt_about" />
         <item android:id="@+id/navLogout"
             android:icon="@drawable/logout"
             android:title="Logout" />

@@ -19,6 +19,8 @@
     <string name="title_faturas">Lista de faturas</string>
     <string name="download_icon">Download fatura</string>
     <string name="txt_perfil">Perfil</string>
+    <string name="txt_about">Sobre nós</string>
+    <string name="txt_contactos">Contactos</string>
 
     <string name="ndOpen">Open Navigation Drawer</string>
     <string name="ndClose">Close Navigation Drawer</string>

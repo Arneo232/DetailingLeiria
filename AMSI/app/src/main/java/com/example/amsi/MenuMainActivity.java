@@ -75,6 +75,10 @@ public class MenuMainActivity extends AppCompatActivity implements NavigationVie
             Intent intent = new Intent(this, PerfilActivity.class);
             startActivity(intent);
             setTitle(item.getTitle());
+        } else if (item.getItemId() == R.id.navAbout) {
+            Intent intent = new Intent(this, AboutUsActivity.class);
+            startActivity(intent);
+            setTitle(item.getTitle());
         } else if (item.getItemId() == R.id.navFavoritos) {
             if (!ProdutoJsonParser.isConnectionInternet(this)) {
                 Toast.makeText(this, "Sem ligação à internet", Toast.LENGTH_SHORT).show();
@@ -89,6 +93,10 @@ public class MenuMainActivity extends AppCompatActivity implements NavigationVie
             setTitle(item.getTitle());
         }else if (item.getItemId() == R.id.navFaturas) {
             fragment = new ListaFaturasFragment();
+            setTitle(item.getTitle());
+        } else if (item.getItemId() == R.id.navContactos) {
+            Intent intent = new Intent(this, ContactActivity.class);
+            startActivity(intent);
             setTitle(item.getTitle());
         } else if (item.getItemId() == R.id.navLogout) {
             SingletonGestorProdutos singletonGestorProdutos = SingletonGestorProdutos.getInstance(this);
