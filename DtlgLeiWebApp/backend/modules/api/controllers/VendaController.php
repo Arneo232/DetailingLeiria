@@ -274,7 +274,7 @@ class VendaController extends ActiveController
 
         return [
             'success' => true,
-            'downloadUrl' => "http://172.22.21.201/detailingleiria/dtlgleiwebapp/backend/web/api/vendas/downloadvenda/" . urlencode($fileName)
+            'downloadUrl' => "http://172.22.21.201/DetailingLeiria/DtlgLeiWebApp/backend/web/api/vendas/downloadvenda/" . urlencode($fileName)
         ];
     }
 

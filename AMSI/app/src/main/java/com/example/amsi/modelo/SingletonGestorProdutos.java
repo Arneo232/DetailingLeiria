@@ -588,9 +588,10 @@ public class SingletonGestorProdutos {
                             JSONObject jsonResponse = new JSONObject(response);
                             if (jsonResponse.getBoolean("success")) {
                                 String downloadUrl = jsonResponse.optString("downloadUrl", "");
+                                Log.e("BUG", "Link:" + downloadUrl + "?token=" + login.token);
                                 if (!downloadUrl.isEmpty()) {
                                     Intent intent = new Intent(Intent.ACTION_VIEW);
-                                    intent.setData(Uri.parse(downloadUrl));
+                                    intent.setData(Uri.parse(downloadUrl + "?token=" + login.token));
                                     context.startActivity(intent);
                                 } else {
                                     Toast.makeText(context, "Erro ao obter link de download", Toast.LENGTH_SHORT).show();
