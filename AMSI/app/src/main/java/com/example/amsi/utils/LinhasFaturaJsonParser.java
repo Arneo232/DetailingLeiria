@@ -3,32 +3,40 @@ package com.example.amsi.utils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import com.example.amsi.modelo.LinhasFatura;
-
 import java.util.ArrayList;
 
 public class LinhasFaturaJsonParser {
 
-    public static ArrayList<LinhasFatura> parserJsonLinhasFatura(String response) {
+    public static ArrayList<LinhasFatura> parserJsonLinhasFatura(String response, int idFatura) {
         ArrayList<LinhasFatura> linhasFaturaList = new ArrayList<>();
 
         try {
             JSONArray outerArray = new JSONArray(response);
 
-            JSONObject faturaObject = outerArray.getJSONArray(0).getJSONObject(0);
+            for (int i = 0; i < outerArray.length(); i++) {
+                JSONArray innerArray = outerArray.getJSONArray(i);
 
-            JSONArray linhasVendaArray = faturaObject.getJSONArray("linhasVenda");
+                for (int j = 0; j < innerArray.length(); j++) {
+                    JSONObject faturaObject = innerArray.getJSONObject(j);
 
-            for (int i = 0; i < linhasVendaArray.length(); i++) {
-                JSONObject linha = linhasVendaArray.getJSONObject(i);
+                    if (faturaObject.getInt("idvendas") == idFatura) {
+                        JSONArray linhasVendaArray = faturaObject.getJSONArray("linhasVenda");
 
-                LinhasFatura linhasFatura = new LinhasFatura();
-                linhasFatura.setIdLinhasvenda(linha.getInt("idLinhaVenda"));
-                linhasFatura.setQuantidade(linha.getInt("quantidade"));
-                linhasFatura.setPrecounitario(linha.getDouble("precounitario"));
-                linhasFatura.setSubtotal(linha.getDouble("subtotal"));
-                linhasFatura.setNomeproduto(linha.getString("nomeProduto"));
+                        for (int k = 0; k < linhasVendaArray.length(); k++) {
+                            JSONObject linha = linhasVendaArray.getJSONObject(k);
 
-                linhasFaturaList.add(linhasFatura);
+                            LinhasFatura linhasFatura = new LinhasFatura();
+                            linhasFatura.setIdLinhasvenda(linha.getInt("idLinhaVenda"));
+                            linhasFatura.setQuantidade(linha.getInt("quantidade"));
+                            linhasFatura.setPrecounitario(linha.getDouble("precounitario"));
+                            linhasFatura.setSubtotal(linha.getDouble("subtotal"));
+                            linhasFatura.setNomeproduto(linha.getString("nomeProduto"));
+
+                            linhasFaturaList.add(linhasFatura);
+                        }
+                        return linhasFaturaList;
+                    }
+                }
             }
 
         } catch (Exception e) {

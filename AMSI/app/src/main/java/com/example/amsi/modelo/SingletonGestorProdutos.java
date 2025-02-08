@@ -1,5 +1,6 @@
 package com.example.amsi.modelo;
 
+import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -129,7 +130,7 @@ public class SingletonGestorProdutos {
         mUrlAPIFinalizarCompra ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/venda/finalizarcompra";
         mUrlAPIFaturas ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/vendas/vendasporperfil";
         mUrlAPIFatura ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/vendas/vendasporperfil";
-        mUrlAPIDownloadFatura ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/venda/vendapdf";
+        mUrlAPIDownloadFatura ="http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/vendas/vendapdf";
         mUrlAPIAvaliacoes = "http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/avaliacaos/avaliacoesporproduto";
         mUrlAPIAddAvaliacao = "http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/avaliacaos/fazeravaliacao";
         mUrlAPIRemoverAvaliacao = "http://"+ ipAddress +"/DetailingLeiria/DtlgLeiWebApp/backend/web/api/avaliacaos/delavaliacaoporid";
@@ -550,7 +551,7 @@ public class SingletonGestorProdutos {
                     public void onResponse(String response) {
                         Log.d("API", "Response received: " + response);
                         try {
-                            ArrayList<LinhasFatura> linhasFatura = LinhasFaturaJsonParser.parserJsonLinhasFatura(response);
+                            ArrayList<LinhasFatura> linhasFatura = LinhasFaturaJsonParser.parserJsonLinhasFatura(response, idFatura);
                             Log.d("API", "Linhas de fatura totais: " + linhasFatura.size());
                             if (faturaListener != null) {
                                 faturaListener.onRefreshDetalhes(linhasFatura);
@@ -584,42 +585,41 @@ public class SingletonGestorProdutos {
                     @Override
                     public void onResponse(String response) {
                         try {
-                            // Convert response to bytes
-                            byte[] pdfData = response.getBytes();
+                            JSONObject jsonResponse = new JSONObject(response);
+                            if (jsonResponse.getBoolean("success")) {
+                                String downloadUrl = jsonResponse.getString("downloadUrl");
 
-                            // Define file location
-                            File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
-                                    "Fatura_" + idfatura + ".pdf");
+                                DownloadManager.Request request = new DownloadManager.Request(Uri.parse(downloadUrl));
+                                request.setTitle("Baixando Fatura");
+                                request.setDescription("Fatura_" + idfatura + ".pdf");
+                                request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "Fatura_" + idfatura + ".pdf");
+                                request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+                                request.setAllowedOverMetered(true);
+                                request.setAllowedOverRoaming(true);
 
-                            // Save the PDF data to the file
-                            FileOutputStream fos = new FileOutputStream(file);
-                            fos.write(pdfData);
-                            fos.close();
-
-                            // Use FileProvider to get URI for the file
-                            Uri fileUri = FileProvider.getUriForFile(context,
-                                    context.getApplicationContext().getPackageName() + ".provider", file);
-
-                            // Grant permission to read the URI
-                            Intent intent = new Intent(Intent.ACTION_VIEW);
-                            intent.setDataAndType(fileUri, "application/pdf");
-                            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);  // Grant permission to read URI
-
-                            context.startActivity(intent);
-
-                            Toast.makeText(context, "Fatura baixada com sucesso!", Toast.LENGTH_SHORT).show();
+                                DownloadManager downloadManager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
+                                if (downloadManager != null) {
+                                    downloadManager.enqueue(request);
+                                    Toast.makeText(context, "Download iniciado...", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(context, "Erro ao iniciar download", Toast.LENGTH_SHORT).show();
+                                }
+                            } else {
+                                Toast.makeText(context, "Erro: " + jsonResponse.getString("message"), Toast.LENGTH_SHORT).show();
+                            }
                         } catch (Exception e) {
                             e.printStackTrace();
-                            Toast.makeText(context, "Erro ao salvar fatura.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, "Erro ao processar resposta.", Toast.LENGTH_SHORT).show();
                         }
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(context, "Erro ao baixar fatura: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "Erro ao obter URL de download: " + error.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
+
         volleyQueue.add(request);
     }
 
@@ -1172,6 +1172,7 @@ public class SingletonGestorProdutos {
         // Step 6: Add the request to the Volley request queue
         volleyQueue.add(request);
     }
+
     public void getMetodosEntregaAPI(final Context context, final MetodoEntregaListener listener) {
         if (!ProdutoJsonParser.isConnectionInternet(context)) {
             Toast.makeText(context, "Sem ligação à internet", Toast.LENGTH_SHORT).show();

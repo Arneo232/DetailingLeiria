@@ -240,8 +240,6 @@ class VendaController extends ActiveController
 
     public function actionVendapdf($idvenda)
     {
-        Yii::$app->response->format = \yii\web\Response::FORMAT_RAW;
-
         $venda = Venda::findOne($idvenda);
         if (!$venda) {
             return [
@@ -249,7 +247,7 @@ class VendaController extends ActiveController
                 'message' => 'Venda não encontrada.'
             ];
         }
-        
+
         $linhasVenda = $venda->getLinhasVenda()->all();
 
         $cssFile = Yii::getAlias('@frontend/web/css/styledata.css');
@@ -261,14 +259,22 @@ class VendaController extends ActiveController
         ]);
 
         $mpdf = new \Mpdf\Mpdf();
-
         $mpdf->WriteHTML($css, \Mpdf\HTMLParserMode::HEADER_CSS);
         $mpdf->WriteHTML($content, \Mpdf\HTMLParserMode::HTML_BODY);
 
-        Yii::$app->response->headers->set('Content-Type', 'application/pdf');
-        Yii::$app->response->headers->set('Content-Disposition', 'attachment; filename="Fatura_' . $venda->idVenda . '.pdf"');
+        $pdfDirectory = Yii::getAlias('@frontend/web/faturas/');
+        if (!is_dir($pdfDirectory)) {
+            mkdir($pdfDirectory, 0777, true);
+        }
 
-        return $mpdf->Output('', \Mpdf\Output\Destination::STRING_RETURN);
+        $fileName = "Fatura_" . $venda->idVenda . ".pdf";
+        $filePath = $pdfDirectory . $fileName;
+
+        $mpdf->Output($filePath, \Mpdf\Output\Destination::FILE);
+
+        return [
+            'success' => true,
+            'downloadUrl' => Yii::$app->request->hostInfo . "/faturas/" . $fileName
+        ];
     }
-
 }

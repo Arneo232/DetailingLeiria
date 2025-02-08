@@ -1,6 +1,7 @@
 package com.example.amsi;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ListView;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -23,16 +24,13 @@ public class DetalheFaturaActivity extends AppCompatActivity implements FaturaLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detalhe_fatura);
 
-        // Get the Fatura ID passed from ListaFaturasFragment
         idFatura = getIntent().getIntExtra(IDFATURA, -1);
 
-        // Initialize ListView
         lvLinhasFatura = findViewById(R.id.lvLinhasFatura);
         linhasFaturaList = new ArrayList<>();
         adapter = new ListaLinhasFaturaAdaptador(this, linhasFaturaList);
         lvLinhasFatura.setAdapter(adapter);
 
-        // Register listener and fetch data
         SingletonGestorProdutos.getInstance(this).setFaturaListener(this);
         SingletonGestorProdutos.getInstance(this).getAllLinhasFaturaAPI(this, idFatura);
     }
@@ -42,7 +40,9 @@ public class DetalheFaturaActivity extends AppCompatActivity implements FaturaLi
         if (linhasFatura != null) {
             linhasFaturaList.clear();
             linhasFaturaList.addAll(linhasFatura);
-            adapter.notifyDataSetChanged();
+            Log.d("ADAPTER", "Adapter updated with " + linhasFaturaList.size() + " items");
+
+            runOnUiThread(() -> adapter.notifyDataSetChanged());
         }
     }
 }
