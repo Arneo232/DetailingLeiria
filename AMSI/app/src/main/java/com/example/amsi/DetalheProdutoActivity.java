@@ -2,6 +2,7 @@ package com.example.amsi;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -73,6 +74,11 @@ public class DetalheProdutoActivity extends AppCompatActivity implements Produto
 
         if (produto != null) {
             buscaInfo();
+        }
+
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle("Detailing Leiria");
         }
 
         int idProduto = getIntent().getIntExtra(IDPRODUTO, 0);
@@ -167,5 +173,15 @@ public class DetalheProdutoActivity extends AppCompatActivity implements Produto
         } else {
             btnFavorito.setImageResource(R.drawable.favorito);
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

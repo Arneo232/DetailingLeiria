@@ -2,6 +2,7 @@ package com.example.amsi;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -46,6 +47,11 @@ public class FinalizarCompraActivity extends AppCompatActivity implements Carrin
         SingletonGestorProdutos.getInstance(this).getMetodosEntregaAPI(this, this);
         SingletonGestorProdutos.getInstance(this).getMetodosPagamentoAPI(this, this);
 
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle("Detailing Leiria");
+        }
+
         btnFinalizar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -78,6 +84,16 @@ public class FinalizarCompraActivity extends AppCompatActivity implements Carrin
                 idMetodoPagamento = 1;
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

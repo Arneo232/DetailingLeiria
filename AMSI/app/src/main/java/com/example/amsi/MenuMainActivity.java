@@ -57,7 +57,10 @@ public class MenuMainActivity extends AppCompatActivity implements NavigationVie
         if (startFragment != null && startFragment.equals("ListaProdutosFragment")) {
             Fragment fragment = new ListaProdutosFragment();
             fragmentManager.beginTransaction().replace(R.id.contentFragment, fragment).commit();
-            setTitle("Produtos");
+            setTitle("Detailing Leiria");
+        }
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle("Detailing Leiria");
         }
     }
 

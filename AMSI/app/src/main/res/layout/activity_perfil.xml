@@ -19,7 +19,7 @@
             android:id="@+id/imageView"
             android:layout_width="116dp"
             android:layout_height="116dp"
-            app:srcCompat="@drawable/dl_logo" />
+            app:srcCompat="@drawable/dl_logosolo" />
 
         <TextView
             android:id="@+id/textViewTitle"

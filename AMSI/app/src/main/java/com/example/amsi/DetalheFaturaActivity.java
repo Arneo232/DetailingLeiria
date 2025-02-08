@@ -2,6 +2,7 @@ package com.example.amsi;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.ListView;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -31,8 +32,23 @@ public class DetalheFaturaActivity extends AppCompatActivity implements FaturaLi
         adapter = new ListaLinhasFaturaAdaptador(this, linhasFaturaList);
         lvLinhasFatura.setAdapter(adapter);
 
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle("Detailing Leiria");
+        }
+
         SingletonGestorProdutos.getInstance(this).setFaturaListener(this);
         SingletonGestorProdutos.getInstance(this).getAllLinhasFaturaAPI(this, idFatura);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
