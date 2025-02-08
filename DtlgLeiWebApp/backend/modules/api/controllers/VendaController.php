@@ -274,7 +274,24 @@ class VendaController extends ActiveController
 
         return [
             'success' => true,
-            'downloadUrl' => Yii::$app->request->hostInfo . "/faturas/" . $fileName
+            'downloadUrl' => "http://172.22.21.201/detailingleiria/dtlgleiwebapp/backend/web/api/vendas/downloadvenda/" . urlencode($fileName)
         ];
+    }
+
+
+    public function actionDownloadvenda($nomeficheiro)
+    {
+        $fileDirectory = Yii::getAlias('@frontend/web/faturas/');
+        $filePath = $fileDirectory . $nomeficheiro;
+
+        if (file_exists($filePath)) {
+            Yii::$app->response->headers->set('Content-Type', 'application/pdf');
+            Yii::$app->response->headers->set('Content-Disposition', 'attachment; filename="' . $nomeficheiro . '"');
+
+            return Yii::$app->response->sendFile($filePath);
+        } else {
+            Yii::$app->response->statusCode = 404;
+            return ['message' => 'Fatura não encontrada.'];
+        }
     }
 }

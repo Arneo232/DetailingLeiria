@@ -578,7 +578,7 @@ public class SingletonGestorProdutos {
             return;
         }
 
-        String url = mUrlAPIDownloadFatura + "?idvenda=" + idfatura + "&token=" + login.token;
+        String url = mUrlAPIDownloadFatura + '/' + idfatura + "?token=" + login.token;
 
         StringRequest request = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
@@ -587,8 +587,14 @@ public class SingletonGestorProdutos {
                         try {
                             JSONObject jsonResponse = new JSONObject(response);
                             if (jsonResponse.getBoolean("success")) {
-                                String downloadUrl = jsonResponse.getString("downloadUrl");
-
+                                String downloadUrl = jsonResponse.optString("downloadUrl", "");
+                                if (!downloadUrl.isEmpty()) {
+                                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                                    intent.setData(Uri.parse(downloadUrl));
+                                    context.startActivity(intent);
+                                } else {
+                                    Toast.makeText(context, "Erro ao obter link de download", Toast.LENGTH_SHORT).show();
+                                }
                                 DownloadManager.Request request = new DownloadManager.Request(Uri.parse(downloadUrl));
                                 request.setTitle("Baixando Fatura");
                                 request.setDescription("Fatura_" + idfatura + ".pdf");

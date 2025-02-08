@@ -122,9 +122,11 @@ return [
                         'GET vendasporperfil/{idprofilefk}' => 'vendasporperfil', // actionVendasporperfil
                         'GET linhasvendaporvenda/{idvenda}' => 'linhasvendaporvenda', // actionLinhasvendaporvenda
                         'GET vendapdf/{idvenda}' => 'vendapdf', // actionVendapdf
+                        'GET downloadvenda/{nomeficheiro}' => 'downloadvenda', // actionDownloadvenda
                     ],
                     'tokens' => [
                         '{idvenda}' => '<idvenda:\\d+>',
+                        '{nomeficheiro}' => '<nomeficheiro:[\w\.-]+>', // deixa por pontos nos ficheiros
                         '{idprofilefk}' => '<idprofilefk:\\d+>',
                     ],
                 ],
