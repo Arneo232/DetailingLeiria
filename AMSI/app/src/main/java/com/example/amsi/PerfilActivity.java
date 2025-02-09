@@ -24,6 +24,7 @@ public class PerfilActivity extends AppCompatActivity implements UtilizadorListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_perfil);
+        setTitle("Perfil");
 
         tvEmail = findViewById(R.id.textViewEmail);
         tvNome = findViewById(R.id.textViewName);
@@ -36,7 +37,6 @@ public class PerfilActivity extends AppCompatActivity implements UtilizadorListe
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle("Detailing Leiria");
         }
 
         buttonEditProfile.setOnClickListener(new View.OnClickListener() {

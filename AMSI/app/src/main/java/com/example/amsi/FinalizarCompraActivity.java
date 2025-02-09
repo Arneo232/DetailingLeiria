@@ -1,5 +1,6 @@
 package com.example.amsi;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -111,8 +112,6 @@ public class FinalizarCompraActivity extends AppCompatActivity implements Carrin
 
     @Override
     public void onMetodosPagamentoObtidos(List<MetodoPagamento> metodosPagamento) {
-        Log.d("API_RESPONSE", "Payment Methods: " + metodosPagamento.size());
-
         if (metodosPagamento != null && !metodosPagamento.isEmpty()) {
             ArrayAdapter<MetodoPagamento> adapter = new ArrayAdapter<>(FinalizarCompraActivity.this, android.R.layout.simple_spinner_item, metodosPagamento);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -138,5 +137,10 @@ public class FinalizarCompraActivity extends AppCompatActivity implements Carrin
                 idMetodoEntrega,
                 idMetodoPagamento
         );
+
+        Intent intent = new Intent(this, MenuMainActivity.class);
+        intent.putExtra("faturas", true);
+        startActivity(intent);
+        finish();
     }
 }

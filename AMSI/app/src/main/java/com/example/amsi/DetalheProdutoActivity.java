@@ -78,7 +78,6 @@ public class DetalheProdutoActivity extends AppCompatActivity implements Produto
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle("Detailing Leiria");
         }
 
         int idProduto = getIntent().getIntExtra(IDPRODUTO, 0);

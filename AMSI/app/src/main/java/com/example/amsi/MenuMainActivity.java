@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -50,8 +51,11 @@ public class MenuMainActivity extends AppCompatActivity implements NavigationVie
 
         fragmentManager = getSupportFragmentManager();
         navigationView.setNavigationItemSelectedListener(this);
-
         carregarCabecalho();
+
+        if (getIntent().getBooleanExtra("faturas", false)) {
+            carregarFragmentoInicial();
+        }
 
         String startFragment = getIntent().getStringExtra("startFragment");
         if (startFragment != null && startFragment.equals("ListaProdutosFragment")) {
@@ -62,6 +66,15 @@ public class MenuMainActivity extends AppCompatActivity implements NavigationVie
         if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle("Detailing Leiria");
         }
+
+    }
+
+    private boolean carregarFragmentoInicial() {
+        Menu menu = navigationView.getMenu();
+        int menuconexao = 4;
+        MenuItem item = menu.getItem(menuconexao);
+        item.setChecked(true);
+        return onNavigationItemSelected(item);
     }
 
     @Override

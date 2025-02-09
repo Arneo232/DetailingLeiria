@@ -64,7 +64,7 @@ public class ListaFaturasAdaptador extends BaseAdapter {
         viewHolder.tvDataVenda.setText(fatura.getDatavenda());
 
         viewHolder.btnDownloadPDF.setOnClickListener(v -> {
-            Toast.makeText(context, "Baixando fatura...", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "A fazer download da fatura...", Toast.LENGTH_SHORT).show();
             SingletonGestorProdutos.getInstance(context).downloadFaturaAPI(context, fatura.getIdfatura());
         });
 

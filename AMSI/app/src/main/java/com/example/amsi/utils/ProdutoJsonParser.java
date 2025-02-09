@@ -23,7 +23,6 @@ public class ProdutoJsonParser {
             for (int i = 0; i < produtosArray.length(); i++) {
                 JSONObject produtoJSON = produtosArray.getJSONObject(i);
 
-                // Extract product details
                 int id = produtoJSON.getInt("id");
                 String nome = produtoJSON.getString("nome");
                 String descricao = produtoJSON.getString("descricao");
@@ -34,7 +33,6 @@ public class ProdutoJsonParser {
                 String desconto = produtoJSON.getString("desconto");
                 String imagem = produtoJSON.getString("imagem");
 
-                // Create a Produto object and add it to the list
                 Produto produto = new Produto(id, nome, descricao, preco, stock, categoria, fornecedor, desconto, imagem);
                 produtos.add(produto);
             }

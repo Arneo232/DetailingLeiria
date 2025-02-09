@@ -50,7 +50,6 @@ public class ListaProdutosAdaptador extends BaseAdapter {
             convertView = inflater.inflate(R.layout.item_lista_produto, null);
         }
 
-        // Otimização com ViewHolder
         ViewHolderLista viewHolder = (ViewHolderLista) convertView.getTag();
         if (viewHolder == null) {
             viewHolder = new ViewHolderLista(convertView);
@@ -71,8 +70,6 @@ public class ListaProdutosAdaptador extends BaseAdapter {
             tvCategoria = view.findViewById(R.id.tvCategoria);
             imgProduto = view.findViewById(R.id.imgProduto);
         }
-
-        // Atualiza os dados da linha
         public void update(Produto produto) {
             tvNome.setText(produto.getNome());
             tvPreco.setText(String.format("€ %.2f", produto.getPreco()));

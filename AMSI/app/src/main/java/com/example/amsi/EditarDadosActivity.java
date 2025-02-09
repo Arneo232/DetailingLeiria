@@ -25,6 +25,7 @@ public class EditarDadosActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editar_dados);
+        setTitle("Editar dados");
 
         editTextEmail = findViewById(R.id.editTextEmail);
         editTextNome = findViewById(R.id.editTextNome);

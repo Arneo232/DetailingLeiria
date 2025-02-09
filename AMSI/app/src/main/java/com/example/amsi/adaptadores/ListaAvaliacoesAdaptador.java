@@ -93,7 +93,7 @@ public class ListaAvaliacoesAdaptador extends BaseAdapter {
         private void showDeleteDialog(Avaliacao avaliacao, int position) {
             new AlertDialog.Builder(context)
                     .setTitle("Remover Avaliação")
-                    .setMessage("Tem certeza que deseja remover este comentário?")
+                    .setMessage("Tem a certeza que deseja remover este comentário?")
                     .setPositiveButton("Sim", (dialog, which) -> {
                         SingletonGestorProdutos.getInstance(context).removerAvaliacaoAPI(
                                 context,

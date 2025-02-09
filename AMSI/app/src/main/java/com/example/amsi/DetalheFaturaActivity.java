@@ -34,7 +34,6 @@ public class DetalheFaturaActivity extends AppCompatActivity implements FaturaLi
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle("Detailing Leiria");
         }
 
         SingletonGestorProdutos.getInstance(this).setFaturaListener(this);

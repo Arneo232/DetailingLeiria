@@ -44,7 +44,6 @@ public class ListaLinhasFaturaAdaptador extends BaseAdapter {
             convertView = LayoutInflater.from(context).inflate(R.layout.item_linha_fatura, parent, false);
             holder = new ViewHolder();
 
-            // Binding UI components
             holder.tvNomeProduto = convertView.findViewById(R.id.tvNome);
             holder.tvPrecoUnitario = convertView.findViewById(R.id.tvPrecoUnitario);
             holder.tvQuantidade = convertView.findViewById(R.id.tvQuantidade);
@@ -55,10 +54,8 @@ public class ListaLinhasFaturaAdaptador extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        // Get current item
         LinhasFatura linhaFatura = linhasFaturaList.get(position);
 
-        // Set values
         holder.tvNomeProduto.setText(linhaFatura.getNomeproduto());
         holder.tvPrecoUnitario.setText(String.format("€%.2f", linhaFatura.getPrecounitario()));
         holder.tvQuantidade.setText(String.valueOf(linhaFatura.getQuantidade()));

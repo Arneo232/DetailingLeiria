@@ -53,6 +53,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
@@ -266,7 +267,7 @@ public class SingletonGestorProdutos {
                         editor.apply();
 
                         String savedIdProfile = sharedPreferences.getString("idprofile", "NOT FOUND");
-                        Log.d("SharedPreferences", "idprofile saved: " + savedIdProfile);
+                        Log.d("SharedPreferences", "idprofile guardado: " + savedIdProfile);
 
                         if (loginListener != null) {
                             loginListener.onValidateLogin(context, login);
@@ -322,14 +323,14 @@ public class SingletonGestorProdutos {
                         Log.e("ParsedMessage", "Message: '" + message + "'");
 
                         if (message != null) {
-                            Log.e("ParsedMessage", "Message length: " + message.length());
+                            Log.e("ParsedMessage", "tamanho da msg: " + message.length());
                         }
-                        Log.e("RegisterAPI", "Message before check: '" + message + "'");
+                        Log.e("RegisterAPI", "msg antes da verificacao: '" + message + "'");
                         if (message != null && !message.trim().isEmpty()) {
-                            Log.e("RegisterAPI", "Message passed the check: '" + message + "'");
+                            Log.e("RegisterAPI", "msg passou a verificacao: '" + message + "'");
                             registerListener.onSignup(message);
                         } else {
-                            Log.e("RegisterAPI", "Message was null or empty");
+                            Log.e("RegisterAPI", "msg a null ou vazia");
                             Toast.makeText(context, "Erro ao registrar", Toast.LENGTH_SHORT).show();
                         }
                     },
@@ -367,10 +368,8 @@ public class SingletonGestorProdutos {
             @Override
             public void onResponse(JSONArray response) {
                 try {
-                    // Extract the nested JSONArray from the response
                     JSONArray produtosArray = response.getJSONArray(0);
 
-                    // Parse the array using your parser method
                     ArrayList<Produto> produtos = ProdutoJsonParser.parserJsonProdutos(produtosArray, context);
 
                     if (produtosListener != null) {
@@ -440,7 +439,7 @@ public class SingletonGestorProdutos {
         int idp = sp.getInt("idprofile", -1);
 
         if (idp == -1) {
-            Log.e("API", "User is not logged in. idprofile is missing.");
+            Log.e("API", "User  nao esta logado");
             return;
         }
 
@@ -448,7 +447,7 @@ public class SingletonGestorProdutos {
 
         if (!ProdutoJsonParser.isConnectionInternet(context)) {
             Toast.makeText(context, "Sem ligação à internet", Toast.LENGTH_SHORT).show();
-            Log.d("API", "Offline mode. Fetching favorites from local DB.");
+            Log.d("API", "modo offline, a buscar os favs à bd.");
             FavoritoBDHelper dbHelper = new FavoritoBDHelper(context);
             ArrayList<Favorito> favoritos = dbHelper.getFavoritosBD();
 
@@ -456,7 +455,7 @@ public class SingletonGestorProdutos {
                 favoritosListener.onRefreshFavoritos(favoritos);
             }
         } else {
-            Log.d("API", "Online mode. Fetching favorites from API.");
+            Log.d("API", "modo online, a buscar os favs à API");
             StringRequest request = new StringRequest(Request.Method.GET, mUrlAPIFavorito + '/' + idp + "?token=" + login.token,
                     new Response.Listener<String>() {
                         @Override
@@ -491,7 +490,6 @@ public class SingletonGestorProdutos {
                     });
 
             volleyQueue.add(request);
-            Log.d("API", "Request adicionada a queue");
         }
     }
 
@@ -506,7 +504,7 @@ public class SingletonGestorProdutos {
                     try {
                         boolean isFavorito = response.getBoolean("success");
                         if (verificafavoritoListener != null) {
-                            verificafavoritoListener.onVerificaFavorito(isFavorito);  // Notify listener
+                            verificafavoritoListener.onVerificaFavorito(isFavorito);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -518,7 +516,7 @@ public class SingletonGestorProdutos {
                 error -> {
                     Log.e("VerificaFavError", "Erro ao verificar favorito: " + error.toString());
                     if (verificafavoritoListener != null) {
-                        verificafavoritoListener.onVerificaFavorito(false);  // Default to false on error
+                        verificafavoritoListener.onVerificaFavorito(false);
                     }
                 });
 
@@ -640,7 +638,7 @@ public class SingletonGestorProdutos {
                         try {
                             ArrayList<Fatura> faturas = FaturaJsonParser.parserJsonFaturas(response);
                             Log.d("API", "Faturas totais: " + faturas.size());
-
+                            Collections.reverse(faturas);
                             if (faturasListener != null) {
                                 faturasListener.onRefreshFaturas(faturas);
                             }
@@ -657,7 +655,6 @@ public class SingletonGestorProdutos {
                 });
 
         volleyQueue.add(request);
-        Log.d("API", "Request adicionada a queue");
     }
 
     public void getAllLinhasFaturaAPI(final Context context, final int idFatura) {
@@ -697,7 +694,6 @@ public class SingletonGestorProdutos {
                 });
 
         volleyQueue.add(request);
-        Log.d("API", "Request adicionada à queue");
     }
 
     public void downloadFaturaAPI(final Context context, final int idfatura) {
@@ -778,13 +774,13 @@ public class SingletonGestorProdutos {
                         try {
                             JSONArray outerArray = new JSONArray(response);
                             if (outerArray.length() == 0) {
-                                Log.e("API_ERROR", "Outer array is empty!");
+                                Log.e("API_ERROR", "outerArray vazio");
                                 return;
                             }
 
                             JSONArray innerArray = outerArray.getJSONArray(0);
                             if (innerArray.length() == 0) {
-                                Log.e("API_ERROR", "Inner array is empty!");
+                                Log.e("API_ERROR", "innerArray vazio");
                                 return;
                             }
                             JSONObject carrinhoObj = innerArray.getJSONObject(0);
@@ -850,7 +846,6 @@ public class SingletonGestorProdutos {
                 });
 
         volleyQueue.add(request);
-        Log.d("API", "Request adicionada à queue");
     }
 
     public void addLinhaCarrinhoAPI(final Context context, final int idProduto, final int quantidade) {
@@ -888,8 +883,7 @@ public class SingletonGestorProdutos {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        // Log error details and display error message
-                        Log.e("VolleyError", "Error: " + error.toString());
+                        Log.e("VolleyError", "Erro: " + error.toString());
                         if (error.networkResponse != null) {
                             Log.e("VolleyError", "Status Code: " + error.networkResponse.statusCode);
                             try {
@@ -907,10 +901,7 @@ public class SingletonGestorProdutos {
                 return params;
             }
         };
-
-        // Add the request to the Volley queue
         volleyQueue.add(request);
-        Log.d("API", "Request to add product to cart added to queue");
     }
 
     public void removerLinhaCarrinhoAPI(final Context context, final int idLinhaCarrinho){
@@ -926,8 +917,7 @@ public class SingletonGestorProdutos {
                     @Override
                     public void onResponse(String response) {
                         Log.d("API", "Linha removida com sucesso: " + response);
-                        Toast.makeText(context, "Linha removida com sucesso!", Toast.LENGTH_SHORT).show();
-                        // Refresh the list if necessary
+                        Toast.makeText(context, "Produto removido com sucesso!", Toast.LENGTH_SHORT).show();
                         getAllLinhasCarrinhoAPI(context, idLinhaCarrinho);
                     }
                 },
@@ -944,20 +934,17 @@ public class SingletonGestorProdutos {
                                 e.printStackTrace();
                             }
                         }
-                        Toast.makeText(context, "Erro ao remover linha!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "Erro ao remover o produto!", Toast.LENGTH_SHORT).show();
                     }
                 }) {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
-                params.put("idLinhasCarrinho", String.valueOf(idLinhaCarrinho));  // Send the ID in the body
+                params.put("idLinhasCarrinho", String.valueOf(idLinhaCarrinho));
                 return params;
             }
         };
-
-        // Add request to the queue
         volleyQueue.add(request);
-        Log.d("API", "Request added to queue for deletion");
     }
 
     public void aumentarQuantidadeAPI(final Context context, int idLinhasCarrinho) {
@@ -1016,7 +1003,7 @@ public class SingletonGestorProdutos {
                         try {
                             JSONObject jsonResponse = new JSONObject(response);
                             if (jsonResponse.getBoolean("success")) {
-                                Toast.makeText(context, "Quantidade diminuida com sucesso!", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, "Quantidade reduzida com sucesso!", Toast.LENGTH_SHORT).show();
                                 getCarrinhoAPI(context);
                             } else {
                                 Toast.makeText(context, "Erro: " + jsonResponse.getString("message"), Toast.LENGTH_SHORT).show();
@@ -1104,7 +1091,8 @@ public class SingletonGestorProdutos {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(context, "Erro ao carregar avaliações.", Toast.LENGTH_SHORT).show();
+                        Log.e("AVALIACOES", "Erro: ao carregar as avaliações.");
+                        //Toast.makeText(context, "Erro ao carregar avaliações.", Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -1129,10 +1117,10 @@ public class SingletonGestorProdutos {
                             String message = jsonResponse.getString("message");
 
                             if (success) {
-                                Toast.makeText(context, "Avaliação enviada com sucesso.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, "Avaliação feita com sucesso!", Toast.LENGTH_SHORT).show();
                             } else {
                                 if (message.contains("preciso comprar o produto")) {
-                                    Toast.makeText(context, "Erro: Você precisa comprar o produto antes de avaliá-lo.", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(context, "Erro: Você precisa de comprar o produto para o avaliar.", Toast.LENGTH_LONG).show();
                                 } else if (message.contains("Produto não encontrado")) {
                                     Toast.makeText(context, "Erro: Produto não encontrado.", Toast.LENGTH_LONG).show();
                                 } else if (message.contains("Invalido ou token em falta")) {
@@ -1249,22 +1237,15 @@ public class SingletonGestorProdutos {
     }
 
     public void atualizarPerfilAPI(final Context context, final String username, final String email, final String morada, final String ntelefone) {
-        // Step 1: Check if there is an internet connection
         if (!ProdutoJsonParser.isConnectionInternet(context)) {
             Toast.makeText(context, "Sem ligação à internet", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Step 2: Retrieve the idprofile from SharedPreferences
         SharedPreferences sp = context.getSharedPreferences("DADOSUSER", Context.MODE_PRIVATE);
         int idp = sp.getInt("idprofile", login.getIdprofile());
 
-        // Step 3: Construct the URL
         String url = mUrlAPIProfileEditar + '/' + idp + "?token=" + login.token;
-
-        // Step 4: Prepare the data to send in the request
-        // You can either use a JSON object or send form parameters.
-        // Using JSONObject for sending JSON data
 
         JSONObject postData = new JSONObject();
         try {
@@ -1276,18 +1257,14 @@ public class SingletonGestorProdutos {
             e.printStackTrace();
         }
 
-        // Step 5: Create the POST request
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, postData, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
-                    // Handle the response from the API
                     boolean success = response.getBoolean("success");
                     if (success) {
-                        // Profile updated successfully
                         Toast.makeText(context, "Perfil atualizado com sucesso", Toast.LENGTH_SHORT).show();
                     } else {
-                        // Handle errors
                         String errorMessage = response.getString("message");
                         Toast.makeText(context, "Erro: " + errorMessage, Toast.LENGTH_LONG).show();
                     }
@@ -1299,12 +1276,9 @@ public class SingletonGestorProdutos {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                // Handle error response from the API
                 Toast.makeText(context, "Erro na API: " + error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-
-        // Step 6: Add the request to the Volley request queue
         volleyQueue.add(request);
     }
 
@@ -1318,7 +1292,6 @@ public class SingletonGestorProdutos {
             @Override
             public void onResponse(JSONArray response) {
                 try {
-                    // Parse the delivery methods
                     List<MetodoEntrega> metodosEntrega = new ArrayList<>();
                     for (int i = 0; i < response.length(); i++) {
                         JSONObject metodoEntregaJson = response.getJSONObject(i);
@@ -1368,7 +1341,7 @@ public class SingletonGestorProdutos {
                         MetodoPagamento metodo = new MetodoPagamento(id, designacao);
                         metodosPagamento.add(metodo);
                     }
-                    Log.d("API_RESPONSE", "Payment Methods: " + metodosPagamento.size());
+                    Log.d("API_RESPONSE", "Metodos pagamento: " + metodosPagamento.size());
                     if (listener != null) {
                         listener.onMetodosPagamentoObtidos(metodosPagamento);
                     }
