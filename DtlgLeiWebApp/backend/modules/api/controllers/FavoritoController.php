@@ -81,7 +81,6 @@ class FavoritoController extends ActiveController
 
     public function actionAddfav($idProduto, $idProfile)
     {
-        // No need to use request->post() since the parameters will be passed via URL
         if (!$idProduto || !$idProfile) {
             return [
                 'success' => false,
@@ -89,18 +88,15 @@ class FavoritoController extends ActiveController
             ];
         }
 
-        // Check if the favorite already exists
         $model = $this->modelClass::find()->where(['produto_id' => $idProduto, 'profile_id' => $idProfile])->one();
 
         if ($model) {
-            // If the favorite already exists, remove it
             $model->delete();
             return [
                 'success' => true,
                 'message' => 'O produto foi removido dos favoritos.'
             ];
         } else {
-            // Otherwise, add the new product to favorites
             $model = new Favorito();
             $model->profile_id = $idProfile;
             $model->produto_id = $idProduto;
